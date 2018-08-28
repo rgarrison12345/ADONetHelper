@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net45;net40;net35;net20;</TargetFrameworks>
+      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+      <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
+      <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Oledb</PackageProjectUrl>
+      <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+      <Version>1.0.2</Version>
+      <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Oledb ANSI</PackageTags>
+      <Copyright>Copyright © Robert Garrison 2018</Copyright>
+      <Authors>Robert Garrison</Authors>
+      <Company>Robert Garrison</Company>
+      <Product>ADONetHelper.Oledb</Product>
+      <Title>ADONetHelper.Oledb</Title>
+      <PackageId>ADONetHelper.Oledb</PackageId>
+      <Description>Extends ADONetHelper library to Oledb</Description>
+      <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+      <AssemblyName>ADONetHelper.Oledb</AssemblyName>
+      <RootNamespace>ADONetHelper.Oledb</RootNamespace>
+      <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Oledb.xml</DocumentationFile>
+      <NeutralLanguage>en-us</NeutralLanguage>
+      <DefineConstants>TRACE;</DefineConstants>
+      <Prefer32Bit>false</Prefer32Bit>
+      <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug'">
+      <PropertyGroup>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>.\bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <ProjectReference Include="..\ADONetHelper\ADONetHelper.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>.\bin\Release\</OutputPath>
+        <DefineConstants>RELEASE;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="ADONetHelper" version="3.0.7" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+</Project>

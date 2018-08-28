@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0;</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.ASE</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Version>1.0.3</Version>
+    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL SAP ANSI</PackageTags>
+    <Copyright>Copyright © Robert Garrison 2018</Copyright>
+    <Authors>Robert Garrison</Authors>
+    <Company>Robert Garrison</Company>
+    <Product>ADONetHelper.ASE</Product>
+    <Title>ADONetHelper.ASE</Title>
+    <PackageId>ADONetHelper.ASE</PackageId>
+    <Description>Extends ADONetHelper library to SAP</Description>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <AssemblyName>ADONetHelper.ASE</AssemblyName>
+    <RootNamespace>ADONetHelper.ASE</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.SAP.xml</DocumentationFile>
+    <NeutralLanguage>en-us</NeutralLanguage>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputType>Library</OutputType>
+	<Platforms>x64</Platforms>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AdoNetCore.AseClient" Version="0.10.1" />
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug'">
+      <PropertyGroup>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>.\bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <ProjectReference Include="..\ADONetHelper\ADONetHelper.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>.\bin\Release\</OutputPath>
+        <DefineConstants>RELEASE;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="ADONetHelper" version="3.0.7" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+</Project>

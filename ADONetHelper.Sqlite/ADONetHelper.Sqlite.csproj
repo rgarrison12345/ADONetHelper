@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net46;net451;net45;net40;net20;</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Sqlite</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Version>1.5.5</Version>
+    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Sqlite ANSI</PackageTags>
+    <Copyright>Copyright © Robert Garrison 2018</Copyright>
+    <Authors>Robert Garrison</Authors>
+    <Company>Robert Garrison</Company>
+    <Product>ADONetHelper.Sqlite</Product>
+    <Title>ADONetHelper.Sqlite</Title>
+    <PackageId>ADONetHelper.Sqlite</PackageId>
+    <Description>Extends ADONetHelper library to Sqlite</Description>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <AssemblyName>ADONetHelper.Sqlite</AssemblyName>
+    <RootNamespace>ADONetHelper.Sqlite</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Sqlite.xml</DocumentationFile>
+    <NeutralLanguage>en-us</NeutralLanguage>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.109.1" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug'">
+      <PropertyGroup>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>.\bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <ProjectReference Include="..\ADONetHelper\ADONetHelper.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>.\bin\Release</OutputPath>
+        <DefineConstants>RELEASE;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="ADONetHelper" version="3.0.7" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+</Project>

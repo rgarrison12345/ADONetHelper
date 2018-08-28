@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net451;net45;</TargetFrameworks>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Postgres</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Version>2.0.8</Version>
+    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Postgres Npgsql ANSI</PackageTags>
+    <Copyright>Copyright © Robert Garrison 2018</Copyright>
+    <Authors>Robert Garrison</Authors>
+    <Company>Robert Garrison</Company>
+    <Product>ADONetHelper.Postgres</Product>
+    <Title>ADONetHelper.Postgres</Title>
+    <PackageId>ADONetHelper.Postgres</PackageId>
+    <Description>Extends ADONetHelper library to Postgres</Description>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <AssemblyName>ADONetHelper.Postgres</AssemblyName>
+    <RootNamespace>ADONetHelper.Postgres</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Postgres.xml</DocumentationFile>
+    <NeutralLanguage>en-us</NeutralLanguage>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+    <PackageReference Include="Npgsql" Version="4.0.2" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug'">
+      <PropertyGroup>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>.\bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <ProjectReference Include="..\ADONetHelper\ADONetHelper.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>.\bin\Release</OutputPath>
+        <DefineConstants>RELEASE;</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="ADONetHelper" Version="3.0.7" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+</Project>
