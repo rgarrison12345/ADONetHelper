@@ -4,6 +4,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Sqlite</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Sqlite</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Version>1.5.6</Version>
     <PackageTags>Sqlite SystemData.Sqlite ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
