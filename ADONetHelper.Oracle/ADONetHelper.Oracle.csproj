@@ -1,21 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45;net40;</TargetFrameworks>
+    <TargetFrameworks>net461;net45;net40;</TargetFrameworks>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Oracle</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Oracle</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Oracle</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.4.5</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Oracle ANSI</PackageTags>
+    <Version>1.5.0</Version>
+    <PackageTags>Oracle Oracle.ManagedDataAccess ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
     <Product>ADONetHelper.Oracle</Product>
     <Title>ADONetHelper.Oracle</Title>
     <PackageId>ADONetHelper.Oracle</PackageId>
     <Description>Extends ADONetHelper library to Oracle</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8, updating to Oracle.ManagedDataAccess 18.3.0, Adding .NET 4.6.1 Build</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Oracle</AssemblyName>
     <RootNamespace>ADONetHelper.Oracle</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Oracle.xml</DocumentationFile>
@@ -26,19 +28,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="18.3.0" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(TargetFramework)'!='netstandard2.0'">
-      <ItemGroup>
-        <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta3" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <Choose>
     <When Condition="'$(Configuration)'=='Debug'">
       <PropertyGroup>
