@@ -40,7 +40,7 @@ namespace ADONetHelper.SqlServer
     /// </summary>
     /// <seealso cref="DbClient"/>
     /// <seealso cref="IXMLExecutor"/>
-    public sealed class SqlServerClient : DbClient, IXMLExecutor
+    public class SqlServerClient : DbClient, IXMLExecutor
     {
         #region Fields/Properties
         /// <summary>

@@ -4,10 +4,11 @@
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.SqlServer</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.SqlServer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.SqlServer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.6.3</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL System.Data.SqlClient SQLServer ANSI</PackageTags>
+    <Version>1.6.4</Version>
+    <PackageTags>SQLServer System.Data.SqlClient ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
