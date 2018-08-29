@@ -281,8 +281,11 @@ namespace ADONetHelper.Oracle
         /// Opens the current <see cref="OracleConnection"/> with a new password as a <see cref="string"/>, particularly useful if password has an expiration datetime
         /// </summary>
         /// <param name="password">The password to use when opening the connection</param>
-        public void OpenWithNewPassowrd(string password)
+        public void OpenConnectionWithNewPassowrd(string password)
         {
+            //Have to close the connection first
+            this.Close();
+
             //Try and reopen the connection with a new password
             this.Connection.OpenWithNewPassword(password);
         }
@@ -290,31 +293,47 @@ namespace ADONetHelper.Oracle
         /// Opens the current <see cref="OracleConnection"/> with a new password as a <see cref="SecureString"/>, particularly useful if password has an expiration datetime
         /// </summary>
         /// <param name="password">The password to use when opening the connection</param>
-        public void OpenWithNewPassowrd(SecureString password)
+        /// <remarks>
+        /// Flushing the statement cache repetitively results in decreased performance and may negate the performance benefit gained by enabling the statement cache.
+        /// Statement caching remains enabled after the call to PurgeStatementCache.
+        /// Invocation of this method purges the cached cursors that are associated with the OracleConnection.It does not purge all the cached cursors in the database.
+        /// </remarks>
+        public void OpenConnectionWithNewPassowrd(SecureString password)
         {
+            //Have to close the connection first
+            this.Close();
+
             //Try and reopen the connection with a new password
             this.Connection.OpenWithNewPassword(password);
         }
         /// <summary>
-        /// 
+        /// This method returns a new instance of the <see cref="OracleGlobalization"/> object that represents the globalization settings of the session.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns an instance of <see cref="OracleGlobalization"/></returns>
         public OracleGlobalization GetSessionInfo()
         {
             //Return this back to the caller
             return this.Connection.GetSessionInfo();
         }
         /// <summary>
-        /// Purges the statement cache.
+        /// This method refreshes the provided <see cref="OracleGlobalization"/> object with the globalization settings of the session.
+        /// </summary>
+        public void GetSessionInfo(OracleGlobalization globe)
+        {
+            //Return this back to the caller
+            this.Connection.GetSessionInfo(globe);
+        }
+        /// <summary>
+        /// This method flushes the statement cache by closing all open cursors on the database, when statement caching is enabled.
         /// </summary>
         public void PurgeStatementCache()
         {
             this.Connection.PurgeStatementCache();
         }
         /// <summary>
-        /// Sets the session information.
+        /// This method alters the session's globalization settings with all the property values specified in the provided OracleGlobalization object..
         /// </summary>
-        /// <param name="globe">The globe.</param>
+        /// <param name="globe">An instance of <see cref="OracleGlobalization"/></param>
         public void SetSessionInfo(OracleGlobalization globe)
         {
             //Return this back to the caller
