@@ -47,7 +47,7 @@ namespace ADONetHelper.SqlServer
         /// An instance of <see cref="SqlConnection"/>
         /// </summary>
         /// <returns>Returns an instance of <see cref="SqlConnection"/></returns>
-        private SqlConnection Connection
+        protected SqlConnection Connection
         {
             get
             {
