@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp2.0;netstandard2.0;net46;</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.ASE</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.ASE</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.ASE</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.0.3</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL SAP ANSI</PackageTags>
+    <Version>1.0.4</Version>
+    <PackageTags>SYBASE ASE SAP AseClient ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
     <Product>ADONetHelper.ASE</Product>
     <Title>ADONetHelper.ASE</Title>
     <PackageId>ADONetHelper.ASE</PackageId>
-    <Description>Extends ADONetHelper library to SAP</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <Description>Extends ADONetHelper library to ASE</Description>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8, Updating to AdoNetCore.AseClient 0.11.0</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.ASE</AssemblyName>
     <RootNamespace>ADONetHelper.ASE</RootNamespace>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.SAP.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.ASE.xml</DocumentationFile>
     <NeutralLanguage>en-us</NeutralLanguage>
     <DefineConstants>TRACE;</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
@@ -25,7 +27,7 @@
 	<Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AdoNetCore.AseClient" Version="0.10.1" />
+    <PackageReference Include="AdoNetCore.AseClient" Version="0.11.0" />
     <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
   </ItemGroup>
   <Choose>
@@ -50,7 +52,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.7" />
+        <PackageReference Include="ADONetHelper" version="3.0.8" />
       </ItemGroup>
     </Otherwise>
   </Choose>
