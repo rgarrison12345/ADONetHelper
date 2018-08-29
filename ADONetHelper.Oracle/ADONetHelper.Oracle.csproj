@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461;net45;net40;</TargetFrameworks>
+    <TargetFrameworks>net471;net461;net45;net40;</TargetFrameworks>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>

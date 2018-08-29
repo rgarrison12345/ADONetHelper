@@ -25,9 +25,7 @@ SOFTWARE.*/
 using Oracle.ManagedDataAccess.Client;
 using System.IO;
 using System.Data;
-#if NETSTANDARD2_0
 using System.Security;
-#endif
 using System.Xml;
 #endregion
 
@@ -288,7 +286,6 @@ namespace ADONetHelper.Oracle
             //Try and reopen the connection with a new password
             this.Connection.OpenWithNewPassword(password);
         }
-#if NETSTANDARD2_0
         /// <summary>
         /// Opens the current <see cref="OracleConnection"/> with a new password as a <see cref="SecureString"/>, particularly useful if password has an expiration datetime
         /// </summary>
@@ -298,7 +295,6 @@ namespace ADONetHelper.Oracle
             //Try and reopen the connection with a new password
             this.Connection.OpenWithNewPassword(password);
         }
-#endif
         /// <summary>
         /// 
         /// </summary>
