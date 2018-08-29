@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net46;net451;net45;net40;net20;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net46;net451;net45;net40;net20;</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Sqlite</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.5.5</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Sqlite ANSI</PackageTags>
+    <Version>1.5.6</Version>
+    <PackageTags>Sqlite SystemData.Sqlite ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -14,7 +14,7 @@
     <Title>ADONetHelper.Sqlite</Title>
     <PackageId>ADONetHelper.Sqlite</PackageId>
     <Description>Extends ADONetHelper library to Sqlite</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8, adding .NET Standard 2.0 build</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Sqlite</AssemblyName>
     <RootNamespace>ADONetHelper.Sqlite</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Sqlite.xml</DocumentationFile>
@@ -49,7 +49,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.7" />
+        <PackageReference Include="ADONetHelper" version="3.0.8" />
       </ItemGroup>
     </Otherwise>
   </Choose>
