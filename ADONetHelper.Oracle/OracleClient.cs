@@ -293,11 +293,6 @@ namespace ADONetHelper.Oracle
         /// Opens the current <see cref="OracleConnection"/> with a new password as a <see cref="SecureString"/>, particularly useful if password has an expiration datetime
         /// </summary>
         /// <param name="password">The password to use when opening the connection</param>
-        /// <remarks>
-        /// Flushing the statement cache repetitively results in decreased performance and may negate the performance benefit gained by enabling the statement cache.
-        /// Statement caching remains enabled after the call to PurgeStatementCache.
-        /// Invocation of this method purges the cached cursors that are associated with the OracleConnection.It does not purge all the cached cursors in the database.
-        /// </remarks>
         public void OpenConnectionWithNewPassowrd(SecureString password)
         {
             //Have to close the connection first
@@ -326,6 +321,11 @@ namespace ADONetHelper.Oracle
         /// <summary>
         /// This method flushes the statement cache by closing all open cursors on the database, when statement caching is enabled.
         /// </summary>
+        /// <remarks>
+        /// Flushing the statement cache repetitively results in decreased performance and may negate the performance benefit gained by enabling the statement cache.
+        /// Statement caching remains enabled after the call to PurgeStatementCache.
+        /// Invocation of this method purges the cached cursors that are associated with the OracleConnection.It does not purge all the cached cursors in the database.
+        /// </remarks>
         public void PurgeStatementCache()
         {
             this.Connection.PurgeStatementCache();
