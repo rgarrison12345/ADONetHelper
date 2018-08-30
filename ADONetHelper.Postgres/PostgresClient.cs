@@ -36,7 +36,7 @@ namespace ADONetHelper.Postgres
     /// A specialized instance of <see cref="DbClient"/> that is used to query a Postgres database system
     /// </summary>
     /// <seealso cref="DbClient"/>
-    public sealed class PostgresClient : DbClient
+    public class PostgresClient : DbClient
     {
         #region Events
         /// <summary>
@@ -73,7 +73,7 @@ namespace ADONetHelper.Postgres
         /// <value>
         /// The connection.
         /// </value>
-        private NpgsqlConnection Connection
+        protected NpgsqlConnection Connection
         {
             get
             {
@@ -305,7 +305,7 @@ namespace ADONetHelper.Postgres
         public async Task WaitAsync()
         {
             //Go ahead and wait
-            await this.Connection.WaitAsync();
+            await this.WaitAsync(CancellationToken.None).ConfigureAwait(false);
         }
         /// <summary>
         /// Waits the asynchronous.
@@ -315,7 +315,7 @@ namespace ADONetHelper.Postgres
         public async Task WaitAsync(CancellationToken token)
         {
             //Go ahead and wait for an event
-            await this.Connection.WaitAsync(token);
+            await this.Connection.WaitAsync(token).ConfigureAwait(false);
         }
         /// <summary>
         /// Flushes the type cache for this <see cref="NpgsqlConnection"/> <see cref="NpgsqlConnection.ConnectionString"/> and reloads types for this connection only
