@@ -2,11 +2,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard1.6;net452;</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Firebird</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Firebird</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Firebird</RepositoryUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.5.4</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Firebird ANSI</PackageTags>
+    <Version>1.5.5</Version>
+    <PackageTags>Firebird FirebirdSql.Data.FirebirdClient ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -14,7 +16,7 @@
     <Title>ADONetHelper.Firebird</Title>
     <PackageId>ADONetHelper.Firebird</PackageId>
     <Description>Extends ADONetHelper library to Firebird</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7 and FirebirdSql.Data.FirebirdClient 6.2.0.1</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8 and FirebirdSql.Data.FirebirdClient 6.3.0</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Firebird</AssemblyName>
     <RootNamespace>ADONetHelper.Firebird</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Firebird.xml</DocumentationFile>
@@ -25,7 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
-    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.2.0.1" />
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.3.0" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(Configuration)'=='Debug'">
@@ -49,7 +51,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.7" />
+        <PackageReference Include="ADONetHelper" version="3.0.8" />
       </ItemGroup>
     </Otherwise>
   </Choose>

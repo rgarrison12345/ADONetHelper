@@ -52,7 +52,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" Version="3.0.7" />
+        <PackageReference Include="ADONetHelper" Version="3.0.8" />
       </ItemGroup>
     </Otherwise>
   </Choose>
