@@ -201,7 +201,7 @@ namespace ADONetHelper
         #endregion
         #region Constructors
         /// <summary>
-        /// Intializes an instance of <see cref="DbClient"/> with an instance of <see cref="ISqlExecutor"/>
+        /// Instantiates a new instance of <see cref="DbClient"/> with an instance of <see cref="ISqlExecutor"/>
         /// </summary>
         /// <param name="executor">An instance of <see cref="ISqlExecutor"/></param>
         public DbClient(ISqlExecutor executor)
@@ -210,31 +210,30 @@ namespace ADONetHelper
             _executeSQL = executor;
         }
         /// <summary>
-        /// The overloaded constuctor that will initialize the <paramref name="connectionString"/>, and <paramref name="queryCommandType"/>, and <paramref name="factory"/>
+        /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="connectionString"/>, and <paramref name="queryCommandType"/>, and <paramref name="factory"/>
         /// </summary>
         /// <param name="factory">An instance of a <see cref="DbProviderFactory"/> client class</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        public DbClient(string connectionString, CommandType queryCommandType, DbProviderFactory factory)
+        public DbClient(string connectionString, CommandType queryCommandType, DbProviderFactory factory) : this(connectionString, string.Empty)
         {
             //Set fields/properties
             _executeSQL = new SqlExecutor(factory);
-            this.ConnectionString = connectionString;
             this.QueryCommandType = queryCommandType;
         }
         /// <summary>
-        /// The overloaded constuctor that will initialize the connection string and the DbProviderFactory
+        /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
         /// </summary>
         /// <param name="factory">An instance of the <see cref="DbProviderFactory"/> client class</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
-        public DbClient(string connectionString, DbProviderFactory factory)
+        public DbClient(string connectionString, DbProviderFactory factory) : this(connectionString, string.Empty)
         {
             //Set fields/properties
             _executeSQL = new SqlExecutor(factory);
             this.ConnectionString = connectionString;
         }
         /// <summary>
-        /// The overloaded constuctor that will initialize the connection string and command type
+        /// Instantiates a new instance of <see cref="DbClient"/> with the passed in with the passed in <paramref name="connectionString"/>, <paramref name="providerName"/>, and <paramref name="queryCommandType"/>
         /// </summary>
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
@@ -245,7 +244,7 @@ namespace ADONetHelper
             this.QueryCommandType = queryCommandType;
         }
         /// <summary>
-        /// The overloaded constuctor that will initialize the <paramref name="connectionString"/> and <paramref name="providerName"/>
+        /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="connectionString"/> and <paramref name="providerName"/>
         /// </summary>
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
@@ -277,11 +276,10 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="connectionString">The connection string used to query a database</param>
         /// <param name="factory">An instance of <see cref="IDbObjectFactory"/> to create the objects needed to help query a database</param>
-        public DbClient(string connectionString, IDbObjectFactory factory)
+        public DbClient(string connectionString, IDbObjectFactory factory) : this(connectionString, string.Empty)
         {
             //Set properties
             _executeSQL = new SqlExecutor(factory);
-            this.ConnectionString = connectionString;
         }
         #endregion
         #region Destructor

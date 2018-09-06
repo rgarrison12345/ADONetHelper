@@ -130,6 +130,9 @@ namespace ADONetHelper
             //Set properties
             _connection = connection;
             _factory = new DbObjectFactory(connection);
+
+            //Get the connection string from the connection
+            this.ConnectionStringBuilder.ConnectionString = _connection.ConnectionString;
         }
         /// <summary>
         /// The overloaded constuctor that will initialize the <paramref name="providerName"/>
