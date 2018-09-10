@@ -259,6 +259,14 @@ namespace ADONetHelper.Postgres
         {
         }
         /// <summary>
+        /// Insantiates a new instance of <see cref="PostgresClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public PostgresClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
+        {
+        }
+        /// <summary>
         /// Constructor to query a database using an existing <see cref="NpgsqlConnection"/> to initialize the <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">An instance of <see cref="NpgsqlConnection"/> to use to query a database </param>
