@@ -41,7 +41,7 @@ namespace ADONetHelper.Sqlite
         /// <value>
         /// The connection.
         /// </value>
-        private SQLiteConnection Connection
+        protected SQLiteConnection Connection
         {
             get
             {
@@ -79,7 +79,14 @@ namespace ADONetHelper.Sqlite
         /// <param name="connection">An instance of <see cref="SQLiteConnection"/> to use to query a database</param>
         public SqliteClient(SQLiteConnection connection) : base(connection)
         {
-
+        }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public SqliteClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
+        {
         }
         #endregion
         #region Utility Methods        
