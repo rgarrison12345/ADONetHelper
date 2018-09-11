@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp2.0;netstandard2.0;net46;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.ASE</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.ASE</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <PackageTags>SYBASE ASE SAP AseClient ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
@@ -16,7 +16,7 @@
     <Title>ADONetHelper.ASE</Title>
     <PackageId>ADONetHelper.ASE</PackageId>
     <Description>Extends ADONetHelper library to ASE</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8, Updating to AdoNetCore.AseClient 0.11.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9, reducing target frameworks to just .net core 2.1</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.ASE</AssemblyName>
     <RootNamespace>ADONetHelper.ASE</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.ASE.xml</DocumentationFile>
@@ -52,7 +52,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.8" />
+        <PackageReference Include="ADONetHelper" version="3.0.9" />
       </ItemGroup>
     </Otherwise>
   </Choose>
