@@ -3,7 +3,7 @@
     <TargetFrameworks>netcoreapp2.1;netcoreapp2.0;netstandard2.0;netstandard1.3;net461;net46;net451;net45;net40;net35;net20;</TargetFrameworks>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.SqlServer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.SqlServer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -16,7 +16,7 @@
     <Title>ADONetHelper.SqlServer</Title>
     <PackageId>ADONetHelper.SqlServer</PackageId>
     <Description>Extends ADONetHelper library for SQL Server</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.8</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9</PackageReleaseNotes>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <AssemblyName>ADONetHelper.SqlServer</AssemblyName>
     <RootNamespace>ADONetHelper.SqlServer</RootNamespace>
