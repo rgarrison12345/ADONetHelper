@@ -36,7 +36,7 @@ namespace ADONetHelper.Firebird
     /// A specialized instance of <see cref="DbClient"/> that is used to query a Firebird database system
     /// </summary>
     /// <seealso cref="DbClient"/>
-    public sealed class FirebirdClient : DbClient
+    public class FirebirdClient : DbClient
     {
         #region Fields/Properties
         private FbRemoteEvent _event = null;
@@ -137,6 +137,14 @@ namespace ADONetHelper.Firebird
         /// </summary>
         /// <param name="connection">An instance of <see cref="FbConnection"/> to use to query a database </param>
         public FirebirdClient(FbConnection connection) : base(connection)
+        {
+        }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="FirebirdClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public FirebirdClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
         {
         }
         #endregion
