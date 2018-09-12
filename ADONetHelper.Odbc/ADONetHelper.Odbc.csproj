@@ -3,10 +3,12 @@
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net461;net45;net40;net35;net20;</TargetFrameworks>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Odbc</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Odbc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Odbc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.1.3</Version>
+    <Version>1.1.4</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Odbc ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
@@ -15,7 +17,7 @@
     <Title>ADONetHelper.Odbc</Title>
     <PackageId>ADONetHelper.Odbc</PackageId>
     <Description>Extends ADONetHelper library to Odbc</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Odbc</AssemblyName>
     <RootNamespace>ADONetHelper.Odbc</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Odbc.xml</DocumentationFile>
@@ -52,7 +54,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" Version="3.0.8" />
+        <PackageReference Include="ADONetHelper" Version="3.0.9" />
       </ItemGroup>
     </Otherwise>
   </Choose>

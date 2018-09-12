@@ -32,7 +32,7 @@ namespace ADONetHelper.Odbc
     /// A specialized instance of <see cref="DbClient"/> that is used to query a relational database using ODBC technology
     /// </summary>
     /// <seealso cref="DbClient"/>
-    public sealed class OdbcClient : DbClient
+    public class OdbcClient : DbClient
     {
         #region Constructors
         /// <summary>
@@ -62,6 +62,14 @@ namespace ADONetHelper.Odbc
         /// </summary>
         /// <param name="connection">An instance of <see cref="OdbcConnection"/> to use to query a database </param>
         public OdbcClient(OdbcConnection connection) : base(connection)
+        {
+        }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="OdbcClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public OdbcClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
         {
         }
         #endregion
