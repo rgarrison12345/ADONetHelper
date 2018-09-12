@@ -52,14 +52,14 @@ namespace ADONetHelper.Sqlite
         #endregion
         #region Constructors
         /// <summary>
-        /// Intializes the <see cref="SqliteClient"/> with a <see cref="ISqlExecutor"/>
+        /// Instantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="executor"/>
         /// </summary>
         /// <param name="executor">An instance of <see cref="ISqlExecutor"/></param>
         public SqliteClient(ISqlExecutor executor) : base(executor)
         {
         }
         /// <summary>
-        /// The overloaded constuctor that will initialize the <paramref name="connectionString"/>, And <paramref name="queryCommandType"/>
+        /// Instantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="queryCommandType"/>
         /// </summary>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
@@ -67,21 +67,21 @@ namespace ADONetHelper.Sqlite
         {
         }
         /// <summary>
-        /// The overloaded constuctor that will initialize the <paramref name="connectionString"/>
+        /// Instantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="connectionString"/>
         /// </summary>
         /// <param name="connectionString">The connection string used to query a data store</param>
         public SqliteClient(string connectionString) : base(connectionString, SQLiteFactory.Instance)
         {
         }
         /// <summary>
-        /// Constructor to query a database using an existing <see cref="SQLiteConnection"/> to initialize the <paramref name="connection"/>
+        /// Instantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">An instance of <see cref="SQLiteConnection"/> to use to query a database</param>
         public SqliteClient(SQLiteConnection connection) : base(connection)
         {
         }
         /// <summary>
-        /// Insantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// Instantiates a new instance of <see cref="SqliteClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
         /// </summary>
         /// <param name="connectionString">Connection string to use to query a database</param>
         /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
@@ -103,6 +103,9 @@ namespace ADONetHelper.Sqlite
                 //Add in any parameters
                 command.Parameters.AddRange(this.ExecuteSQL.Parameters.ToArray());
                 command.VerifyOnly();
+
+                //Clear the parameters
+                command.Parameters.Clear();
             }
         }
         #endregion
