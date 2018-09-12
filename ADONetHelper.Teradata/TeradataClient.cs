@@ -32,7 +32,7 @@ namespace ADONetHelper.TeraData
     /// A specialized instance of <see cref="DbClient"/> to target Terdata system
     /// </summary>
     /// <seealso cref="ADONetHelper.DbClient" />
-    public sealed class TeradataClient : DbClient
+    public class TeradataClient : DbClient
     {
         #region Fields/Properties        
         /// <summary>
@@ -92,6 +92,14 @@ namespace ADONetHelper.TeraData
         /// </summary>
         /// <param name="connection">An instance of <see cref="TdConnection"/> to use to query a database </param>
         public TeradataClient(TdConnection connection) : base(connection)
+        {
+        }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="TeradataClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public TeradataClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
         {
         }
         #endregion
