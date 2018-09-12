@@ -14,7 +14,7 @@
     <Product>ADONetHelper.MySql</Product>
     <Title>ADONetHelper.MySql</Title>
     <PackageId>ADONetHelper.MySql</PackageId>
-    <Description>Extends ADONetHelper library to MySql</Description>
+    <Description>Extends ADONetHelper library to MySQL MariaDb Percona Server Amazon Aurora</Description>
     <PackageReleaseNotes>Updating to ADONetHelper 3.0.9</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.MySql</AssemblyName>
     <RootNamespace>ADONetHelper.MySql</RootNamespace>
