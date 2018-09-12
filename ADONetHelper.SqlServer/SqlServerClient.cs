@@ -278,10 +278,10 @@ namespace ADONetHelper.SqlServer
         /// <remarks>When this method is called, the values retrieved are those at the current point in time. 
         /// If you continue using the connection, the values are incorrect. You need to re-execute the method to obtain the most current values.
         /// </remarks>
-        public IDictionary<string, object> GetConnectionStatisticts()
+        public IDictionary GetConnectionStatistics()
         {
             //Return this back to the caller
-            return (IDictionary<string, object>)this.Connection.RetrieveStatistics();
+            return this.Connection.RetrieveStatistics();
         }
         #endregion
     }
