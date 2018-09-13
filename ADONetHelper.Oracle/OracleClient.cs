@@ -183,7 +183,6 @@ namespace ADONetHelper.Oracle
         /// <param name="executor">An instance of <see cref="ISqlExecutor"/></param>
         public OracleClient(ISqlExecutor executor) : base(executor)
         {
-
         }
         /// <summary>
         /// The overloaded constuctor that will initialize the <paramref name="connectionString"/>, And <paramref name="queryCommandType"/>
@@ -192,7 +191,6 @@ namespace ADONetHelper.Oracle
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         public OracleClient(string connectionString, CommandType queryCommandType) : base(connectionString, queryCommandType, OracleClientFactory.Instance)
         {
-
         }
         /// <summary>
         /// The overloaded constuctor that will initialize the <paramref name="connectionString"/>
@@ -200,7 +198,6 @@ namespace ADONetHelper.Oracle
         /// <param name="connectionString">The connection string used to query a data store</param>
         public OracleClient(string connectionString) : base(connectionString, OracleClientFactory.Instance)
         {
-
         }
         /// <summary>
         /// Constructor to query a database using an existing <see cref="OracleConnection"/> to initialize the <paramref name="connection"/>
@@ -208,7 +205,14 @@ namespace ADONetHelper.Oracle
         /// <param name="connection">An instance of <see cref="OracleConnection"/> to use to query a database</param>
         public OracleClient(OracleConnection connection) : base(connection)
         {
-
+        }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="OracleClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public OracleClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
+        {
         }
         #endregion
         #region Utility Methods
