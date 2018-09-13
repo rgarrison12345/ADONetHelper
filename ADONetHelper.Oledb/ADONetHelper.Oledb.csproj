@@ -2,9 +2,11 @@
   <PropertyGroup>
     <TargetFrameworks>net45;net40;net35;net20;</TargetFrameworks>
       <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-      <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-      <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Oledb</PackageProjectUrl>
+      <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
+      <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Oledb</PackageProjectUrl>
       <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+      <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Oledb</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
       <Version>1.0.3</Version>
       <PackageTags>System.Data.Oledb Oledb ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
       <Copyright>Copyright © Robert Garrison 2018</Copyright>
