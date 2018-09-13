@@ -9,7 +9,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Version>1.1.4</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Odbc ANSI</PackageTags>
+    <PackageTags>Odbc System.Data.Odbc ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Odbc ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
