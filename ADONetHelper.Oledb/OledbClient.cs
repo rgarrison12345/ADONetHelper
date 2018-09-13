@@ -34,6 +34,32 @@ namespace ADONetHelper.Oledb
     /// <seealso cref="DbClient"/>
     public class OledbClient : DbClient
     {
+        #region Events
+        #endregion
+        #region Fields/Properties
+        /// <summary>
+        /// An instance of <see cref="OleDbConnection"/> to use to connect to an OledDb data source
+        /// </summary>
+        /// <returns></returns>
+        protected OleDbConnection Connection
+        {
+            get
+            {
+                //Return this back to the caller
+                return (OleDbConnection)this.ExecuteSQL.Connection;
+            }
+        }
+        /// <summary>
+        /// Gets the name of the OLE DB provider specified in the "Provider= " clause of the connection string.
+        /// </summary>
+        public string Provider
+        {
+            get
+            {
+                return this.Connection.Provider;
+            }
+        }
+        #endregion
         #region Constructors
         /// <summary>
         /// The overloaded constuctor that will initialize the <paramref name="connectionString"/>, And <paramref name="queryCommandType"/>
@@ -63,6 +89,33 @@ namespace ADONetHelper.Oledb
         /// <param name="connection">An instance of <see cref="OleDbConnection"/> to use to query a database </param>
         public OledbClient(OleDbConnection connection) : base(connection)
         {
+        }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="OledbClient"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public OledbClient(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
+        {
+        }
+        #endregion
+        #region Methods        
+        /// <summary>
+        /// Updates the <see cref="System.Data.ConnectionState"/> property of the current <see cref="OleDbConnection"/> object.
+        /// </summary>
+        /// <remarks>
+        /// Some OLE DB providers can check the current state of the connection. 
+        /// For example, if the database server has recycled since you opened your <see cref="OleDbConnection"/>, 
+        /// the State property will continue to return Open. If you are working with an OLE DB Provider that 
+        /// supports polling for this information on a live connection, calling the <see cref="OleDbConnection.ResetState"/> 
+        /// method and then checking the State property will tell you that the connection is no longer open. 
+        /// The ResetState method relies on functionality in the OLE DB Provider to verify the current state 
+        /// of the connection. To determine if your OLE DB Provider supports this functionality, 
+        /// check the provider's documentation for information on DBPROP_CONNECTIONSTATUS.
+        /// </remarks>
+        public void ResetState()
+        { 
+            this.Connection.ResetState();
         }
         #endregion
     }

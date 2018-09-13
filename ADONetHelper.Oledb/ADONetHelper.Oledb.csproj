@@ -5,8 +5,8 @@
       <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
       <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Oledb</PackageProjectUrl>
       <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-      <Version>1.0.2</Version>
-      <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Oledb ANSI</PackageTags>
+      <Version>1.0.3</Version>
+      <PackageTags>System.Data.Oledb Oledb ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
       <Copyright>Copyright © Robert Garrison 2018</Copyright>
       <Authors>Robert Garrison</Authors>
       <Company>Robert Garrison</Company>
@@ -14,7 +14,7 @@
       <Title>ADONetHelper.Oledb</Title>
       <PackageId>ADONetHelper.Oledb</PackageId>
       <Description>Extends ADONetHelper library to Oledb</Description>
-      <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+      <PackageReleaseNotes>Updating to ADONetHelper 3.0.9</PackageReleaseNotes>
       <AssemblyName>ADONetHelper.Oledb</AssemblyName>
       <RootNamespace>ADONetHelper.Oledb</RootNamespace>
       <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Oledb.xml</DocumentationFile>
@@ -48,7 +48,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.8" />
+        <PackageReference Include="ADONetHelper" version="3.0.9" />
       </ItemGroup>
     </Otherwise>
   </Choose>
