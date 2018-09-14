@@ -40,18 +40,30 @@ namespace ADONetHelper
     /// </remarks>
     public partial class DbClient : IDbClient
     {
-        #region Events
+        #region Events        
         /// <summary>
-        /// Sets the notification.
+        /// Sets the state change event handler.  This event occurs when the <see cref="DbConnection.State"/> changes
         /// </summary>
         /// <value>
-        /// The notification.
+        /// The state change handler delegate
         /// </value>
-        public StateChangeEventHandler StateChange
+        public event StateChangeEventHandler StateChange
         {
-            set
+            add
             {
-                this.ExecuteSQL.Connection.StateChange += value;
+                //Get an exclusive lock first
+                lock (this.ExecuteSQL.Connection)
+                {
+                    this.ExecuteSQL.Connection.StateChange += value;
+                }
+            }
+            remove
+            {
+                //Get an exclusive lock first
+                lock (this.ExecuteSQL.Connection)
+                {
+                    this.ExecuteSQL.Connection.StateChange -= value;
+                }
             }
         }
         #endregion
