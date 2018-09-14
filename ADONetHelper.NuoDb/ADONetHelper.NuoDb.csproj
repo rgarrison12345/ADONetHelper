@@ -5,9 +5,11 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.NuoDb</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.0.3</Version>
-    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL NuoDb ANSI</PackageTags>
+    <Version>1.0.4</Version>
+    <PackageTags>NuoDb NuoDb.Data.Client ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -15,7 +17,7 @@
     <Title>ADONetHelper.NuoDb</Title>
     <PackageId>ADONetHelper.NuoDb</PackageId>
     <Description>Extends ADONetHelper library to NuoDb</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.7</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9, adding new constructor to DbClient to take in a connectionstring and an IDbObjectFactory</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.NuoDb</AssemblyName>
     <RootNamespace>ADONetHelper.NuoDb</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.NuoDb.xml</DocumentationFile>
@@ -50,7 +52,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.7" />
+        <PackageReference Include="ADONetHelper" version="3.0.9" />
       </ItemGroup>
     </Otherwise>
   </Choose>
