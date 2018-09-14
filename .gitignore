@@ -36,3 +36,5 @@
 /bin
 /obj
 /ADONetHelper.ASE/bin/Release
+/ADONetHelper.Snowflake/bin/Release/netstandard2.0
+/ADONetHelper.Snowflake/obj
