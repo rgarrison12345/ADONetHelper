@@ -38,3 +38,4 @@
 /ADONetHelper.ASE/bin/Release
 /ADONetHelper.Snowflake/bin/Release/netstandard2.0
 /ADONetHelper.Snowflake/obj
+/ADONetHelper.Snowflake/bin/Release/net46

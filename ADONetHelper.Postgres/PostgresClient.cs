@@ -45,11 +45,23 @@ namespace ADONetHelper.Postgres
         /// <value>
         /// Represents the method that handles the <see cref="Notification"/> events.
         /// </value>
-        public NoticeEventHandler Notice
+        public event NoticeEventHandler Notice
         {
-            set
+            add
             {
-                this.Connection.Notice += value;
+                //Get an exclusive lock
+                lock (this.Connection)
+                {
+                    this.Connection.Notice += value;
+                }
+            }
+            remove
+            {
+                //Get an exclusive lock
+                lock (this.Connection)
+                {
+                    this.Connection.Notice -= value;
+                }
             }
         }
         /// <summary>
@@ -58,11 +70,23 @@ namespace ADONetHelper.Postgres
         /// <value>
         /// Represents the method that handles the <see cref="Notification"/> events.
         /// </value>
-        public NotificationEventHandler Notification
+        public event NotificationEventHandler Notification
         {
-            set
+            add
             {
-                this.Connection.Notification += value;
+                //Get an exclusive lock
+                lock (this.Connection)
+                {
+                    this.Connection.Notification += value;
+                }
+            }
+            remove
+            {
+                //Get an exclusive lock
+                lock (this.Connection)
+                {
+                    this.Connection.Notification -= value;
+                }
             }
         }
         #endregion

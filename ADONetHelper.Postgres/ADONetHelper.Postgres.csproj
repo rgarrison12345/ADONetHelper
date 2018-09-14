@@ -3,10 +3,12 @@
     <TargetFrameworks>netstandard2.0;net451;net45;</TargetFrameworks>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Postgres</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Postgres</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Postgres</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL Postgres Npgsql ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
@@ -15,7 +17,7 @@
     <Title>ADONetHelper.Postgres</Title>
     <PackageId>ADONetHelper.Postgres</PackageId>
     <Description>Extends ADONetHelper library to Postgres</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9, Npgql 4.0.3</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.1.0, setting Notice and Notification as Events</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Postgres</AssemblyName>
     <RootNamespace>ADONetHelper.Postgres</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Postgres.xml</DocumentationFile>
@@ -50,7 +52,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" Version="3.0.9" />
+        <PackageReference Include="ADONetHelper" Version="3.1.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
