@@ -6,7 +6,9 @@
     <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper</PackageProjectUrl>
-    <Version>3.0.9</Version>
+    <RepositoryUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>3.1.0</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
