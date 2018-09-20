@@ -19,6 +19,8 @@
     <PackageReleaseNotes>
       Correcting StateChange on DbClient to be an event not property
     </PackageReleaseNotes>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
     <AssemblyName>ADONetHelper</AssemblyName>
     <RootNamespace>ADONetHelper</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.xml</DocumentationFile>
