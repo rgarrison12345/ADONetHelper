@@ -130,7 +130,7 @@ namespace ADONetHelper.MySql
         public async Task<bool> PingAsync()
         {
             //Return this back to the caller
-            return await this.Connection.PingAsync();
+            return await this.PingAsync(CancellationToken.None);
         }
         /// <summary>
         /// Determines whether the the current <see cref="MySqlConnection"/> to mysql server is valid
@@ -155,7 +155,7 @@ namespace ADONetHelper.MySql
         /// Gets the transaction asynchronously.
         /// </summary>
         /// <param name="level">The level.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task{TResult}"/> that is an instance of <see cref="MySqlTransaction"/></returns>
         public async Task<MySqlTransaction> BeginTransactionAsync(IsolationLevel level)
         {
             //Await this task
@@ -165,7 +165,7 @@ namespace ADONetHelper.MySql
         /// Begins the transaction asynchronously.
         /// </summary>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task{TResult}"/> that is an instance of <see cref="MySqlTransaction"/></returns>
         public async Task<MySqlTransaction> BeginTransactionAsync(CancellationToken token)
         { 
             //Await this task
@@ -176,7 +176,7 @@ namespace ADONetHelper.MySql
         /// </summary>
         /// <param name="level">The level.</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task{TResult}"/> that is an instance of <see cref="MySqlTransaction"/></returns>
         public async Task<MySqlTransaction> BeginTransactionAsync(IsolationLevel level, CancellationToken token)
         {
             //Await this task

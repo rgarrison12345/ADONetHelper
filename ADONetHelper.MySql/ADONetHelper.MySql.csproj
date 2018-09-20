@@ -16,8 +16,10 @@
     <Product>ADONetHelper.MySql</Product>
     <Title>ADONetHelper.MySql</Title>
     <PackageId>ADONetHelper.MySql</PackageId>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
     <Description>Extends ADONetHelper library to MySQL MariaDb Percona Server Amazon Aurora</Description>
-    <PackageReleaseNotes>Updating to MySqlConnector 0.45.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.1.0</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.MySql</AssemblyName>
     <RootNamespace>ADONetHelper.MySql</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.MySql.xml</DocumentationFile>
@@ -48,7 +50,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" Version="3.0.9" />
+        <PackageReference Include="ADONetHelper" Version="3.1.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
