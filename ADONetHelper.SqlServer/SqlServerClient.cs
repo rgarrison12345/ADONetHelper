@@ -42,6 +42,37 @@ namespace ADONetHelper.SqlServer
     /// <seealso cref="IXMLExecutor"/>
     public class SqlServerClient : DbClient, IXMLExecutor
     {
+        #region Events
+#if !NETCOREAPP2_1 && !NETCOREAPP2_0 && !NETSTANDARD1_3 && !NETSTANDARD2_0
+        /// <summary>
+        /// Occurs when SQL Server returns a warning or informational message
+        /// </summary>
+        /// <remarks>
+        /// Clients that want to process warnings or informational messages sent by the server should create an <see cref="SqlInfoMessageEventHandler"/> 
+        /// delegate to listen to this event.  The InfoMessage event occurs when a message with a severity of 10 or less is returned by 
+        /// SQL Server.Messages that have a severity between 11 and 20 raise an error and messages that have a severity over 20 causes the connection to close.
+        /// </remarks>
+        public event SqlInfoMessageEventHandler InfoMessage
+        {
+            add
+            {
+                //Get an exclusive lock first
+                lock (this.Connection)
+                {
+                    this.Connection.InfoMessage += value;
+                }
+            }
+            remove
+            {
+                //Get an exclusive lock first
+                lock (this.Connection)
+                {
+                    this.Connection.InfoMessage -= value;
+                }
+            }
+        }
+#endif
+        #endregion
         #region Fields/Properties
         /// <summary>
         /// An instance of <see cref="SqlConnection"/>
@@ -55,6 +86,60 @@ namespace ADONetHelper.SqlServer
                 return (SqlConnection)this.ExecuteSQL.Connection;
             }
         }
+#if !NETCOREAPP2_1 && !NETCOREAPP2_0 && !NETSTANDARD1_3 && !NETSTANDARD2_0
+        /// <summary>
+        /// Gets or sets the <see cref="FireInfoMessageEventOnUserErrors"/> property.
+        /// </summary>
+        /// <remarks>
+        /// When you set <see cref="FireInfoMessageEventOnUserErrors"/> to <c>true</c>, errors that were previously treated as exceptions 
+        /// are now handled as <see cref="InfoMessage"/> events. All events fire immediately and are handled by the event handler. 
+        /// If is <see cref="FireInfoMessageEventOnUserErrors"/> is set to <c>false</c>, then <see cref="InfoMessage"/> events are handled at 
+        /// the end of the procedure. 
+        /// </remarks>
+        public bool FireInfoMessageEventOnUserErrors
+        {
+            get
+            {
+                return this.Connection.FireInfoMessageEventOnUserErrors;
+            }
+            set
+            {
+                this.Connection.FireInfoMessageEventOnUserErrors = value;
+            }
+        }
+#endif
+#if NET46 || NET461
+        /// <summary>
+        /// Gets or sets the access token for the connection
+        /// </summary>
+        /// <returns>The access token as a <see cref="string"/></returns>
+        public string AccessToken
+        {
+            get
+            {
+                //Return this back to the caller
+                return this.Connection.AccessToken;
+            }
+            set
+            {
+                this.Connection.AccessToken = value;
+            }
+        }
+#endif
+#if !NET20 && !NET35 && !NET40
+        /// <summary>
+        /// The connection ID of the most recent connection attempt, regardless of whether the attempt succeeded or failed.
+        /// </summary>
+        /// <returns>The connection ID of the most recent connection attempt, regardless of whether the attempt succeeded or failed as a <c>string</c></returns>
+        public Guid ClientConnectionID
+        {
+            get
+            {
+                //Return this back to the caller
+                return this.Connection.ClientConnectionId;
+            }
+        }
+#endif
         /// <summary>
         /// Enables statistics gathering for the current connection when set to <c>true</c>
         /// </summary>
@@ -95,38 +180,6 @@ namespace ADONetHelper.SqlServer
                 return this.Connection.WorkstationId;
             }
         }
-#if NET46 || NET461
-        /// <summary>
-        /// Gets or sets the access token for the connection
-        /// </summary>
-        /// <returns>The access token as a <see cref="string"/></returns>
-        public string AccessToken
-        {
-            get
-            {
-                //Return this back to the caller
-                return this.Connection.AccessToken;
-            }
-            set
-            {
-                this.Connection.AccessToken = value;
-            }
-        }
-#endif
-#if !NET20 && !NET35 && !NET40
-        /// <summary>
-        /// The connection ID of the most recent connection attempt, regardless of whether the attempt succeeded or failed.
-        /// </summary>
-        /// <returns>The connection ID of the most recent connection attempt, regardless of whether the attempt succeeded or failed as a <c>string</c></returns>
-        public Guid ClientConnectionID
-        {
-            get
-            {
-                //Return this back to the caller
-                return this.Connection.ClientConnectionId;
-            }
-        }
-#endif
         #endregion
         #region Constructors
         /// <summary>
