@@ -16,6 +16,8 @@
     <Title>ADONetHelper.SqlServer</Title>
     <PackageId>ADONetHelper.SqlServer</PackageId>
     <Description>Extends ADONetHelper library for SQL Server</Description>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
     <PackageReleaseNotes>Updating to ADONetHelper 3.1.0, Adding InfoMessage event and FireInfoMessageEventOnUserErrors property</PackageReleaseNotes>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <AssemblyName>ADONetHelper.SqlServer</AssemblyName>
