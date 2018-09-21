@@ -12,11 +12,13 @@
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
     <Product>ADONetHelper.Sqlite</Product>
     <Title>ADONetHelper.Sqlite</Title>
     <PackageId>ADONetHelper.Sqlite</PackageId>
     <Description>Extends ADONetHelper library to Sqlite</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.1.0</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Sqlite</AssemblyName>
     <RootNamespace>ADONetHelper.Sqlite</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Sqlite.xml</DocumentationFile>
@@ -51,7 +53,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.9" />
+        <PackageReference Include="ADONetHelper" version="3.1.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
