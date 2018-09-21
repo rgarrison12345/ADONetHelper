@@ -6,7 +6,7 @@
     <PackageLicenseUrl>https://github.com/rgarrison12345/Libraries/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/Libraries/tree/master/ADONetHelper/ADONetHelper.Teradata</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.4.5</Version>
+    <Version>1.4.6</Version>
     <PackageTags>Teradata Teradata.Client.Provider ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
@@ -14,8 +14,10 @@
     <Product>ADONetHelper.Teradata</Product>
     <Title>ADONetHelper.Teradata</Title>
     <PackageId>ADONetHelper.Teradata</PackageId>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
     <Description>Extends ADONetHelper library for Teradata</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.0.9</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.1.0</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Teradata</AssemblyName>
     <RootNamespace>ADONetHelper.Teradata</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Teradata.xml</DocumentationFile>
@@ -50,7 +52,7 @@
         <DefineConstants>RELEASE;</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.0.9" />
+        <PackageReference Include="ADONetHelper" version="3.1.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
