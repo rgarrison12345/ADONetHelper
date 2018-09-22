@@ -37,6 +37,33 @@ namespace ADONetHelper.Oracle
     /// <seealso cref="DbClient"/>
     public class OracleClient : DbClient
     {
+        #region Events
+        /// <summary>
+        /// An event that is triggered for any message or warning sent by the database
+        /// </summary>
+        /// <remarks>
+        /// In order to respond to warnings and messages from the database, the client should create an <see cref="OracleInfoMessageEventHandler" /> delegate to listen to this event.
+        /// </remarks>
+        public event OracleInfoMessageEventHandler InfoMessage
+        {
+            add
+            {
+                //Get an exclusive lock first
+                lock (this.Connection)
+                {
+                    this.Connection.InfoMessage += value;
+                }
+            }
+            remove
+            {
+                //Get an exclusive lock first
+                lock (this.Connection)
+                {
+                    this.Connection.InfoMessage -= value;
+                }
+            }
+        }
+        #endregion
         #region Fields/Properties
         /// <summary>
         /// This property specifies the action name for the connection.
@@ -71,9 +98,9 @@ namespace ADONetHelper.Oracle
             }
         }
         /// <summary>
-        /// 
+        /// This property specifies the current size of the statement cache associated with this connection.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Size of the statement cache as an <see cref="int"/></returns>
         public int StatementCacheSize
         {
             get
@@ -83,9 +110,9 @@ namespace ADONetHelper.Oracle
             }
         }
         /// <summary>
-        /// 
+        /// This property specifies the name of the service that this connection is connected to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Name of the service as a <see cref="string"/></returns>
         public string ServiceName
         {
             get
@@ -111,9 +138,9 @@ namespace ADONetHelper.Oracle
             }
         }
         /// <summary>
-        /// 
+        /// This property specifies the name of the host that this connection is connected to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The name of the host as a <see cref="string"/></returns>
         public string HostName
         {
             get
@@ -123,9 +150,9 @@ namespace ADONetHelper.Oracle
             }
         }
         /// <summary>
-        /// 
+        /// Specifies the module name for the connection
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The module name as a <see cref="string"/></returns>
         public string ModuleName
         {
             set
@@ -134,9 +161,9 @@ namespace ADONetHelper.Oracle
             }
         }
         /// <summary>
-        /// 
+        /// This property specifies the name of the instance that this connection is connected to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The instance name as a <see cref="string"/></returns>
         public string InstanceName
         {
             get
@@ -149,7 +176,7 @@ namespace ADONetHelper.Oracle
         /// Gets the name of the PDB.
         /// </summary>
         /// <value>
-        /// The name of the PDB.
+        /// The name of the PDB as a <see cref="string"/>
         /// </value>
         public string PDBName
         {
@@ -167,7 +194,7 @@ namespace ADONetHelper.Oracle
         /// An instance of <see cref="OracleConnection"/> to use to connect to an Oracle database
         /// </summary>
         /// <returns></returns>
-        private OracleConnection Connection
+        protected OracleConnection Connection
         {
             get
             {
