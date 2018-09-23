@@ -247,6 +247,14 @@ namespace ADONetHelper.DB2Client
         public DB2Client(DB2Connection connection) : base(connection)
         {
         }
+        /// <summary>
+        /// Insantiates a new instance of <see cref="DB2Client"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
+        /// </summary>
+        /// <param name="connectionString">Connection string to use to query a database</param>
+        /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
+        public DB2Client(string connectionString, IDbObjectFactory factory) : base(connectionString, factory)
+        {
+        }
         #endregion
         #region Utility Methods
         #endregion
