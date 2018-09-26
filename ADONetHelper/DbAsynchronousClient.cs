@@ -477,7 +477,7 @@ namespace ADONetHelper
             await this.ExecuteSQL.Connection.OpenAsync(CancellationToken.None).ConfigureAwait(false);
         }
         /// <summary>
-        /// Opens the connection to a database asynchronously if the connection is not <see cref="ConnectionState.Open"/>
+        /// Opens the connection to a database asynchronously
         /// </summary>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         public async Task OpenAsync(CancellationToken token)
@@ -503,7 +503,7 @@ namespace ADONetHelper
                     }
 
                     //Call this again and open the database connection
-                    await this.ExecuteSQL.Connection.OpenAsync(token).ConfigureAwait(false);
+                    await this.OpenAsync(token).ConfigureAwait(false);
                 }
                 else
                 {
