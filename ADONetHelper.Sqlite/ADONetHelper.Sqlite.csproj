@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper.Sqlite</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.5.8</Version>
+    <Version>1.5.9</Version>
     <PackageTags>Sqlite SystemData.Sqlite ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
@@ -17,8 +17,10 @@
     <Product>ADONetHelper.Sqlite</Product>
     <Title>ADONetHelper.Sqlite</Title>
     <PackageId>ADONetHelper.Sqlite</PackageId>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
     <Description>Extends ADONetHelper library to Sqlite</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.1.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to System.Data.SQLite 1.0.109.2</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Sqlite</AssemblyName>
     <RootNamespace>ADONetHelper.Sqlite</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Sqlite.xml</DocumentationFile>
@@ -29,32 +31,21 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.109.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
+    <PackageReference Include="ADONetHelper" version="3.1.0" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(Configuration)'=='Debug'">
-      <PropertyGroup>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>.\bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;</DefineConstants>
-      </PropertyGroup>
-      <ItemGroup>
-        <ProjectReference Include="..\ADONetHelper\ADONetHelper.csproj" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup>
-        <DebugSymbols>false</DebugSymbols>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>.\bin\Release</OutputPath>
-        <DefineConstants>RELEASE;</DefineConstants>
-      </PropertyGroup>
-      <ItemGroup>
-        <PackageReference Include="ADONetHelper" version="3.1.0" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <DefineConstants>RELEASE;</DefineConstants>
+  </PropertyGroup>
 </Project>
