@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.Postgres", "AD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.SqlServer", "ADONetHelper.SqlServer\ADONetHelper.SqlServer.csproj", "{2509D18E-A036-4204-A95E-A12D8617C0F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.MySql", "ADONetHelper.MySql\ADONetHelper.MySql.csproj", "{DE397A82-6BDB-4F74-BF74-416983ADA009}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.Firebird", "ADONetHelper.Firebird\ADONetHelper.Firebird.csproj", "{DF63AA58-B3DF-4922-BCB1-9696A47FCB4F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.Sqlite", "ADONetHelper.Sqlite\ADONetHelper.Sqlite.csproj", "{60312652-5F5A-40FA-A991-CC73CA71799F}"
@@ -31,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.NuoDb", "ADONe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.Oledb", "ADONetHelper.Oledb\ADONetHelper.Oledb.csproj", "{3DC31A09-B18D-46A2-90C5-55F55DE1BE68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADONetHelper.Snowflake", "ADONetHelper.Snowflake\ADONetHelper.Snowflake.csproj", "{9B239CD6-1C9D-4149-B029-73C4C6DBB3F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADONetHelper.Snowflake", "ADONetHelper.Snowflake\ADONetHelper.Snowflake.csproj", "{9B239CD6-1C9D-4149-B029-73C4C6DBB3F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,14 +71,6 @@ Global
 		{2509D18E-A036-4204-A95E-A12D8617C0F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2509D18E-A036-4204-A95E-A12D8617C0F9}.Release|x64.ActiveCfg = Release|Any CPU
 		{2509D18E-A036-4204-A95E-A12D8617C0F9}.Release|x64.Build.0 = Release|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Debug|x64.Build.0 = Debug|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Release|x64.ActiveCfg = Release|Any CPU
-		{DE397A82-6BDB-4F74-BF74-416983ADA009}.Release|x64.Build.0 = Release|Any CPU
 		{DF63AA58-B3DF-4922-BCB1-9696A47FCB4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF63AA58-B3DF-4922-BCB1-9696A47FCB4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF63AA58-B3DF-4922-BCB1-9696A47FCB4F}.Debug|x64.ActiveCfg = Debug|Any CPU
