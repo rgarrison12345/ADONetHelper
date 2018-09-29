@@ -49,7 +49,7 @@ namespace ADONetHelper.NuoDb
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="queryType">Type of the query.</param>
-        public NuoDbClient(string connectionString, CommandType queryType) : base(connectionString,queryType, NuoDbProviderFactory.Instance)
+        public NuoDbClient(string connectionString, CommandType queryType) : base(connectionString, queryType, NuoDbProviderFactory.Instance)
         {
         }
         /// <summary>
@@ -57,7 +57,7 @@ namespace ADONetHelper.NuoDb
         /// </summary>
         /// <param name="executor">An instance of <see cref="T:ADONetHelper.ISqlExecutor" /></param>
         public NuoDbClient(ISqlExecutor executor) : base(executor)
-        {           
+        {
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="NuoDbClient"/> class.

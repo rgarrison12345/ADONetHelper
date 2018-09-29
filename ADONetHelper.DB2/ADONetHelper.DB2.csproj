@@ -40,9 +40,6 @@
     <OutputPath>.\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ADONetHelper\ADONetHelper.csproj" />
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DebugSymbols>false</DebugSymbols>
     <DebugType>pdbonly</DebugType>
