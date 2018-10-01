@@ -350,7 +350,7 @@ namespace ADONetHelper
             this.ExecuteSQL.ConnectionStringBuilder.Clear();
         }
         /// <summary>
-        /// Checks if the <see cref="ConnectionString"/> in use contains the passed in <paramref name="keyword"/>
+        /// Checks if the current <see cref="ConnectionString"/> in use contains the passed in <paramref name="keyword"/>
         /// </summary>
         /// <param name="keyword">The keyword to verify is in the current <see cref="ConnectionString"/></param>
         /// <returns>Returns a <see cref="bool"/> indicating if the <see cref="ConnectionString"/> contains the passed in <paramref name="keyword"/></returns>
