@@ -55,8 +55,14 @@ namespace ADONetHelper
         /// <param name="properties">Key value pairs of connection string property names and values</param>
         void ConfigureConnectionString(IDictionary<string, object> properties);
         /// <summary>
-        /// Clears the connection string of all key value pairs
+        /// Clears the contents of the connection string
         /// </summary>
-        void Clear();
+        void ClearConnectionString();
+        /// <summary>
+        /// Checks if the connection string in use contains the passed in <paramref name="keyword"/>
+        /// </summary>
+        /// <param name="keyword">The keyword to verify is in a connection string</param>
+        /// <returns>Returns a <see cref="bool"/> indicating if a connection string contains the passed in <paramref name="keyword"/></returns>
+        bool ConnectionStringContainsKey(string keyword);
     }
 }

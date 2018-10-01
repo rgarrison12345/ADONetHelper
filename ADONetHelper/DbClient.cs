@@ -343,6 +343,23 @@ namespace ADONetHelper
             }
         }
         /// <summary>
+        /// Clears the content of the connection string
+        /// </summary>
+        public void ClearConnectionString()
+        {
+            this.ExecuteSQL.ConnectionStringBuilder.Clear();
+        }
+        /// <summary>
+        /// Checks if the <see cref="ConnectionString"/> in use contains the passed in <paramref name="keyword"/>
+        /// </summary>
+        /// <param name="keyword">The keyword to verify is in the current <see cref="ConnectionString"/></param>
+        /// <returns>Returns a <see cref="bool"/> indicating if the <see cref="ConnectionString"/> contains the passed in <paramref name="keyword"/></returns>
+        public bool ConnectionStringContainsKey(string keyword)
+        {
+            //Return this back to the caller
+            return this.ExecuteSQL.ConnectionStringBuilder.ContainsKey(keyword);
+        }
+        /// <summary>
         /// Configures the connection string with the key value pairs passed into the routine
         /// This will clear the current connection string to start over
         /// </summary>
