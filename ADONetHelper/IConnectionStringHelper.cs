@@ -54,5 +54,9 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="properties">Key value pairs of connection string property names and values</param>
         void ConfigureConnectionString(IDictionary<string, object> properties);
+        /// <summary>
+        /// Clears the connection string of all key value pairs
+        /// </summary>
+        void Clear();
     }
 }
