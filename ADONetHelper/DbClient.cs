@@ -514,7 +514,7 @@ namespace ADONetHelper
             //Check if this parameter exists before adding to collection
             if (this.Contains(parameterName) == true)
             {
-                throw new ArgumentException($"Parameter with name {parameterName} already exists", parameterName);
+                throw new ArgumentException($"Parameter with name {parameterName} already exists", nameof(parameterName));
             }
             else
             {
@@ -536,7 +536,7 @@ namespace ADONetHelper
             //Check if this parameter exists before adding to collection
             if (this.Contains(parameterName) == true)
             {
-                throw new ArgumentException($"Parameter with name {parameterName} already exists", parameterName);
+                throw new ArgumentException($"Parameter with name {parameterName} already exists", nameof(parameterName));
             }
             else
             {
@@ -557,7 +557,7 @@ namespace ADONetHelper
             //Check if this parameter exists before adding to collection
             if (this.Contains(param.ParameterName) == true)
             {
-                throw new ArgumentException($"Parameter with name {param.ParameterName} already exists");
+                throw new ArgumentException($"Parameter with name {param.ParameterName} already exists", nameof(param));
             }
             else
             {
