@@ -76,7 +76,7 @@ namespace ADONetHelper
         internal async static Task OpenDbConnectionAsync(DbConnection connection)
         {
             //Await the task
-            await connection.OpenAsync(CancellationToken.None).ConfigureAwait(false);
+            await OpenDbConnectionAsync(connection, CancellationToken.None).ConfigureAwait(false);
         }
         /// <summary>
         /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>
