@@ -474,7 +474,7 @@ namespace ADONetHelper
         public async Task OpenAsync()
         {
             //Open the database connection
-            await this.ExecuteSQL.Connection.OpenAsync(CancellationToken.None).ConfigureAwait(false);
+            await this.OpenAsync(CancellationToken.None).ConfigureAwait(false);
         }
         /// <summary>
         /// Opens the connection to a database asynchronously
