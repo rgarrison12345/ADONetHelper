@@ -32,7 +32,7 @@ namespace ADONetHelper
     /// <summary>
     /// Contract class for modifying and searching parameters in a DbParameter collection
     /// </summary>
-    public interface IDbParameterHelper
+    public interface IDbParameterUtility
     {
         #region Helper Methods
         /// <summary>
@@ -75,6 +75,11 @@ namespace ADONetHelper
         /// <param name="index">The index of the parameter in the parameters collection to identify the parameter to retrieve from the collection</param>
         /// <returns>Returns the <see cref="DbParameter"/> object located at this index</returns>
         DbParameter GetParameter(int index);
+        /// <summary>
+        /// Retrieves the entire <see cref="List{T}"/> of <see cref="DbParameter"/> that are currently in use
+        /// </summary>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="DbParameter"/></returns>
+        List<DbParameter> GetAllParameters();
         /// <summary>
         /// Adds a new parameter to the parameters collection
         /// </summary>
