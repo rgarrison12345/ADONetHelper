@@ -49,7 +49,7 @@ namespace ADONetHelper
         /// </summary>
         DbConnectionStringBuilder ConnectionStringBuilder { get; }
         /// <summary>
-        /// Represents an instance of the <see cref="DbObjectFactory"/>
+        /// Represents an instance of <see cref="IDbObjectFactory"/>
         /// </summary>
         IDbObjectFactory Factory { get; }
         /// <summary>
