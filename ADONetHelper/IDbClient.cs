@@ -36,9 +36,9 @@ namespace ADONetHelper
     /// Contract class for all classes that implement the DbClient pattern
     /// </summary>
     /// <seealso cref="IDisposable"/>
-    /// <seealso cref="IDbParameterHelper"/>
-    /// <seealso cref="IConnectionStringHelper"/>
-    public partial interface IDbClient : IDbParameterHelper, IConnectionStringHelper, IDisposable
+    /// <seealso cref="IDbParameterUtility"/>
+    /// <seealso cref="IConnectionStringUtility"/>
+    public partial interface IDbClient : IDbParameterUtility, IConnectionStringUtility, IDisposable
     {
         #region Events        
         /// <summary>

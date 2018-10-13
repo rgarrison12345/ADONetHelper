@@ -30,7 +30,7 @@ namespace ADONetHelper
     /// <summary>
     /// Contract class to modify/retrieve values in a connection string
     /// </summary>
-    public interface IConnectionStringHelper
+    public interface IConnectionStringUtility
     {
         /// <summary>
         /// Adds a property name and value to the current connection string

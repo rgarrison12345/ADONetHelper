@@ -41,6 +41,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>.\bin\Release</OutputPath>
+    <DefineConstants>RELEASE;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
