@@ -85,6 +85,26 @@ namespace ADONetHelper
                 return this.ExecuteSQL.Factory.CanCreateDataSourceEnumerator;
             }
         }
+        /// <summary>
+        /// Whether or not the <see cref="ConnectionString"/> is readonly
+        /// </summary>
+        public bool ConnectionStringReadonly
+        {
+            get
+            {
+                return this.ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
+            }
+        }
+        /// <summary>
+        /// Whether the <see cref="ConnectionString"/> has a fixed size
+        /// </summary>
+        public bool ConnectionStringFixedSize
+        {
+            get
+            {
+                return this.ExecuteSQL.ConnectionStringBuilder.IsFixedSize;
+            }
+        }
 #endif
         /// <summary>
         /// Represents an instance of the <see cref="ISqlExecutor"/> class to facilitate querying a data store
