@@ -128,7 +128,7 @@ namespace ADONetHelper
         public async Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token) where T : class
         {
             //Open the connection if necessary
-            await UtilityHelper.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = await this.GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleRow).ConfigureAwait(false))
@@ -231,7 +231,7 @@ namespace ADONetHelper
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token) where T : class
         {
             //Open the connection if necessary
-            await UtilityHelper.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = await this.GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleResult).ConfigureAwait(false))
@@ -328,7 +328,7 @@ namespace ADONetHelper
         public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Open the database connection if necessary
-            await UtilityHelper.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -424,7 +424,7 @@ namespace ADONetHelper
         public async Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token)
         {
             //Open the connection to the database
-            await UtilityHelper.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -522,7 +522,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token)
         {
             //Open the database connection if necessary
-            await UtilityHelper.OpenDbConnectionAsync(connection).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -581,7 +581,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, DbTransaction transact, string query, bool commitTransaction = true)
         {
             //Open the connection
-            await UtilityHelper.OpenDbConnectionAsync(this.Connection).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(this.Connection).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically dispose of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, this.Connection, this.CommandTimeout))
@@ -633,7 +633,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the connection
-            await UtilityHelper.OpenDbConnectionAsync(connection).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbTransaction transact = this.Factory.GetDbTransaction(this.Connection))

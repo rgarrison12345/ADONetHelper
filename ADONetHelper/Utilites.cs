@@ -37,7 +37,7 @@ namespace ADONetHelper
     /// <summary>
     /// Static utility class for assembly
     /// </summary>
-    internal static class UtilityHelper
+    internal static class Utilites
     {
         /// <summary>
         /// Checks if the passed in type is a generic type that is nullable
