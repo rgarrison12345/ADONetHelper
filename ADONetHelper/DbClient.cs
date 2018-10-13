@@ -399,6 +399,15 @@ namespace ADONetHelper
         #endregion
         #region Parameter Methods
         /// <summary>
+        /// Retrieves the entire <see cref="List{T}"/> of <see cref="DbParameter"/> that are currently in use
+        /// </summary>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="DbParameter"/></returns>
+        public List<DbParameter> GetCurrentParameters()
+        {
+            //Return this back to the caller
+            return this.ExecuteSQL.Parameters;
+        }
+        /// <summary>
         /// Removes a <see cref="DbParameter"/> from the parameters collection for the current <see cref="DbConnection"/> by using the parameter name
         /// </summary>
         /// <param name="parameterName">The name of the parameter to identify the parameter to remove from the collection</param>
@@ -739,6 +748,7 @@ namespace ADONetHelper
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

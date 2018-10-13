@@ -79,7 +79,7 @@ namespace ADONetHelper
         /// Retrieves the entire <see cref="List{T}"/> of <see cref="DbParameter"/> that are currently in use
         /// </summary>
         /// <returns>Returns a <see cref="List{T}"/> of <see cref="DbParameter"/></returns>
-        List<DbParameter> GetAllParameters();
+        List<DbParameter> GetCurrentParameters();
         /// <summary>
         /// Adds a new parameter to the parameters collection
         /// </summary>
