@@ -55,6 +55,14 @@ namespace ADONetHelper
         /// Whether or not the passed in provider is capable of creating a data source enumerator
         /// </summary>
         bool CanCreateDataSourceEnumerator { get; }
+        /// <summary>
+        /// Whether or not the <see cref="ConnectionString"/> is readonly
+        /// </summary>
+        bool ConnectionStringReadonly { get; }
+        /// <summary>
+        /// Whether the <see cref="ConnectionString"/> has a fixed size
+        /// </summary>
+        bool ConnectionStringFixedSize { get; }
 #endif
         /// <summary>
         /// The current <see cref="ConnectionState"/> of the <see cref="DbConnection"/>
