@@ -175,7 +175,7 @@ namespace ADONetHelper
         public T GetDataObject<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class
         {
             //Open the database connection if necessary
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleRow))
@@ -236,7 +236,7 @@ namespace ADONetHelper
         public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection if necessary
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleResult))
@@ -289,7 +289,7 @@ namespace ADONetHelper
         public DbDataReader GetDbDataReader(CommandType queryCommandType, string query, DbConnection connection, CommandBehavior behavior = CommandBehavior.CloseConnection, DbTransaction transact = null)
         {
             //Open the database connection if necessary
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -333,7 +333,7 @@ namespace ADONetHelper
         public void GetDbDataReader(CommandType queryCommandType, string query, Action<DbDataReader> act, DbConnection connection)
         {
             //Open the database connection if necessary
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -393,7 +393,7 @@ namespace ADONetHelper
         public object GetScalarValue(CommandType queryCommandType, string query, DbConnection connection, DbTransaction transact = null)
         {
             //Open the connection to the database
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -453,7 +453,7 @@ namespace ADONetHelper
         public int ExecuteNonQuery(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -510,7 +510,7 @@ namespace ADONetHelper
             List<int> returnList = new List<int>();
 
             //Open the database connection
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(this.CommandTimeout))
@@ -560,7 +560,7 @@ namespace ADONetHelper
             using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
             {
                 //Open the database connection
-                UtilityHelper.OpenDbConnection(connection);
+                Utilites.OpenDbConnection(connection);
 
                 //Wrap this in a using statement to automatically handle disposing of resources
                 using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
@@ -593,7 +593,7 @@ namespace ADONetHelper
         public int ExecuteTransactedNonQuery(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
@@ -629,7 +629,7 @@ namespace ADONetHelper
             int recordsAffected = 0;
 
             //Open the database connection
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -720,7 +720,7 @@ namespace ADONetHelper
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands, DbConnection connection)
         {
             //Open the database connection
-            UtilityHelper.OpenDbConnection(connection);
+            Utilites.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
@@ -743,7 +743,7 @@ namespace ADONetHelper
             try
             {
                 //Open the database connection
-                UtilityHelper.OpenDbConnection(connection);
+                Utilites.OpenDbConnection(connection);
 
                 //Wrap this in a using statement to automatically handle disposing of resources
                 using (DbCommand command = this.Factory.GetDbCommand(connection, transact, this.CommandTimeout))
@@ -959,7 +959,7 @@ namespace ADONetHelper
                     }
 
                     //Check if this is a nullable type
-                    if (UtilityHelper.IsNullableGenericType(p.PropertyType))
+                    if (Utilites.IsNullableGenericType(p.PropertyType))
                     {
                         if (value == null)
                         {

@@ -85,6 +85,26 @@ namespace ADONetHelper
                 return this.ExecuteSQL.Factory.CanCreateDataSourceEnumerator;
             }
         }
+        /// <summary>
+        /// Whether or not the <see cref="ConnectionString"/> is readonly
+        /// </summary>
+        public bool ConnectionStringReadonly
+        {
+            get
+            {
+                return this.ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
+            }
+        }
+        /// <summary>
+        /// Whether the <see cref="ConnectionString"/> has a fixed size
+        /// </summary>
+        public bool ConnectionStringFixedSize
+        {
+            get
+            {
+                return this.ExecuteSQL.ConnectionStringBuilder.IsFixedSize;
+            }
+        }
 #endif
         /// <summary>
         /// Represents an instance of the <see cref="ISqlExecutor"/> class to facilitate querying a data store
@@ -378,6 +398,15 @@ namespace ADONetHelper
         }
         #endregion
         #region Parameter Methods
+        /// <summary>
+        /// Retrieves the entire <see cref="List{T}"/> of <see cref="DbParameter"/> that are currently in use
+        /// </summary>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="DbParameter"/></returns>
+        public List<DbParameter> GetCurrentParameters()
+        {
+            //Return this back to the caller
+            return this.ExecuteSQL.Parameters;
+        }
         /// <summary>
         /// Removes a <see cref="DbParameter"/> from the parameters collection for the current <see cref="DbConnection"/> by using the parameter name
         /// </summary>
@@ -719,6 +748,7 @@ namespace ADONetHelper
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
