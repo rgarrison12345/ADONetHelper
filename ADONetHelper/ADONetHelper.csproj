@@ -44,9 +44,9 @@
     <DefineConstants>RELEASE;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
-    <None Include="..\CONTRIBUTING.md" Pack="true" PackagePath="CONTRIBUTING.md" />
-    <None Include="..\README.md" Pack="true" PackagePath="README.md" />
+    <None Include="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+    <None Include="CONTRIBUTING.md" Pack="true" PackagePath="CONTRIBUTING.md" />
+    <None Include="README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net20' or '$(TargetFramework)'=='net35' or '$(TargetFramework)'=='net40'">
     <Compile Remove="IAsynchronousClient.cs"></Compile>
