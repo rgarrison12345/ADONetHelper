@@ -283,13 +283,30 @@ namespace ADONetHelper
             return this.ProviderFactory.CreateConnection();
         }
         /// <summary>
-        /// Create an instance of <see cref="DbParameter"/> object based off of the provider passed into factory
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
-        /// <returns>Returns an instantiated <see cref="DbParameter"/> object</returns>
-        public DbParameter GetDbParameter()
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
+        /// <param name="size">maximum size, in bytes, of the data.  Should not be set for numeric types.</param>
+        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
+        /// <param name="parameterValue">The value of the parameter</param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to input</param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        public DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
+            //Get the DbParameter object
+            DbParameter param = this.GetDbParameter(parameterName, parameterValue);
+
+            param.DbType = dataType;
+            param.Direction = paramDirection;
+
+            //Check if size has value
+            if (size.HasValue == true)
+            {
+                param.Size = size.Value;
+            }
+
             //Return this back to the caller
-            return this.ProviderFactory.CreateParameter();
+            return this.FormatDbParameter(param);
         }
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
@@ -300,7 +317,7 @@ namespace ADONetHelper
         public DbParameter GetDbParameter(string parameterName, object parameterValue)
         {
             //Get the DbParameter object
-            DbParameter param = this.ProviderFactory.CreateParameter();
+            DbParameter param = this.GetDbParameter();
 
             param.ParameterName = parameterName;
             param.Value = parameterValue;
@@ -324,32 +341,13 @@ namespace ADONetHelper
             return this.FormatDbParameter(param);
         }
         /// <summary>
-        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
+        /// Create an instance of <see cref="DbParameter"/> object based off of the provider passed into factory
         /// </summary>
-        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
-        /// <param name="size">maximum size, in bytes, of the data.  Should not be set for numeric types.</param>
-        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
-        /// <param name="parameterValue">The value of the parameter</param>
-        /// <param name="paramDirection">The direction of the parameter, defaults to input</param>
-        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
-        public DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
+        /// <returns>Returns an instantiated <see cref="DbParameter"/> object</returns>
+        public DbParameter GetDbParameter()
         {
-            //Get the DbParameter object
-            DbParameter param = this.ProviderFactory.CreateParameter();
-
-            param.ParameterName = parameterName;
-            param.Value = parameterValue;
-            param.DbType = dataType;
-            param.Direction = paramDirection;
-
-            //Check if size has value
-            if (size.HasValue == true)
-            {
-                param.Size = size.Value;
-            }
-
             //Return this back to the caller
-            return this.FormatDbParameter(param);
+            return this.ProviderFactory.CreateParameter();
         }
         /// <summary>
         /// Gets an instace of the <see cref="DbTransaction"/> object based on the <see cref="DbConnection"/> object passed in
