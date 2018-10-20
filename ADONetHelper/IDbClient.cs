@@ -65,6 +65,10 @@ namespace ADONetHelper
         bool ConnectionStringFixedSize { get; }
 #endif
         /// <summary>
+        /// Gets the current number of keys that are contained within the <see cref="ConnectionString"/> property
+        /// </summary>
+        int ConnectionStringKeyCount { get; }
+        /// <summary>
         /// The current <see cref="ConnectionState"/> of the <see cref="DbConnection"/>
         /// </summary>
         ConnectionState State { get; }

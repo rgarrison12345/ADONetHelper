@@ -92,9 +92,11 @@ namespace ADONetHelper
         {
             get
             {
+                //Return this back to the caller
                 return this.ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
             }
         }
+        
         /// <summary>
         /// Whether the <see cref="ConnectionString"/> has a fixed size
         /// </summary>
@@ -102,10 +104,22 @@ namespace ADONetHelper
         {
             get
             {
+                //Return this back to the caller
                 return this.ExecuteSQL.ConnectionStringBuilder.IsFixedSize;
             }
         }
 #endif
+        /// <summary>
+        /// Gets the current number of keys that are contained within the <see cref="ConnectionString"/> property
+        /// </summary>
+        public int ConnectionStringKeyCount
+        {
+            get
+            {
+                //Return this back to the caller
+                return this.ExecuteSQL.ConnectionStringBuilder.Count;
+            }
+        }
         /// <summary>
         /// Represents an instance of the <see cref="ISqlExecutor"/> class to facilitate querying a data store
         /// </summary>
