@@ -206,8 +206,7 @@ namespace ADONetHelper
                 //Add in all the parameters
                 foreach (DbParameter param in parameters)
                 {
-                    //Add these parameters
-                    dCommand.Parameters.Add(this.FormatDbParameter(param));
+                    dCommand.Parameters.Add(param);
                 }
             }
 
@@ -252,10 +251,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DbCommand"/> object</returns>
         public DbCommand GetDbCommand()
         {
-            DbCommand command = this.ProviderFactory.CreateCommand();
-
             //Return this back to the caller
-            return command;
+            return this.ProviderFactory.CreateCommand();
         }
         /// <summary>
         /// Instantiates a new instance of the <see cref="DbConnection"/> object based on the specified provider
@@ -289,24 +286,49 @@ namespace ADONetHelper
         /// <param name="size">maximum size, in bytes, of the data.  Should not be set for numeric types.</param>
         /// <param name="parameterName">The name of the parameter to identify the parameter</param>
         /// <param name="parameterValue">The value of the parameter</param>
-        /// <param name="paramDirection">The direction of the parameter, defaults to input</param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
         public DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
             //Get the DbParameter object
-            DbParameter param = this.GetDbParameter(parameterName, parameterValue);
+            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue);
+            bool paramIsVariableSize = (parameter.Value is string || parameter.Value is byte[]);
 
-            param.DbType = dataType;
-            param.Direction = paramDirection;
+            //Set parameter properties
+            parameter.DbType = dataType;
+            parameter.Direction = paramDirection;
 
-            //Check if size has value
+            //Check for value
             if (size.HasValue == true)
             {
-                param.Size = size.Value;
+                parameter.Size = size.Value;
+            }
+
+            //Check if this parameter is a database null value
+            if (parameter.IsNullable == false && paramIsVariableSize == true && parameter.Size <= 0)
+            {
+                //Check the parameter direction
+                if (parameter.Direction == ParameterDirection.Output)
+                {
+                    //Let implementors now that size must be set for output parameters
+                    throw new ArgumentNullException("Parameter size must be set for variable sized data type output parameters");
+                }
+                else
+                {
+                    //Check if this is a string or byte array, we need to set the size of the parameter explicitly
+                    if (parameter.Value is string)
+                    {
+                        parameter.Size = parameter.Value.ToString().Length;
+                    }
+                    else if (parameter.Value is byte[])
+                    {
+                        parameter.Size = ((byte[])parameter.Value).Length;
+                    }
+                }
             }
 
             //Return this back to the caller
-            return this.FormatDbParameter(param);
+            return parameter;
         }
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
@@ -317,28 +339,53 @@ namespace ADONetHelper
         public DbParameter GetDbParameter(string parameterName, object parameterValue)
         {
             //Get the DbParameter object
-            DbParameter param = this.GetDbParameter();
+            DbParameter parameter = this.GetDbParameter();
 
-            param.ParameterName = parameterName;
-            param.Value = parameterValue;
+            parameter.Value = parameterValue ?? DBNull.Value;
+
+            //Check for null reference
+            if (parameter.Value != DBNull.Value)
+            {
+                string parameterString = parameter.Value.ToString();
+
+                //Check if this is a date time value
+                if (parameterString == DateTime.MinValue.ToString() || parameterString == DateTime.MaxValue.ToString())
+                {
+                    //SQL Server cannot handle these values
+                    parameter.Value = DBNull.Value;
+                }
+            }
+
+            //Check for null or empty
+            if (!string.IsNullOrEmpty(this.VariableBinder) || this.VariableBinder.Trim() != string.Empty)
+            {
+                parameter.ParameterName = this.VariableBinder + parameter.ParameterName.Replace(this.VariableBinder, "");
+            }
+            else
+            {
+                parameter.ParameterName = parameterName;
+            }
 
             //Check if this binary or xml of some sort
             if (parameterValue is byte[])
             {
-                param.DbType = DbType.Binary;
+                parameter.DbType = DbType.Binary;
             }
             else if (parameterValue is Guid)
             {
-                param.DbType = DbType.Guid;
+                parameter.DbType = DbType.Guid;
             }
             else if (parameterValue is XmlNode)
             {
-                param.DbType = DbType.String;
-                param.Value = ((XmlNode)parameterValue).OuterXml;
+                parameter.DbType = DbType.String;
+                parameter.Value = ((XmlNode)parameterValue).OuterXml;
             }
 
+            //Check if this is nullable
+            parameter.IsNullable = (parameter.Value == DBNull.Value);
+
             //Return this back to the caller
-            return this.FormatDbParameter(param);
+            return parameter;
         }
         /// <summary>
         /// Create an instance of <see cref="DbParameter"/> object based off of the provider passed into factory
@@ -428,77 +475,6 @@ namespace ADONetHelper
 
             //Get the provider factory
             return (DbProviderFactory)field.GetValue(null);
-        }
-        /// <summary>
-        /// Formats the passed in <see cref="DbParameter"/> size, direction, name, and value
-        /// </summary>
-        /// <exception cref="ArgumentException">Thrown when the passed in parameter name is empty or null</exception>
-        /// <param name="parameter">An instance of DbParameter object</param>
-        private DbParameter FormatDbParameter(DbParameter parameter)
-        {
-            bool paramIsVariableSize = (parameter.Value is string || parameter.Value is byte[]);
-
-            //Check for null or empty
-            if (!string.IsNullOrEmpty(this.VariableBinder) || this.VariableBinder.Trim() != string.Empty)
-            {
-                parameter.ParameterName = parameter.ParameterName.Replace(this.VariableBinder, "");
-            }
-
-            //Check for null reference
-            if (parameter.Value != null && parameter.Value != DBNull.Value)
-            {
-                string parameterString = parameter.Value.ToString();
-
-                //Check if this is a date time value
-                if (parameterString == DateTime.MinValue.ToString() || parameterString == DateTime.MaxValue.ToString())
-                {
-                    //SQL Server cannot handle these values
-                    parameter.Value = DBNull.Value;
-                }
-            }
-
-            //Check for null or empty
-            if (!string.IsNullOrEmpty(this.VariableBinder) || this.VariableBinder.Trim() != string.Empty)
-            {
-                parameter.ParameterName = this.VariableBinder + parameter.ParameterName;
-            }
-
-            parameter.Value = parameter.Value ?? DBNull.Value;
-            parameter.IsNullable = (parameter.Value == DBNull.Value);
-
-            //Check if this parameter is a database null value
-            if (parameter.IsNullable == false)
-            {
-                //Check that this is a variable sized data type
-                if (paramIsVariableSize == true)
-                {
-                    //Check if the size parameter has been passed
-                    if (parameter.Size <= 0)
-                    {
-                        //Check the parameter direction
-                        if (parameter.Direction == ParameterDirection.Output)
-                        {
-                            //Let implementors now that size must be set for output parameters
-                            throw new ArgumentNullException("Parameter size must be set for variable sized data type output parameters");
-                        }
-                        else
-                        {
-                            //Check if this is a string or byte array, we need to set the size of the parameter explicitly
-                            if (parameter.Value is string)
-                            {
-                                parameter.Size = parameter.Value.ToString().Length;
-                            }
-                            else if (parameter.Value is byte[])
-                            {
-                                parameter.Size = ((byte[])parameter.Value).Length;
-                            }
-                        }
-                    }
-                }
-            }
-
-            //Return this back to the caller
-            return parameter;
         }
         #endregion
     }
