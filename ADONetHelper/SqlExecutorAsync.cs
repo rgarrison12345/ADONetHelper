@@ -47,7 +47,7 @@ namespace ADONetHelper
         public async Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectAsync<T>(queryCommandType, query, this.Connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetDataObjectAsync<T>(queryCommandType, query, this.Connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -77,7 +77,7 @@ namespace ADONetHelper
         public async Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, string connectionString) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectAsync<T>(queryCommandType, query, connectionString, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetDataObjectAsync<T>(queryCommandType, query, connectionString, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -112,7 +112,7 @@ namespace ADONetHelper
         public async Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectAsync<T>(queryCommandType, query, connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetDataObjectAsync<T>(queryCommandType, query, connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets an instance of the <typeparamref name="T"/> parameter object that creates an object based on the query passed into the routine
@@ -161,7 +161,7 @@ namespace ADONetHelper
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectListAsync<T>(queryCommandType, query, this.Connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetDataObjectListAsync<T>(queryCommandType, query, this.Connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -187,7 +187,7 @@ namespace ADONetHelper
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, string connectionString) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectListAsync<T>(queryCommandType, query, connectionString, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetDataObjectListAsync<T>(queryCommandType, query, connectionString, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -217,7 +217,7 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/>s</returns>
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class
         {
-            return await this.GetDataObjectListAsync<T>(queryCommandType, query, connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetDataObjectListAsync<T>(queryCommandType, query, connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -254,7 +254,7 @@ namespace ADONetHelper
         public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string connectionString, string query, CommandBehavior behavior = CommandBehavior.CloseConnection)
         {
             //Return this back to the caller
-            return await this.GetDbDataReaderAsync(queryCommandType, connectionString, query, CancellationToken.None, behavior).ConfigureAwait(false);
+            return await this.GetDbDataReaderAsync(queryCommandType, connectionString, query, default(CancellationToken), behavior).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
@@ -285,7 +285,7 @@ namespace ADONetHelper
         public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return await this.GetDbDataReaderAsync(queryCommandType, query, CancellationToken.None, behavior, transact).ConfigureAwait(false);
+            return await this.GetDbDataReaderAsync(queryCommandType, query, default(CancellationToken), behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
@@ -313,7 +313,7 @@ namespace ADONetHelper
         public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return await this.GetDbDataReaderAsync(queryCommandType, query, connection, CancellationToken.None, behavior, transact).ConfigureAwait(false);
+            return await this.GetDbDataReaderAsync(queryCommandType, query, connection, default(CancellationToken), behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
@@ -358,7 +358,7 @@ namespace ADONetHelper
         public async Task<object> GetScalarValueAsync(CommandType queryCommandType, string query)
         {
             //Return this back to the caller
-            return await this.GetScalarValueAsync(queryCommandType, query, this.Connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetScalarValueAsync(queryCommandType, query, this.Connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
@@ -382,7 +382,7 @@ namespace ADONetHelper
         public async Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, string connectionString)
         {
             //Return this back to the caller
-            return await GetScalarValueAsync(queryCommandType, query, connectionString, CancellationToken.None).ConfigureAwait(false);
+            return await GetScalarValueAsync(queryCommandType, query, connectionString, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
@@ -411,7 +411,7 @@ namespace ADONetHelper
         public async Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Return this back to the caller
-            return await this.GetScalarValueAsync(queryCommandType, query, connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.GetScalarValueAsync(queryCommandType, query, connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
@@ -456,7 +456,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query)
         {
             //Execute this query
-            return await this.ExecuteNonQueryAsync(queryCommandType, query, CancellationToken.None).ConfigureAwait(false);
+            return await this.ExecuteNonQueryAsync(queryCommandType, query, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
@@ -480,7 +480,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, string connectionString)
         {
             //Execute this query
-            return await this.ExecuteNonQueryAsync(queryCommandType, query, connectionString, CancellationToken.None).ConfigureAwait(false);
+            return await this.ExecuteNonQueryAsync(queryCommandType, query, connectionString, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
@@ -509,7 +509,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Return this back to the caller
-            return await this.ExecuteNonQueryAsync(queryCommandType, query, connection, CancellationToken.None).ConfigureAwait(false);
+            return await this.ExecuteNonQueryAsync(queryCommandType, query, connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
