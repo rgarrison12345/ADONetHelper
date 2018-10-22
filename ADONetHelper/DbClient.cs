@@ -436,6 +436,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="index">The index of the parameter in the parameters collection to identify the parameter to remove from the collection</param>
         /// <returns>Returns true if item was successully removed, false otherwise if item was not found in the list</returns>
+        /// <exception cref="IndexOutOfRangeException">thrown when an attempt is made to access an element of an array or collection with an index that is outside the bounds of the array or less than zero.</exception>
         public bool RemoveParameter(int index)
         {
             //Return this back to the caller
@@ -486,6 +487,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="index">The index of the parameter in the parameters collection to identify the parameter to retrieve from the collection</param>
         /// <returns>Returns the DbParameter object located at this index</returns>
+        /// <exception cref="IndexOutOfRangeException">thrown when an attempt is made to access an element of an array or collection with an index that is outside the bounds of the array or less than zero.</exception>
         public DbParameter GetParameter(int index)
         {
             //Return this back to the caller
@@ -509,7 +511,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="index">The index as an <see cref="int"/> to use when searching for the existing parameter</param>
         /// <param name="param">A new instance of <see cref="DbParameter"/></param>
-        /// <exception cref="IndexOutOfRangeException"></exception>
+        /// <exception cref="IndexOutOfRangeException">thrown when an attempt is made to access an element of an array or collection with an index that is outside the bounds of the array or less than zero.</exception>
         public void ReplaceParameter(int index, DbParameter param)
         {
             //Do a replace of the parameter
@@ -533,6 +535,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="index">The index of the parameter in the parameters collection to identify the parameter to retrieve from the collection</param>
         /// <param name="value">The value of the parameter as an <see cref="object"/></param>
+        /// <exception cref="IndexOutOfRangeException">thrown when an attempt is made to access an element of an array or collection with an index that is outside the bounds of the array or less than zero.</exception>
         public void SetParamaterValue(int index, object value)
         {
             DbParameter param = this.GetParameter(index);
