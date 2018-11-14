@@ -106,7 +106,7 @@ namespace ADONetHelper
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         public DbObjectFactory(string providerName)
         {
-#if NET20 || NET35 || NET40 || NET45
+#if NET20 || NET35 || NET40 || NET45 || NETSTANDARD2_1
             try
             {
                 _dbProviderFactory = DbProviderFactories.GetFactory(providerName);
