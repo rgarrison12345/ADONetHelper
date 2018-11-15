@@ -522,7 +522,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token)
         {
             //Open the database connection if necessary
-            await Utilites.OpenDbConnectionAsync(connection).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
