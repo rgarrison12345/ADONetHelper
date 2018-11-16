@@ -147,7 +147,7 @@ namespace ADONetHelper
             _factory = new DbObjectFactory(providerName);
         }
         /// <summary>
-        /// Initializes an instance of the SQLExecutor class with an instance of <see cref="IDbObjectFactory"/>
+        /// Initializes a new instance with an instance of <see cref="IDbObjectFactory"/>
         /// </summary>
         /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
         public SqlExecutor(IDbObjectFactory factory)
