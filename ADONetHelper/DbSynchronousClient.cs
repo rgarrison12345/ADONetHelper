@@ -417,8 +417,8 @@ namespace ADONetHelper
         /// </summary>
         /// <typeparam name="T">An instance of the type the caller wants create to from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public List<T> GetDataObjectList<T>(string query) where T : class
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public IEnumerable<T> GetDataObjectList<T>(string query) where T : class
         {
             try
             {
@@ -460,8 +460,8 @@ namespace ADONetHelper
         /// <param name="connection">An instance of <see cref="DbConnection"/></param>
         /// <typeparam name="T">An instance of the type the caller wants create to from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public List<T> GetDataObjectList<T>(string query, DbConnection connection) where T : class
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public IEnumerable<T> GetDataObjectList<T>(string query, DbConnection connection) where T : class
         {
             try
             {

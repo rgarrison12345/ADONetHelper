@@ -181,10 +181,12 @@ namespace ADONetHelper
             using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleRow))
             {
                 //Get the field name and value pairs out of this query
-                List<IDictionary<string, object>> results = this.GetDynamicResults(reader);
+                IEnumerable<IDictionary<string, object>> results = this.GetDynamicResults(reader);
+                IEnumerator<IDictionary<string, object>> enumerator = results.GetEnumerator();
+                bool canMove = enumerator.MoveNext();
 
                 //Check if we need to return the default for the type
-                if (results == null || results.Count == 0)
+                if (canMove == false)
                 {
                     //Return the default for the type back to the caller
                     return default(T);
@@ -192,7 +194,7 @@ namespace ADONetHelper
                 else
                 {
                     //Return this back to the caller
-                    return this.GetSingleDynamicType<T>(results[0]);
+                    return this.GetSingleDynamicType<T>(enumerator.Current);
                 }
             }
         }
@@ -203,7 +205,7 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query)
+        public IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query)
         {
             //Return this back to the caller
             return this.GetDataObjectList<T>(queryCommandType, query, this.Connection);
@@ -216,7 +218,7 @@ namespace ADONetHelper
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, string connectionString)
+        public IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query, string connectionString)
         {
             //Wrap this in a using statement to automatically dispose of resources
             using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
@@ -233,7 +235,7 @@ namespace ADONetHelper
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection)
+        public IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection if necessary
             Utilites.OpenDbConnection(connection);
@@ -242,10 +244,15 @@ namespace ADONetHelper
             using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleResult))
             {
                 //Get the field name and value pairs out of this query
-                List<IDictionary<string, object>> results = this.GetDynamicResults(reader);
+                IEnumerable<IDictionary<string, object>> results = this.GetDynamicResults(reader);
+                IEnumerator<IDictionary<string, object>> enumerator = results.GetEnumerator();
 
-                //Return this back to the caller
-                return this.GetDynamicTypeList<T>(results);
+                //Keep moving through the enumerator
+                while (enumerator.MoveNext() == true)
+                {
+                    //Return this back to the caller
+                    yield return this.GetSingleDynamicType<T>(enumerator.Current);
+                }
             }
         }
         /// <summary>
@@ -843,10 +850,8 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
         /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
-        private List<IDictionary<string, object>> GetDynamicResults(DbDataReader reader)
+        private IEnumerable<IDictionary<string, object>> GetDynamicResults(DbDataReader reader)
         {
-            List<IDictionary<string, object>> results = new List<IDictionary<string, object>>();
-
             //Keep reading records while there are records to read
             while (reader.Read() == true)
             {
@@ -868,11 +873,8 @@ namespace ADONetHelper
                 }
 
                 //Add this item to the Array
-                results.Add(obj);
+                yield return obj;
             }
-
-            //Return this back to the caller
-            return results;
         }
         /// <summary>
         /// Gets a <see cref="List{T}"/> from the passed in <see cref="IEnumerable{IDictionary}"/>
