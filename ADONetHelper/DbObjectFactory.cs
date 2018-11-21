@@ -125,7 +125,7 @@ namespace ADONetHelper
         /// <param name="connection">An instance of <see cref="DbConnection"/> </param>
         public DbObjectFactory(DbConnection connection)
         {
-#if NET20 || NET35 || NET40 || NET45 || NETSTANDARD2_1
+#if NET45 || NETSTANDARD2_1
             _dbProviderFactory = DbProviderFactories.GetFactory(connection);
 #elif NETSTANDARD2_0
             //Get the assembly from the dbconnection type
