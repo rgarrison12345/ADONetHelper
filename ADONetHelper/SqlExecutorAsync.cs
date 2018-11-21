@@ -217,6 +217,7 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/>s</returns>
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class
         {
+            //Return this back to the caller
             return await this.GetDataObjectListAsync<T>(queryCommandType, query, connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
