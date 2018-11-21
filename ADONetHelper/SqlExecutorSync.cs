@@ -204,7 +204,7 @@ namespace ADONetHelper
         /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query)
         {
             //Return this back to the caller
@@ -217,7 +217,7 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query, string connectionString)
         {
             //Wrap this in a using statement to automatically dispose of resources
@@ -234,7 +234,7 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection if necessary
@@ -817,7 +817,7 @@ namespace ADONetHelper
         private IEnumerable<IDictionary<string, object>> GetDynamicResultsMultiSet(DbDataReader reader)
         {
             //Keep moving through th result sets
-            while (reader.NextResult())
+            while (reader.NextResult() == true)
             {
                 Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
 
