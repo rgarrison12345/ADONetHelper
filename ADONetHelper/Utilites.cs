@@ -57,7 +57,7 @@ namespace ADONetHelper
 #endif
         }
         /// <summary>
-        /// Opens the passed in <see cref="DbConnection"/>
+        /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>
         /// </summary>
         /// <param name="connection">An instance of the <see cref="DbConnection"/> class</param>
         internal static void OpenDbConnection(DbConnection connection)

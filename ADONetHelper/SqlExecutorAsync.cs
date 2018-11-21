@@ -217,6 +217,7 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/>s</returns>
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class
         {
+            //Return this back to the caller
             return await this.GetDataObjectListAsync<T>(queryCommandType, query, connection, default(CancellationToken)).ConfigureAwait(false);
         }
         /// <summary>
@@ -522,7 +523,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token)
         {
             //Open the database connection if necessary
-            await Utilites.OpenDbConnectionAsync(connection).ConfigureAwait(false);
+            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))

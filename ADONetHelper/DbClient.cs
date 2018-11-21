@@ -96,7 +96,7 @@ namespace ADONetHelper
                 return this.ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
             }
         }
-        
+
         /// <summary>
         /// Whether the <see cref="ConnectionString"/> has a fixed size
         /// </summary>
@@ -298,7 +298,7 @@ namespace ADONetHelper
         {
             //Set properties
             this.ConnectionString = connectionString;
-        }                                                           
+        }
         /// <summary>
         /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="providerName"/>
         /// </summary>
