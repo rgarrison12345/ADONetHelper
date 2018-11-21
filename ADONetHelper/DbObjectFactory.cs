@@ -106,7 +106,7 @@ namespace ADONetHelper
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         public DbObjectFactory(string providerName)
         {
-#if NET20 || NET35 || NET40 || NET45
+#if NET20 || NET35 || NET40 || NET45 || NETSTANDARD2_1
             try
             {
                 _dbProviderFactory = DbProviderFactories.GetFactory(providerName);
@@ -125,7 +125,9 @@ namespace ADONetHelper
         /// <param name="connection">An instance of <see cref="DbConnection"/> </param>
         public DbObjectFactory(DbConnection connection)
         {
-#if !NETSTANDARD1_3
+#if NET20 || NET35 || NET40 || NET45 || NETSTANDARD2_1
+            _dbProviderFactory = DbProviderFactories.GetFactory(connection);
+#elif NETSTANDARD2_0
             //Get the assembly from the dbconnection type
             _dbProviderFactory = GetProviderFactory(connection.GetType().Assembly);
 #else
