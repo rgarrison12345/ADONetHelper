@@ -49,23 +49,22 @@ namespace ADONetHelper
     {
         #region Fields/Properties
         private readonly DbProviderFactory _dbProviderFactory;
-        private string _variableBinder = "";
 
         /// <summary>
-        /// The character symbol to use when binding a variable in a given providers SQL query
+        /// An instance of the <see cref="DbProviderFactory"/> class initialized with the provider specified by the Provider property
         /// </summary>
-        public string VariableBinder
+        private DbProviderFactory ProviderFactory
         {
             get
             {
                 //Return this back to the caller
-                return _variableBinder;
-            }
-            set
-            {
-                _variableBinder = value;
+                return _dbProviderFactory;
             }
         }
+        /// <summary>
+        /// The character symbol to use when binding a variable in a given providers SQL query
+        /// </summary>
+        public string VariableBinder { get; set; } = "";
 #if !NETSTANDARD1_3
         /// <summary>
         /// Whether or not the passed in provider is capable of creating a data source enumerator
@@ -79,21 +78,10 @@ namespace ADONetHelper
             }
         }
 #endif
-        /// <summary>
-        /// An instance of the <see cref="DbProviderFactory"/> class initialized with the provider specified by the Provider property
-        /// </summary>
-        private DbProviderFactory ProviderFactory
-        {
-            get
-            {
-                //Return this back to the caller
-                return _dbProviderFactory;
-            }
-        }
         #endregion
         #region Constructors
         /// <summary>
-        /// Initialzes and instantiates a new instance of the <see cref="DbProviderFactory"/> class
+        /// Instantiates a new instance with the passed in <paramref name="factory"/>
         /// </summary>
         /// <param name="factory">An instance of the <see cref="DbProviderFactory"/> client class</param>
         public DbObjectFactory(DbProviderFactory factory)
@@ -101,7 +89,7 @@ namespace ADONetHelper
             _dbProviderFactory = factory;
         }
         /// <summary>
-        /// Initialzes and instantiates a new instance of the <see cref="DbProviderFactory"/>
+        /// Instantiates a new instance with the passed in <paramref name="providerName"/>
         /// </summary>
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         public DbObjectFactory(string providerName)
@@ -120,14 +108,14 @@ namespace ADONetHelper
 #endif
         }
         /// <summary>
-        /// Initialzes and instantiates a new instance of the <see cref="DbProviderFactory"/>  class
+        /// Instantiates a new instance with the passed in <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">An instance of <see cref="DbConnection"/> </param>
         public DbObjectFactory(DbConnection connection)
         {
 #if NET45 || NETSTANDARD2_1
             _dbProviderFactory = DbProviderFactories.GetFactory(connection);
-#elif NETSTANDARD2_0
+#elif NET20 || NET35 || NET40 || NETSTANDARD2_0
             //Get the assembly from the dbconnection type
             _dbProviderFactory = GetProviderFactory(connection.GetType().Assembly);
 #else
