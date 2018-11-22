@@ -51,17 +51,6 @@ namespace ADONetHelper
         private readonly DbProviderFactory _dbProviderFactory;
 
         /// <summary>
-        /// An instance of the <see cref="DbProviderFactory"/> class initialized with the provider specified by the Provider property
-        /// </summary>
-        private DbProviderFactory ProviderFactory
-        {
-            get
-            {
-                //Return this back to the caller
-                return _dbProviderFactory;
-            }
-        }
-        /// <summary>
         /// The character symbol to use when binding a variable in a given providers SQL query
         /// </summary>
         public string VariableBinder { get; set; } = "";
@@ -74,7 +63,7 @@ namespace ADONetHelper
             get
             {
                 //Return this back to the caller
-                return this.ProviderFactory.CanCreateDataSourceEnumerator;
+                return this._dbProviderFactory.CanCreateDataSourceEnumerator;
             }
         }
 #endif
@@ -133,7 +122,7 @@ namespace ADONetHelper
         public DbDataSourceEnumerator GetDataSourceEnumerator()
         {
             //Return this back to the caller
-            return this.ProviderFactory.CreateDataSourceEnumerator();
+            return this._dbProviderFactory.CreateDataSourceEnumerator();
         }
         /// <summary>
         /// Gets a <see cref="DbDataAdapter"/> based on the provider the <see cref="DbObjectFactory"/> is utilizing
@@ -142,7 +131,7 @@ namespace ADONetHelper
         public DbDataAdapter GetDbDataAdapter()
         {
             //Return this back to the caller
-            return this.ProviderFactory.CreateDataAdapter();
+            return this._dbProviderFactory.CreateDataAdapter();
         }
         /// <summary>
         /// Gets a <see cref="DbCommandBuilder"/> based on the provider the <see cref="DbObjectFactory"/> is utilizing
@@ -151,7 +140,7 @@ namespace ADONetHelper
         public DbCommandBuilder GetDbCommandBuilder()
         {
             //Return this back to the caller
-            return this.ProviderFactory.CreateCommandBuilder();
+            return this._dbProviderFactory.CreateCommandBuilder();
         }
 #endif
         /// <summary>
@@ -160,7 +149,7 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="DbConnectionStringBuilder"/> based off of target .NET framework data provider</returns>
         public DbConnectionStringBuilder GetDbConnectionStringBuilder(string connectionString = "")
         {
-            DbConnectionStringBuilder builder = this.ProviderFactory.CreateConnectionStringBuilder();
+            DbConnectionStringBuilder builder = this._dbProviderFactory.CreateConnectionStringBuilder();
 
             //Don't set if empty
             if (!string.IsNullOrEmpty(connectionString) || connectionString.Trim() != string.Empty)
@@ -242,7 +231,7 @@ namespace ADONetHelper
         public DbCommand GetDbCommand()
         {
             //Return this back to the caller
-            return this.ProviderFactory.CreateCommand();
+            return this._dbProviderFactory.CreateCommand();
         }
         /// <summary>
         /// Instantiates a new instance of the <see cref="DbConnection"/> object based on the specified provider
@@ -267,7 +256,7 @@ namespace ADONetHelper
         public DbConnection GetDbConnection()
         {
             //Return this back to the caller
-            return this.ProviderFactory.CreateConnection();
+            return this._dbProviderFactory.CreateConnection();
         }
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
@@ -384,7 +373,7 @@ namespace ADONetHelper
         public DbParameter GetDbParameter()
         {
             //Return this back to the caller
-            return this.ProviderFactory.CreateParameter();
+            return this._dbProviderFactory.CreateParameter();
         }
         /// <summary>
         /// Gets an instace of the <see cref="DbTransaction"/> object based on the <see cref="DbConnection"/> object passed in
