@@ -67,8 +67,14 @@ namespace ADONetHelper
         /// <summary>
         /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class
         /// </summary>
+        /// <param name="connectionString">The connection string that will be used to when building a connection string</param>
         /// <returns>Returns a <see cref="DbConnectionStringBuilder"/> based off of target .NET framework data provider</returns>
-        DbConnectionStringBuilder GetDbConnectionStringBuilder(string connectionString = "");
+        DbConnectionStringBuilder GetDbConnectionStringBuilder(string connectionString);
+        /// <summary>
+        /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class
+        /// </summary>
+        /// <returns>Returns a <see cref="DbConnectionStringBuilder"/> based off of target .NET framework data provider</returns>
+        DbConnectionStringBuilder GetDbConnectionStringBuilder();
         /// <summary>
         /// Gets an instance of a <see cref="DbCommand"/> object
         /// </summary>

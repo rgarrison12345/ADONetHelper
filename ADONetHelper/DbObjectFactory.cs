@@ -144,12 +144,13 @@ namespace ADONetHelper
         }
 #endif
         /// <summary>
-        /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class
+        /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class using the passed in <paramref name="connectionString"/>
         /// </summary>
+        /// <param name="connectionString">The connection string that will be used to when building a connection string</param>
         /// <returns>Returns a <see cref="DbConnectionStringBuilder"/> based off of target .NET framework data provider</returns>
-        public DbConnectionStringBuilder GetDbConnectionStringBuilder(string connectionString = "")
+        public DbConnectionStringBuilder GetDbConnectionStringBuilder(string connectionString)
         {
-            DbConnectionStringBuilder builder = this._dbProviderFactory.CreateConnectionStringBuilder();
+            DbConnectionStringBuilder builder = this.GetDbConnectionStringBuilder();
 
             //Don't set if empty
             if (!string.IsNullOrEmpty(connectionString) || connectionString.Trim() != string.Empty)
@@ -159,6 +160,15 @@ namespace ADONetHelper
 
             //Return this back to the caller
             return builder;
+        }
+        /// <summary>
+        /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class
+        /// </summary>
+        /// <returns>Returns a <see cref="DbConnectionStringBuilder"/> based off of target .NET framework data provider</returns>
+        public DbConnectionStringBuilder GetDbConnectionStringBuilder()
+        {
+            //Return this back to the caller
+            return this._dbProviderFactory.CreateConnectionStringBuilder();
         }
         /// <summary>
         /// Gets an instance of a formatted <see cref="DbCommand"/> object based on the specified provider
