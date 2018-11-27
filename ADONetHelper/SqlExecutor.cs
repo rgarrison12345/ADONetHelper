@@ -125,7 +125,7 @@ namespace ADONetHelper
         /// Constructor to query a database using an existing <see cref="DbConnection"/> to initialize the <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">An instance of <see cref="DbConnection"/> to use to query a database </param>
-        public SqlExecutor(DbConnection connection)
+        public SqlExecutor(in DbConnection connection)
         {
             //Set properties
             _connection = connection;
@@ -141,7 +141,7 @@ namespace ADONetHelper
         /// An example of provider name would be System.Data.SqlClient.  The drivers assembly needs to be installed in the Global Assembly Cache in order to be referenced.
         /// </example>
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
-        public SqlExecutor(string providerName)
+        public SqlExecutor(in string providerName)
         {
             //Set properties
             _factory = new DbObjectFactory(providerName);
@@ -150,7 +150,7 @@ namespace ADONetHelper
         /// Initializes a new instance with an instance of <see cref="IDbObjectFactory"/>
         /// </summary>
         /// <param name="factory">An instance of <see cref="IDbObjectFactory"/></param>
-        public SqlExecutor(IDbObjectFactory factory)
+        public SqlExecutor(in IDbObjectFactory factory)
         {
             _factory = factory;
         }
@@ -158,7 +158,7 @@ namespace ADONetHelper
         /// Instantiates a new instance of <see cref="SqlExecutor"/> with the <paramref name="factory"/>
         /// </summary>
         /// <param name="factory">An instance of <see cref="DbProviderFactory"/></param>
-        public SqlExecutor(DbProviderFactory factory)
+        public SqlExecutor(in DbProviderFactory factory)
         {
             _factory = new DbObjectFactory(factory);
         }
