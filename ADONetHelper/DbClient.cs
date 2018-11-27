@@ -250,7 +250,7 @@ namespace ADONetHelper
         /// Instantiates a new instance of <see cref="DbClient"/> with an instance of <see cref="ISqlExecutor"/>
         /// </summary>
         /// <param name="executor">An instance of <see cref="ISqlExecutor"/></param>
-        public DbClient(ISqlExecutor executor)
+        public DbClient(in ISqlExecutor executor)
         {
             //Set fields
             _executeSQL = executor;
@@ -261,7 +261,7 @@ namespace ADONetHelper
         /// <param name="factory">An instance of a <see cref="DbProviderFactory"/> client class</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        public DbClient(string connectionString, CommandType queryCommandType, DbProviderFactory factory) : this(connectionString, string.Empty)
+        public DbClient(in string connectionString, in CommandType queryCommandType, in DbProviderFactory factory) : this(connectionString, string.Empty)
         {
             //Set fields/properties
             _executeSQL = new SqlExecutor(factory);
@@ -272,7 +272,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="factory">An instance of the <see cref="DbProviderFactory"/> client class</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
-        public DbClient(string connectionString, DbProviderFactory factory) : this(connectionString, string.Empty)
+        public DbClient(in string connectionString, in DbProviderFactory factory) : this(connectionString, string.Empty)
         {
             //Set fields/properties
             _executeSQL = new SqlExecutor(factory);
@@ -284,7 +284,7 @@ namespace ADONetHelper
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        public DbClient(string connectionString, string providerName, CommandType queryCommandType) : this(connectionString, providerName)
+        public DbClient(in string connectionString, in string providerName, in CommandType queryCommandType) : this(connectionString, providerName)
         {
             //Set properties
             this.QueryCommandType = queryCommandType;
@@ -294,7 +294,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
-        public DbClient(string connectionString, string providerName) : this(providerName)
+        public DbClient(in string connectionString, in string providerName) : this(providerName)
         {
             //Set properties
             this.ConnectionString = connectionString;
@@ -303,7 +303,7 @@ namespace ADONetHelper
         /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="providerName"/>
         /// </summary>
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
-        public DbClient(string providerName)
+        public DbClient(in string providerName)
         {
             //Set fields
             _executeSQL = new SqlExecutor(providerName);
@@ -312,7 +312,7 @@ namespace ADONetHelper
         /// Instantiates a new instance of <see cref="DbClient"/> using an existing <see cref="DbConnection"/> to initialize the <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">An instance of <see cref="DbConnection"/> to use to query a database </param>
-        public DbClient(DbConnection connection)
+        public DbClient(in DbConnection connection)
         {
             //Set properties
             _executeSQL = new SqlExecutor(connection);
@@ -322,7 +322,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="connectionString">The connection string used to query a database</param>
         /// <param name="factory">An instance of <see cref="IDbObjectFactory"/> to create the objects needed to help query a database</param>
-        public DbClient(string connectionString, IDbObjectFactory factory) : this(connectionString, string.Empty)
+        public DbClient(in string connectionString, in IDbObjectFactory factory) : this(connectionString, string.Empty)
         {
             //Set properties
             _executeSQL = new SqlExecutor(factory);
