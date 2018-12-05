@@ -612,7 +612,7 @@ namespace ADONetHelper
                 {
                     param.Value = DBNull.Value;
                 }
-                //Check if we need to add in the @ sign
+                //Check if we need to add in the variable binder
                 if (param.ParameterName.StartsWith(this.VariableBinder) == false)
                 {
                     param.ParameterName = this.VariableBinder + param.ParameterName;
