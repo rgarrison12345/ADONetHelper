@@ -98,7 +98,7 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passedin <paramref name="query"/></returns>
-        IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query);
+        IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query);
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
@@ -107,7 +107,7 @@ namespace ADONetHelper
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query, string connectionString);
+        IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query, string connectionString);
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
@@ -116,7 +116,7 @@ namespace ADONetHelper
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="connection">An instance of a DbConnection object to use to query a datastore</param>
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        IEnumerable<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection);
+        IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query, DbConnection connection);
         /// <summary>
         /// Utility method for returning a <see cref="DbDataReader"/>
         /// </summary>

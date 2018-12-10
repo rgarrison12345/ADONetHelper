@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.1.3</Version>
+    <Version>3.1.4</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -17,7 +17,7 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET helper library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Adding ConnectionStringKeyCount property to DbClient and IDbClient.  Missed passing in the cancellationtoken into OpenDbConnectionAsync in ExecuteNonQueryAsync overload
+      Renaming all synchronous GetDataObjectList to GetDataObjectEnumerable.  Using yield return in SQLExecutor Synchronous GetDataObjectEnumerable calls.
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>

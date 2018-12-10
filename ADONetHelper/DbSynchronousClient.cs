@@ -418,7 +418,7 @@ namespace ADONetHelper
         /// <typeparam name="T">An instance of the type the caller wants create to from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public IEnumerable<T> GetDataObjectList<T>(string query) where T : class
+        public IEnumerable<T> GetDataObjectEnumerable<T>(string query) where T : class
         {
             try
             {
@@ -426,7 +426,7 @@ namespace ADONetHelper
                 attemptsMade++;
 
                 //Return this back to the caller
-                return this.ExecuteSQL.GetDataObjectList<T>(this.QueryCommandType, query);
+                return this.ExecuteSQL.GetDataObjectEnumerable<T>(this.QueryCommandType, query);
             }
             catch (Exception ex)
             {
@@ -441,7 +441,7 @@ namespace ADONetHelper
                     }
 
                     //Call this again
-                    return this.GetDataObjectList<T>(query);
+                    return this.GetDataObjectEnumerable<T>(query);
                 }
                 else
                 {
@@ -469,7 +469,7 @@ namespace ADONetHelper
                 attemptsMade++;
 
                 //Return this back to the caller
-                return this.ExecuteSQL.GetDataObjectList<T>(this.QueryCommandType, query, connection);
+                return this.ExecuteSQL.GetDataObjectEnumerable<T>(this.QueryCommandType, query, connection);
             }
             catch (Exception ex)
             {
