@@ -96,7 +96,6 @@ namespace ADONetHelper
                 return this.ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
             }
         }
-
         /// <summary>
         /// Whether the <see cref="ConnectionString"/> has a fixed size
         /// </summary>
@@ -465,7 +464,7 @@ namespace ADONetHelper
             //Check for null or empty
             if (string.IsNullOrEmpty(parameterName) || parameterName.Trim() == string.Empty)
             {
-                throw new ArgumentException(nameof(parameterName) + "is null or empty");
+                throw new ArgumentException(nameof(parameterName) + " is null or empty");
             }
 
             //Loop through all parameters
