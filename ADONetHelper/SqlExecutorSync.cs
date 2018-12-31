@@ -43,26 +43,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataSet"/> based on the <paramref name="query"/> passed into the routine</returns>
         public DataSet GetDataSet(CommandType queryCommandType, string query)
         {
-            //Wrap this automatically to dispose of resources
-            using (DbDataAdapter adap = this.Factory.GetDbDataAdapter())
-            {
-                //Wrap this automatically to dispose of resources
-                using (DbCommand command = this.Factory.GetDbCommand(this.CommandTimeout))
-                {
-                    DataSet set = new DataSet();
-
-                    command.CommandType = queryCommandType;
-                    command.CommandText = query;
-                    command.Parameters.AddRange(this.Parameters.ToArray());
-
-                    //Fill out the dataset
-                    adap.SelectCommand = command;
-                    adap.Fill(set);
-
-                    //Return this back to the caller
-                    return set;
-                }
-            }
+			//Return this back to the caller
+			return this.GetDataSet(queryCommandType, query, this.Connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
@@ -76,23 +58,18 @@ namespace ADONetHelper
             //Wrap this automatically to dispose of resources
             using (DbDataAdapter adap = this.Factory.GetDbDataAdapter())
             {
-                //Wrap this automatically to dispose of resources
-                using (DbCommand command = this.Factory.GetDbCommand(this.CommandTimeout))
-                {
-                    DataSet set = new DataSet();
+				//Wrap this automatically to dispose of resources
+				using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
+				{
+					DataSet set = new DataSet();
 
-                    command.CommandType = queryCommandType;
-                    command.CommandText = query;
-                    command.Connection = connection;
-                    command.Parameters.AddRange(this.Parameters.ToArray());
+					//Fill out the dataset
+					adap.SelectCommand = command;
+					adap.Fill(set);
 
-                    //Fill out the dataset
-                    adap.SelectCommand = command;
-                    adap.Fill(set);
-
-                    //Return this back to the caller
-                    return set;
-                }
+					//Return this back to the caller
+					return set;
+				}
             }
         }
         /// <summary>
@@ -103,16 +80,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(CommandType queryCommandType, string query)
         {
-            DataTable dt = new DataTable();
-
-            //Return this back to the caller
-            using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query))
-            {
-                dt.Load(reader);
-
-                //Return this back to the caller
-                return dt;
-            }
+			//Return this back to the caller
+			return this.GetDataTable(queryCommandType, query, this.Connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/>
@@ -123,12 +92,13 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(CommandType queryCommandType, string query, DbConnection connection)
         {
-            DataTable dt = new DataTable();
-
             //Return this back to the caller
-            using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection))
+            using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, this.Connection))
             {
-                dt.Load(reader);
+				DataTable dt = new DataTable();
+
+				//Load in the result set
+				dt.Load(reader);
 
                 //Return this back to the caller
                 return dt;
