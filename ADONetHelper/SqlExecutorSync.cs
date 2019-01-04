@@ -55,8 +55,11 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataSet"/> based on the <paramref name="query"/> passed into the routine</returns>
         public DataSet GetDataSet(CommandType queryCommandType, string query, DbConnection connection)
         {
-            //Wrap this automatically to dispose of resources
-            using (DbDataAdapter adap = this.Factory.GetDbDataAdapter())
+			//Open the database connection
+			Utilites.OpenDbConnection(connection);
+
+			//Wrap this automatically to dispose of resources
+			using (DbDataAdapter adap = this.Factory.GetDbDataAdapter())
             {
 				//Wrap this automatically to dispose of resources
 				using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -92,8 +95,11 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(CommandType queryCommandType, string query, DbConnection connection)
         {
-            //Return this back to the caller
-            using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, this.Connection))
+			//Open the database connection
+			Utilites.OpenDbConnection(connection);
+
+			//Return this back to the caller
+			using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, this.Connection))
             {
 				DataTable dt = new DataTable();
 
