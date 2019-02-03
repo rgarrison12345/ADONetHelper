@@ -107,7 +107,7 @@ namespace ADONetHelper
         #endregion
         #region Utility Methods
         /// <summary>
-        /// Starts a database transaction using the underlying <see cref="DbConnection"/>
+        /// Starts a <see cref="DbTransaction"/>n using the underlying <see cref="DbConnection"/>
         /// </summary>
         /// <returns>Returns an instance of <see cref="DbTransaction"/></returns>
         DbTransaction GetDbTransaction();
