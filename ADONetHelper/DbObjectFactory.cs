@@ -408,7 +408,7 @@ namespace ADONetHelper
         }
         #endregion
         #region Helper Methods
-#if NETSTANDARD2_0
+#if !NET20 && !NET35 && !NET40 && !NET45 && !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClient.
         /// Looks for the <paramref name="providerName"/> within the current <see cref="AssemblyLoadContext"/>
