@@ -127,6 +127,12 @@ namespace ADONetHelper
         /// </returns>
         public async Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token) where T : class
         {
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+           
             //Open the connection if necessary
             await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
@@ -231,6 +237,12 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public async Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token) where T : class
         {
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
             //Open the connection if necessary
             await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
@@ -328,6 +340,12 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DbDataReader"/> object, the caller is responsible for handling closing the DataReader</returns>
         public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
             //Open the database connection if necessary
             await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
@@ -424,6 +442,12 @@ namespace ADONetHelper
         /// <returns>Returns the value of the first column in the first row returned from the passed in query as an object</returns>
         public async Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token)
         {
+            //Check if cancelled
+            if(token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
             //Open the connection to the database
             await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
@@ -522,6 +546,12 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         public async Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token)
         {
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
             //Open the database connection if necessary
             await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
