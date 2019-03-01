@@ -348,7 +348,7 @@ namespace ADONetHelper
             //Check for null or empty
             if (!string.IsNullOrEmpty(this.VariableBinder) || this.VariableBinder.Trim() != string.Empty)
             {
-                parameter.ParameterName = this.VariableBinder + parameter.ParameterName.Replace(this.VariableBinder, "");
+                parameter.ParameterName = this.VariableBinder + parameterName.Replace(this.VariableBinder, "");
             }
             else
             {
