@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,6 +24,7 @@ SOFTWARE.*/
 #region Using Declarations
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 #endregion
 
@@ -134,6 +135,16 @@ namespace ADONetHelper
             //Get the connection string from the connection
             this.ConnectionStringBuilder.ConnectionString = _connection.ConnectionString;
         }
+#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
+        /// <summary>
+        /// Instantiates a new instance of <see cref="SqlExecutor"/> with the passed in <paramref name="row"/>
+        /// </summary>
+        /// <param name="row">An instance of <see cref="DataRow"/> that contains the information to configure a <see cref="DbProviderFactory"/></param>
+        public SqlExecutor(DataRow row)
+        {
+            _factory = new DbObjectFactory(row);
+        }
+#endif
         /// <summary>
         /// The overloaded constuctor that will initialize the <paramref name="providerName"/>
         /// </summary>
@@ -230,4 +241,3 @@ namespace ADONetHelper
         #endregion
     }
 }
-

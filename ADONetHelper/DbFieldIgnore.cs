@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

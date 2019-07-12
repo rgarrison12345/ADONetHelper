@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -93,7 +93,7 @@ namespace ADONetHelper
         /// </summary>
         int ConnectionTimeout { get; }
         /// <summary>
-        /// Gets the name of the current database after a connection is opened, or the database name specified in the connection string before the connection is opened.
+        /// Gets the name of the current database after a connection is opened, or the database name specified in the connection string before the <see cref="DbConnection"/> is opened.
         /// </summary>
         string Database { get; }
         /// <summary>

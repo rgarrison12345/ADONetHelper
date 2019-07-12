@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -84,7 +84,7 @@ namespace ADONetHelper
         /// Gets an instance of a <see cref="DbCommand"/> object
         /// </summary>
         /// <param name="commandTimeout">Gets or sets the wait time in seconds before terminating the attempt to execute a command and generating an error.</param>
-        /// <returns>Returns an instance of DbCommand Object</returns>
+        /// <returns>Returns an instance of <see cref="DbCommand"/> Object</returns>
         DbCommand GetDbCommand(int commandTimeout);
         /// <summary>
         /// Gets an instance of a <see cref="DbCommand"/> subclass based on the specified provider
@@ -92,7 +92,7 @@ namespace ADONetHelper
         /// <param name="commandTimeout">Gets or sets the wait time in seconds before terminating the attempt to execute a command and generating an error.</param>
         /// <param name="connection">Represents a <see cref="DbConnection"/> to a database</param>
         /// <param name="transact">An instance of a <see cref="DbTransaction"/> class</param>
-        /// <returns>Returns an instantiated formatted DbCommand object based off the provider passed into the class</returns>
+        /// <returns>Returns an instantiated formatted <see cref="DbCommand"/> object based off the provider passed into the class</returns>
         DbCommand GetDbCommand(DbConnection connection, DbTransaction transact, int commandTimeout);
         /// <summary>
         /// Instantiates a new isntance of the <see cref="DbCommand"/> subclass based on the provider passed into the class constructor
@@ -103,7 +103,7 @@ namespace ADONetHelper
         /// <param name="parameters">The <see cref="IEnumerable{DbParameter}"/> of parameters associated with the query parameter</param>
         /// <param name="query">The SQL command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns an instantiated formatted DbCommand object based off the provider passed into the class</returns>
+        /// <returns>Returns an instantiated formatted <see cref="DbCommand"/> object based off the provider passed into the class</returns>
         DbCommand GetDbCommand(CommandType queryCommandType, string query, IEnumerable<DbParameter> parameters, DbConnection connection, int commandTimeout, DbTransaction transact = null);
         /// <summary>
         /// Instantiates a new instance of a <see cref="DbTransaction"/> subclass based on the provider passed into class constructor
@@ -127,7 +127,7 @@ namespace ADONetHelper
         /// Instantiates a new instance of a <see cref="DbConnection"/> subclass based on the provider passed into the class constructor
         /// </summary>
         /// <param name="connectionString">The connection string used to query a data store</param>
-        /// <returns>Returns a new instance of the DbConnection subclass based on the specified provider</returns>
+        /// <returns>Returns a new instance of the <see cref="DbConnection"/> subclass based on the specified provider</returns>
         DbConnection GetDbConnection(string connectionString);
         /// <summary>
         /// Create an instance of a <see cref="DbParameter"/> based off of the provider passed into factory
@@ -142,15 +142,37 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DbParameter"/> type with information passed into procedure</returns>
         DbParameter GetDbParameter(string parameterName, object parameterValue);
         /// <summary>
-        /// Gets an initialized instance of a <see cref="DbParameter"/> subclass based on the specified provider
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
-        /// <param name="dataType">The maximum size, in bytes, of the data</param>
-        /// <param name="size">The data type of the field in the database</param>
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
         /// <param name="parameterName">The name of the parameter to identify the parameter</param>
-        /// <param name="parameterValue">The value of the parameter</param>
-        /// <param name="paramDirection">The direction of the parameter, defaults to input</param>
-        /// <returns>Returns an instance of <see cref="DbParameter"/> type with information passed into procedure</returns>
-        DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input);
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, ParameterDirection paramDirection);
+#if !NET20 && !NET35 && !NET40
+        /// <summary>
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
+        /// </summary>
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
+        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="scale">The number of decimal places to which the <see cref="DbParameter.Value"/> property is resolved.  The default value is <c>null</c></param>
+        /// <param name="precision">The maximum number of digits used to represent the <see cref="DbParameter.Value"/> property.  The default value is <c>null</c></param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        DbParameter GetFixedSizeDbParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input);
+#endif
+        /// <summary>
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
+        /// </summary>
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
+        /// <param name="size">maximum size, in bytes, of the data.  Should not be set for numeric types.  The default value is <c>null</c></param>
+        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        DbParameter GetVariableSizeDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input);
         #endregion
     }
 }

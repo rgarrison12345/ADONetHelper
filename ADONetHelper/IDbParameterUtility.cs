@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -80,6 +80,19 @@ namespace ADONetHelper
         /// </summary>
         /// <returns>Returns a <see cref="List{T}"/> of <see cref="DbParameter"/></returns>
         List<DbParameter> GetCurrentParameters();
+#if !NET20 && !NET35 && !NET40
+        /// <summary>
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
+        /// </summary>
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
+        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="scale">The number of decimal places to which the <see cref="DbParameter.Value"/> property is resolved.  The default value is <c>null</c></param>
+        /// <param name="precision">The maximum number of digits used to represent the <see cref="DbParameter.Value"/> property.  The default value is <c>null</c></param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        DbParameter AddParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input);
+#endif
         /// <summary>
         /// Adds a new parameter to the parameters collection
         /// </summary>

@@ -43,3 +43,4 @@
 /.vs/slnx.sqlite-journal
 /ADONetHelper.Snowflake/bin/Release
 /.vs
+/ADONetHelper.Tests.NetCore

@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -76,7 +76,7 @@ namespace ADONetHelper
         internal async static Task OpenDbConnectionAsync(DbConnection connection)
         {
             //Await the task
-            await OpenDbConnectionAsync(connection, default(CancellationToken)).ConfigureAwait(false);
+            await OpenDbConnectionAsync(connection, default).ConfigureAwait(false);
         }
         /// <summary>
         /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>

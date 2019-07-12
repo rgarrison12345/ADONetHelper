@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2018
+Copyright(c) 2019
 Robert Garrison
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
-using System.Xml;
 #if NETSTANDARD2_0
 using System.Runtime.Loader;
 #endif
@@ -83,12 +82,12 @@ namespace ADONetHelper
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         public DbObjectFactory(string providerName)
         {
-#if NET20 || NET35 || NET40 || NET45 || NETSTANDARD2_1
+#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
             try
             {
                 _dbProviderFactory = DbProviderFactories.GetFactory(providerName);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _dbProviderFactory = GetProviderFactory(providerName);
             }
@@ -102,7 +101,7 @@ namespace ADONetHelper
         /// <param name="connection">An instance of <see cref="DbConnection"/> </param>
         public DbObjectFactory(DbConnection connection)
         {
-#if NET45 || NETSTANDARD2_1
+#if NET451 || NETSTANDARD2_1
             _dbProviderFactory = DbProviderFactories.GetFactory(connection);
 #elif NET20 || NET35 || NET40 || NETSTANDARD2_0
             //Get the assembly from the dbconnection type
@@ -112,6 +111,16 @@ namespace ADONetHelper
             _dbProviderFactory = GetProviderFactory(connection.GetType().AssemblyQualifiedName);
 #endif
         }
+#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
+        /// <summary>
+        /// Instantiates a new instance with the passed in <paramref name="row"/>
+        /// </summary>
+        /// <param name="row">An instance of <see cref="DataRow"/> that has the necessary information to create an instance of <see cref="DbProviderFactory"/></param>
+        public DbObjectFactory(DataRow row)
+        {
+            _dbProviderFactory = DbProviderFactories.GetFactory(row);
+        }
+#endif
         #endregion
         #region Utility Methods
 #if !NETSTANDARD1_3
@@ -179,7 +188,7 @@ namespace ADONetHelper
         /// <param name="parameters">The list of <see cref="IEnumerable{DbParameter}"/> associated with the query parameter</param>
         /// <param name="query">The SQL command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns an formatted <see cref="DbCommand"/> object based off the provider passed into the class</returns>
+        /// <returns>Returns an instance of <see cref="DbCommand"/> object based off the provider passed into the class</returns>
         public DbCommand GetDbCommand(CommandType queryCommandType, string query, IEnumerable<DbParameter> parameters, DbConnection connection, int commandTimeout, DbTransaction transact = null)
         {
             //Get the DbCommand object
@@ -208,7 +217,7 @@ namespace ADONetHelper
         /// <param name="commandTimeout">Gets or sets the wait time in seconds before terminating the attempt to execute a command and generating an error.</param>
         /// <param name="connection">Represents a connection to a database</param>
         /// <param name="transact">An instance of a <see cref="DbTransaction"/> object</param>
-        /// <returns>Returns an formatted <see cref="DbCommand"/> object based off the provider passed into the class</returns>
+        /// <returns>Returns an instance of <see cref="DbCommand"/> object based off the provider passed into the class</returns>
         public DbCommand GetDbCommand(DbConnection connection, DbTransaction transact, int commandTimeout)
         {
             //Get the DbCommand object
@@ -268,24 +277,49 @@ namespace ADONetHelper
             //Return this back to the caller
             return this._dbProviderFactory.CreateConnection();
         }
+#if !NET20 && !NET35 && !NET40
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
         /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
-        /// <param name="size">maximum size, in bytes, of the data.  Should not be set for numeric types.</param>
         /// <param name="parameterName">The name of the parameter to identify the parameter</param>
-        /// <param name="parameterValue">The value of the parameter</param>
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="scale">The number of decimal places to which the <see cref="DbParameter.Value"/> property is resolved.  The default value is <c>null</c></param>
+        /// <param name="precision">The maximum number of digits used to represent the <see cref="DbParameter.Value"/> property.  The default value is <c>null</c></param>
         /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
-        public DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
+        public DbParameter GetFixedSizeDbParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
             //Get the DbParameter object
-            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue);
-            bool paramIsVariableSize = (parameter.Value is string || parameter.Value is byte[]);
+            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue, dataType, paramDirection);
 
-            //Set parameter properties
-            parameter.DbType = dataType;
-            parameter.Direction = paramDirection;
+            //Check for values
+            if (precision.HasValue == true)
+            {
+                parameter.Precision = precision.Value;
+            }
+            if (scale.HasValue == true)
+            {
+                parameter.Scale = scale.Value;
+            }
+
+            //Return this back to the caller
+            return parameter;
+        }
+#endif
+        /// <summary>
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
+        /// </summary>
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
+        /// <param name="size">maximum size, in bytes, of the data.  The default value is <c>null</c></param>
+        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        public DbParameter GetVariableSizeDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
+        {
+            //Get the DbParameter object
+            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue, dataType, paramDirection);
 
             //Check for value
             if (size.HasValue == true)
@@ -294,7 +328,7 @@ namespace ADONetHelper
             }
 
             //Check if this parameter is a database null value
-            if (parameter.IsNullable == false && paramIsVariableSize == true && parameter.Size <= 0)
+            if (parameter.IsNullable == false && parameter.Size <= 0)
             {
                 //Check the parameter direction
                 if (parameter.Direction == ParameterDirection.Output)
@@ -315,6 +349,26 @@ namespace ADONetHelper
                     }
                 }
             }
+
+            //Return this back to the caller
+            return parameter;
+        }
+        /// <summary>
+        /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
+        /// </summary>
+        /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
+        /// <param name="parameterName">The name of the parameter to identify the parameter</param>
+        /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
+        /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
+        /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
+        public DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, ParameterDirection paramDirection)
+        {
+            //Get the DbParameter object
+            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue);
+
+            //Set parameter properties
+            parameter.DbType = dataType;
+            parameter.Direction = paramDirection;
 
             //Return this back to the caller
             return parameter;
@@ -364,11 +418,6 @@ namespace ADONetHelper
             {
                 parameter.DbType = DbType.Guid;
             }
-            else if (parameterValue is XmlNode)
-            {
-                parameter.DbType = DbType.String;
-                parameter.Value = ((XmlNode)parameterValue).OuterXml;
-            }
 
             //Check if this is nullable
             parameter.IsNullable = (parameter.Value == DBNull.Value);
@@ -408,7 +457,7 @@ namespace ADONetHelper
         }
         #endregion
         #region Helper Methods
-#if !NET20 && !NET35 && !NET40 && !NET45 && !NETSTANDARD1_3
+#if !NET20 && !NET35 && !NET40 && !NET451 && !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClient.
         /// Looks for the <paramref name="providerName"/> within the current <see cref="AssemblyLoadContext"/>
