@@ -556,6 +556,7 @@ namespace ADONetHelper
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
+        /// <exception cref="ArgumentException">Throws argument exception when there are duplicate parameter names</exception>
         /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
         /// <param name="parameterName">The name of the parameter to identify the parameter</param>
         /// <param name="parameterValue">The value of the parameter as a <see cref="object"/></param>
@@ -682,6 +683,7 @@ namespace ADONetHelper
         /// <summary>
         /// Adds an <see cref="IDictionary{TKey, TValue}"/> object to add to the helpers underlying db parameter collection for the current <see cref="DbConnection"/>
         /// </summary>
+        /// <exception cref="ArgumentException">Throws argument exception when there are duplicate parameter names</exception>
         /// <param name="dbParams">An <see cref="IDictionary{TKey, TValue}"/> of <see cref="KeyValuePair{TKey, TValue}"/> where the key is a parameter name and the value is the value of a parameter</param>
         public void AddParameterRange(IDictionary<string, object> dbParams)
         {
