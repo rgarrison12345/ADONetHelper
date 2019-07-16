@@ -135,7 +135,7 @@ namespace ADONetHelper
             //Get the connection string from the connection
             this.ConnectionStringBuilder.ConnectionString = _connection.ConnectionString;
         }
-#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
+#if !NETSTANDARD1_3 && !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance of <see cref="SqlExecutor"/> with the passed in <paramref name="row"/>
         /// </summary>

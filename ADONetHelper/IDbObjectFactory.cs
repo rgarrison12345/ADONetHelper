@@ -150,7 +150,7 @@ namespace ADONetHelper
         /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
         DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, ParameterDirection paramDirection);
-#if !NET20 && !NET35 && !NET40
+#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>

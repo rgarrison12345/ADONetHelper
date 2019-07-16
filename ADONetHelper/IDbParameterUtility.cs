@@ -80,7 +80,7 @@ namespace ADONetHelper
         /// </summary>
         /// <returns>Returns a <see cref="List{T}"/> of <see cref="DbParameter"/></returns>
         List<DbParameter> GetCurrentParameters();
-#if !NET20 && !NET35 && !NET40
+#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -91,7 +91,7 @@ namespace ADONetHelper
         /// <param name="precision">The maximum number of digits used to represent the <see cref="DbParameter.Value"/> property.  The default value is <c>null</c></param>
         /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
-        DbParameter AddParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input);
+        DbParameter AddFixedSizeParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input);
 #endif
         /// <summary>
         /// Adds a new parameter to the parameters collection
@@ -102,7 +102,7 @@ namespace ADONetHelper
         /// <param name="parameterValue">The value of the parameter</param>
         /// <param name="paramDirection">The direction of the parameter, defaults to input.  The size must be set for output parameters</param>
         /// <returns>Returns a <see cref="DbParameter"/></returns>
-        DbParameter AddParameter(string parameterName, object parameterValue, DbType type, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input);
+        DbParameter AddVariableSizeParameter(string parameterName, object parameterValue, DbType type, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input);
         /// <summary>
         /// Adds the passed in parameter to the parameters collection
         /// </summary>

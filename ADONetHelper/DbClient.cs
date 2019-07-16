@@ -245,7 +245,7 @@ namespace ADONetHelper
         private int attemptsMade = 0;
         #endregion
         #region Constructors
-#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
+#if !NETSTANDARD1_3 && !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="row"/> and <paramref name="connectionString"/>
         /// </summary>
@@ -463,6 +463,7 @@ namespace ADONetHelper
         /// <summary>
         /// Retrieves a <see cref="DbParameter"/> object by using the passed in parameter name
         /// </summary>
+        /// <exception cref="ArgumentException">Throws when the passed in <paramref name="parameterName"/> is <c>null</c> or <see cref="string.Empty"/></exception>
         /// <exception cref="InvalidOperationException">Thrown when the passed in parameter name is not present in the parameters collection</exception>
         /// <param name="parameterName">The name of the parameter to use to find the parameter value</param>
         /// <returns>The specified <see cref="DbParameter"/> object from the parameters collection</returns>
@@ -552,7 +553,7 @@ namespace ADONetHelper
             //Change the value
             this.ExecuteSQL.Parameters[index] = param;
         }
-#if !NET20 && !NET35 && !NET40
+#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -564,7 +565,7 @@ namespace ADONetHelper
         /// <param name="precision">The maximum number of digits used to represent the <see cref="DbParameter.Value"/> property.  The default value is <c>null</c></param>
         /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
-        public DbParameter AddParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input)
+        public DbParameter AddFixedSizeParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
             //Check if this parameter exists before adding to collection
             if (this.Contains(parameterName) == true)
@@ -590,7 +591,7 @@ namespace ADONetHelper
         /// <param name="parameterName">The name of the parameter to identify the parameter</param>
         /// <param name="parameterValue">The value of the parameter</param>
         /// <param name="paramDirection">The direction of the parameter, defaults to input.  The size must be set for output parameters</param>
-        public DbParameter AddParameter(string parameterName, object parameterValue, DbType type, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
+        public DbParameter AddVariableSizeParameter(string parameterName, object parameterValue, DbType type, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
             //Check if this parameter exists before adding to collection
             if (this.Contains(parameterName) == true)

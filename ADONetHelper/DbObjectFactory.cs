@@ -82,7 +82,7 @@ namespace ADONetHelper
         /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
         public DbObjectFactory(string providerName)
         {
-#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
+#if NET20 || NET35 || NET40 || NET45 || NET451 || NETSTANDARD2_1
             try
             {
                 _dbProviderFactory = DbProviderFactories.GetFactory(providerName);
@@ -101,7 +101,7 @@ namespace ADONetHelper
         /// <param name="connection">An instance of <see cref="DbConnection"/> </param>
         public DbObjectFactory(DbConnection connection)
         {
-#if NET451 || NETSTANDARD2_1
+#if !NET20 && !NET35 && !NET40 && !NETSTANDARD1_3 && !NETSTANDARD2_0
             _dbProviderFactory = DbProviderFactories.GetFactory(connection);
 #elif NET20 || NET35 || NET40 || NETSTANDARD2_0
             //Get the assembly from the dbconnection type
@@ -111,7 +111,7 @@ namespace ADONetHelper
             _dbProviderFactory = GetProviderFactory(connection.GetType().AssemblyQualifiedName);
 #endif
         }
-#if NET20 || NET35 || NET40 || NET451 || NETSTANDARD2_1
+#if !NETSTANDARD1_3 && !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance with the passed in <paramref name="row"/>
         /// </summary>
@@ -277,7 +277,7 @@ namespace ADONetHelper
             //Return this back to the caller
             return this._dbProviderFactory.CreateConnection();
         }
-#if !NET20 && !NET35 && !NET40
+#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -310,6 +310,7 @@ namespace ADONetHelper
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
+        /// <exception cref="ArgumentNullException">Throws when the <paramref name="paramDirection"/> is <see cref="ParameterDirection.Output"/> and the <paramref name="size"/> is <c>null</c></exception>
         /// <param name="dataType">The <see cref="DbType"/> of the field in the database</param>
         /// <param name="size">maximum size, in bytes, of the data.  The default value is <c>null</c></param>
         /// <param name="parameterName">The name of the parameter to identify the parameter</param>
@@ -457,7 +458,7 @@ namespace ADONetHelper
         }
         #endregion
         #region Helper Methods
-#if !NET20 && !NET35 && !NET40 && !NET451 && !NETSTANDARD1_3
+#if !NET20 && !NET35 && !NET40 && !NET45 && !NET451 && !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClient.
         /// Looks for the <paramref name="providerName"/> within the current <see cref="AssemblyLoadContext"/>

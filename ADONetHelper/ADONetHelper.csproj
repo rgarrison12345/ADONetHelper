@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard1.3;net451;net40;net35;net20</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.3;net451;net45;net40;net35;net20</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.2.2</Version>
+    <Version>3.3.0</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -17,7 +17,11 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET helper library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Bug fix in DbObjectFactory.GetDbParameter(string parameterName, string parameterValue) not setting parameter name correctly
+      Adding .NET 4.5.1 build
+      Adding constructor in DbObjectFactory, DbClient, and SqlExecutor that takes in a DataRow
+      Adding GetVariableSizedParameter, GetFixedSizedParameter to IDbObjetFactory and DbObjectFactory
+      Adding AddVariableSizedParameter, AddFixedSizedParameter to IDbParameterUtility and DbClient
+      FixedSized parameter methods only available in .NET 4.5.1 and above
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
@@ -57,7 +61,7 @@
   <ItemGroup Condition="'$(TargetFramework)'=='net20' or '$(TargetFramework)'=='net35'">
     <Reference Include="System.Transactions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"></Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net40' or '$(TargetFramework)'=='net451'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net40' or '$(TargetFramework)'=='net45' or '$(TargetFramework)'=='net451'">
     <Reference Include="System.Transactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"></Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
