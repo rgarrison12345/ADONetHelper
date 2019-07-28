@@ -213,15 +213,6 @@ namespace ADONetHelper
         /// Represents how a command should be interpreted by the data provider.  Default value is <see cref="CommandType.Text"/>
         /// </summary>
         public CommandType QueryCommandType { get; set; } = CommandType.Text;
-        /// <summary>
-        /// The maximum amount of attempts a SQL query should attempt to execute before failing.  Only uses values greater than zero
-        /// </summary>
-        public int RetryAttempts { get; set; } = 0;
-        /// <summary>
-        /// The amount of time in seconds a retry attempt should wait before another attempt is made.  Only uses values greater than zero
-        /// </summary>
-        public int RetryInterval { get; set; } = 0;
-        /// <summary>
         /// Gets or sets the wait time in seconds before terminating the attempt to execute a command and generating an error.  Default value is 30
         /// </summary>
         public int CommandTimeout { get; set; } = 30;
@@ -242,7 +233,6 @@ namespace ADONetHelper
         /// Variable To detect redundant calls of dispose
         /// </summary>
         protected bool disposedValue = false;
-        private int attemptsMade = 0;
         #endregion
         #region Constructors
 #if !NETSTANDARD1_3 && !NETSTANDARD2_0

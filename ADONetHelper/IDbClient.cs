@@ -73,14 +73,6 @@ namespace ADONetHelper
         /// </summary>
         ConnectionState State { get; }
         /// <summary>
-        /// The maximum amount of attempts a SQL query should attempt to execute before failing
-        /// </summary>
-        int RetryAttempts { get; set; }
-        /// <summary>
-        /// The amount of time in milliseconds a retry attempt should wait before another attempt is made
-        /// </summary>
-        int RetryInterval { get; set; }
-        /// <summary>
         /// ConnectionString as a <see cref="string"/> to use when creating a <see cref="DbConnection"/>
         /// </summary>
         string ConnectionString { get; set; }

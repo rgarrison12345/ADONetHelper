@@ -33,7 +33,7 @@ using System.Transactions;
 #endregion
 
 namespace ADONetHelper
-{ 
+{
     public partial class DbClient
     {
         #region Data Retrieval
@@ -45,36 +45,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataSet"/> based on the <paramref name="query"/> passed into the routine</returns>
         public DataSet GetDataSet(string query)
         {
-            try
-            {
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataSet(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDataSet(query);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.ExecuteSQL.GetDataSet(this.QueryCommandType, query);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
@@ -84,36 +56,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataSet"/> based on the <paramref name="query"/> passed into the routine</returns>
         public DataSet GetDataSet(string query, DbConnection connection)
         {
-            try
-            {
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataSet(this.QueryCommandType, query, connection);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDataSet(query, connection);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDataSet(query, connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/>
@@ -122,39 +66,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(string query)
         {
-            try
-            {
-                //Keep incrementing the attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataTable(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDataTable(query);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDataTable(query);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/>
@@ -164,39 +77,8 @@ namespace ADONetHelper
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(string query, DbConnection connection)
         {
-            try
-            {
-                //Keep incrementing the attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataTable(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDataTable(query, connection);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDataTable(query, connection);
         }
 #endif
         /// <summary>
@@ -208,39 +90,8 @@ namespace ADONetHelper
         /// <returns>An instance of <see cref="DbDataReader"/></returns>
         public DbDataReader GetDbDataReader(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDbDataReader(this.QueryCommandType, query, behavior, transact);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDbDataReader(query, behavior, transact);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDbDataReader(query, behavior, transact);
         }
         /// <summary>
         /// Utility method for acting on a <see cref="DbDataReader"/>
@@ -250,39 +101,9 @@ namespace ADONetHelper
         /// <returns>A <see cref="DbDataReader"/> object, the caller is responsible for handling closing the <see cref="DbDataReader"/>.  Once the data reader is closed, the database connection will be closed as well</returns>
         public void GetDbDataReader(string query, Action<DbDataReader> act)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
 
-                //Return this back to the caller
-                this.ExecuteSQL.GetDbDataReader(this.QueryCommandType, query, act);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    this.GetDbDataReader(query, act);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            this.GetDbDataReader(query, act);
         }
         /// <summary>
         /// Utility method for returning a scalar value as an <see cref="object"/> from the database
@@ -292,39 +113,8 @@ namespace ADONetHelper
         /// <returns>Returns the value of the first column in the first row as an object</returns>
         public object GetScalarValue(string query, DbTransaction transact = null)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetScalarValue(this.QueryCommandType, query, transact);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetScalarValue(query, transact);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetScalarValue(query, transact);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -336,39 +126,8 @@ namespace ADONetHelper
         /// </returns>
         public T GetDataObject<T>(string query) where T : class
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataObject<T>(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDataObject<T>(query);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDataObject<T>(query);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -381,36 +140,8 @@ namespace ADONetHelper
         /// </returns>
         public T GetDataObject<T>(string query, DbConnection connection) where T : class
         {
-            try
-            {
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataObject<T>(this.QueryCommandType, query, connection);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Return this back to the caller
-                    return this.GetDataObject<T>(query, connection);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDataObject<T>(query, connection);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -420,39 +151,8 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public IEnumerable<T> GetDataObjectEnumerable<T>(string query) where T : class
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataObjectEnumerable<T>(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.GetDataObjectEnumerable<T>(query);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.ExecuteSQL.GetDataObjectEnumerable<T>(this.QueryCommandType, query);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -463,39 +163,8 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public IEnumerable<T> GetDataObjectList<T>(string query, DbConnection connection) where T : class
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.GetDataObjectEnumerable<T>(this.QueryCommandType, query, connection);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Return this back to the caller
-                    return this.GetDataObjectList<T>(query, connection);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return this.GetDataObjectList<T>(query, connection);
         }
         #endregion
         #region Data Modifications
@@ -506,45 +175,8 @@ namespace ADONetHelper
         /// <returns>Returns the amount of records affected by the passed in query</returns>
         public int ExecuteNonQuery(string query)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.ExecuteNonQuery(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.ExecuteNonQuery(query);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return this.ExecuteSQL.ExecuteNonQuery(this.QueryCommandType, query);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -553,45 +185,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by all queries passed in, assuming all are succesful</returns>
         public List<int> ExecuteBatchedNonQuery(IEnumerable<SQLQuery> commands)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.ExecuteBatchedNonQuery(commands);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.ExecuteBatchedNonQuery(commands);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return this.ExecuteSQL.ExecuteBatchedNonQuery(commands);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -600,45 +195,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query</returns>
         public int ExecuteTransactedNonQuery(string query)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.ExecuteTransactedNonQuery(this.QueryCommandType, query);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.ExecuteTransactedNonQuery(query);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return this.ExecuteSQL.ExecuteTransactedNonQuery(this.QueryCommandType, query);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -649,45 +207,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query</returns>
         public int ExecuteTransactedNonQuery(string query, DbTransaction transact, bool commitTransaction = true)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.ExecuteTransactedNonQuery(this.QueryCommandType, transact, query, commitTransaction);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.ExecuteTransactedNonQuery(query, transact, commitTransaction);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return this.ExecuteSQL.ExecuteTransactedNonQuery(this.QueryCommandType, transact, query, commitTransaction);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -696,45 +217,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by all queries passed in, assuming all are succesful</returns>
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.ExecuteTransactedBatchedNonQuery(commands);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.ExecuteTransactedBatchedNonQuery(commands);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return this.ExecuteTransactedBatchedNonQuery(commands);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -744,45 +228,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by all queries passed in, assuming all are succesful</returns>
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands, DbTransaction transact)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return this.ExecuteSQL.ExecuteTransactedBatchedNonQuery(commands, transact);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    return this.ExecuteTransactedBatchedNonQuery(commands, transact);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return this.ExecuteTransactedBatchedNonQuery(commands, transact);
         }
         #endregion
         #region Connection Methods
@@ -867,81 +314,19 @@ namespace ADONetHelper
         /// </summary>
         public void Close()
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
+            //Clear params from this connection
+            this.ClearParameters();
 
-                //Clear params from this connection
-                this.ClearParameters();
-
-                //Dispose of the database connection
-                this.ExecuteSQL.Connection.Dispose();
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    this.ExecuteSQL.Connection.Dispose();
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Dispose of the database connection
+            this.ExecuteSQL.Connection.Dispose();
         }
         /// <summary>
         /// Opens the connection to a database
         /// </summary>
         public void Open()
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Open the database connection
-                this.ExecuteSQL.Connection.Open();
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        Thread.Sleep(this.RetryInterval);
-                    }
-
-                    //Call this again
-                    this.Open();
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Call this again
+            this.Open();
         }
         #endregion
     }

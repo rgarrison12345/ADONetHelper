@@ -46,7 +46,7 @@ namespace ADONetHelper
         public async Task<T> GetDataObjectAsync<T>(string query) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectAsync<T>(query, default(CancellationToken)).ConfigureAwait(false);
+            return await this.GetDataObjectAsync<T>(query, default).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -59,39 +59,8 @@ namespace ADONetHelper
         /// </returns>
         public async Task<T> GetDataObjectAsync<T>(string query, CancellationToken token) where T : class
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.GetDataObjectAsync<T>(this.QueryCommandType, query, token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.GetDataObjectAsync<T>(query, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.GetDataObjectAsync<T>(this.QueryCommandType, query, token).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -102,7 +71,7 @@ namespace ADONetHelper
         public async Task<List<T>> GetDataObjectListAsync<T>(string query) where T : class
         {
             //Return this back to the caller
-            return await this.GetDataObjectListAsync<T>(query, default(CancellationToken)).ConfigureAwait(false);
+            return await this.GetDataObjectListAsync<T>(query, default).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -113,39 +82,8 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         public async Task<List<T>> GetDataObjectListAsync<T>(string query, CancellationToken token) where T : class
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.GetDataObjectListAsync<T>(this.QueryCommandType, query, token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.GetDataObjectListAsync<T>(query, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.GetDataObjectListAsync<T>(this.QueryCommandType, query, token).ConfigureAwait(false);
         }
 #if !NETSTANDARD1_3
         /// <summary>
@@ -156,7 +94,7 @@ namespace ADONetHelper
         public async Task<DataTable> GetDataTableAsync(string query)
         {
             //Return this back to the caller
-            return await this.GetDataTableAsync(query, default(CancellationToken)).ConfigureAwait(false);
+            return await this.GetDataTableAsync(query, default).ConfigureAwait(false);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/> asynchronously
@@ -166,47 +104,15 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="Task{DataTable}"/> of datatable</returns>
         public async Task<DataTable> GetDataTableAsync(string query, CancellationToken token)
         {
-            try
+            DataTable dt = new DataTable();
+            //Wrap this in a using statement to automatically dispose of resources
+            using (DbDataReader reader = await this.GetDbDataReaderAsync(query, token).ConfigureAwait(false))
             {
-                DataTable dt = new DataTable();
-
-                //Increment the number of attempts made
-                attemptsMade++;
-
-                //Wrap this in a using statement to automatically dispose of resources
-                using (DbDataReader reader = await this.GetDbDataReaderAsync(query, token).ConfigureAwait(false))
-                {
-                    dt.Load(reader);
-                }
-
-                //Return this back to the caller
-                return dt;
+                dt.Load(reader);
             }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
 
-                    //Call this again
-                    return await this.GetDataTableAsync(query, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return dt;
         }
 #endif
         /// <summary>
@@ -219,7 +125,7 @@ namespace ADONetHelper
         public async Task<DbDataReader> GetDbDataReaderAsync(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return await this.GetDbDataReaderAsync(query, default(CancellationToken), behavior, transact).ConfigureAwait(false);
+            return await this.GetDbDataReaderAsync(query, default, behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object created from the passed in query
@@ -231,39 +137,8 @@ namespace ADONetHelper
         /// <returns>A <see cref="Task{DbDataReader}"/> object, the caller is responsible for handling closing the <see cref="DbDataReader"/>.  Once the data reader is closed, the database connection will be closed as well</returns>
         public async Task<DbDataReader> GetDbDataReaderAsync(string query, CancellationToken token, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.GetDbDataReaderAsync(this.QueryCommandType, query, token, behavior, transact).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.GetDbDataReaderAsync(query, token, behavior).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.GetDbDataReaderAsync(this.QueryCommandType, query, token, behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
@@ -273,7 +148,7 @@ namespace ADONetHelper
         public async Task<object> GetScalarValueAsync(string query)
         {
             //Return this back to the caller
-            return await this.GetScalarValueAsync(query, default(CancellationToken)).ConfigureAwait(false);
+            return await this.GetScalarValueAsync(query, default).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
@@ -283,39 +158,8 @@ namespace ADONetHelper
         /// <returns>Returns the value of the first column in the first row as <see cref="Task"/></returns>
         public async Task<object> GetScalarValueAsync(string query, CancellationToken token)
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.GetScalarValueAsync(this.QueryCommandType, query, token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.GetScalarValueAsync(query, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.GetScalarValueAsync(this.QueryCommandType, query, token).ConfigureAwait(false);
         }
         #endregion
         #region Data Modifications
@@ -326,42 +170,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         public async Task<int> ExecuteTransactedNonQueryAsync(string query)
         {
-            try
-            {
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.ExecuteTransactedNonQueryAsync(this.QueryCommandType, query).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.ExecuteTransactedNonQueryAsync(query).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.ExecuteTransactedNonQueryAsync(this.QueryCommandType, query).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -371,45 +181,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query</returns>
         public async Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact)
         {
-            try
-            {
-                //Keep incrementing
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.ExecuteTransactedNonQueryAsync(this.QueryCommandType, transact, query).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.ExecuteTransactedNonQueryAsync(query, transact).ConfigureAwait(false);
-                }
-                else
-                {
-                    attemptsMade = 0;
-
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.ExecuteTransactedNonQueryAsync(this.QueryCommandType, transact, query).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
@@ -419,7 +192,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteNonQueryAsync(string query)
         {
             //Return this back to the caller
-            return await this.ExecuteNonQueryAsync(query, default(CancellationToken)).ConfigureAwait(false);
+            return await this.ExecuteNonQueryAsync(query, default).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
@@ -429,42 +202,8 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         public async Task<int> ExecuteNonQueryAsync(string query, CancellationToken token)
         {
-            try
-            {
-                attemptsMade++;
-
-                //Return this back to the caller
-                return await this.ExecuteSQL.ExecuteNonQueryAsync(this.QueryCommandType, query, token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for the next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
-
-                    //Call this again
-                    return await this.ExecuteNonQueryAsync(query, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                //Reset if necessary
-                if (attemptsMade >= this.RetryAttempts)
-                {
-                    attemptsMade = 0;
-                }
-            }
+            //Return this back to the caller
+            return await this.ExecuteSQL.ExecuteNonQueryAsync(this.QueryCommandType, query, token).ConfigureAwait(false);
         }
         #endregion
         #region Connection Methods
@@ -474,7 +213,7 @@ namespace ADONetHelper
         public async Task OpenAsync()
         {
             //Open the database connection
-            await this.OpenAsync(default(CancellationToken)).ConfigureAwait(false);
+            await this.OpenAsync(default).ConfigureAwait(false);
         }
         /// <summary>
         /// Opens the connection to a database asynchronously
@@ -482,39 +221,9 @@ namespace ADONetHelper
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         public async Task OpenAsync(CancellationToken token)
         {
-            try
-            {
-                //Increment attempts
-                attemptsMade++;
+            //Open the database connection
+            await this.ExecuteSQL.Connection.OpenAsync(token).ConfigureAwait(false);
 
-                //Open the database connection
-                await this.ExecuteSQL.Connection.OpenAsync(token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                //Check if we should retry the attempt
-                if (this.RetryAttempts > 0 && attemptsMade <= this.RetryAttempts)
-                {
-                    //Check if we need to wait before next try
-                    if (this.RetryInterval > 0)
-                    {
-                        //Wait for next attempt
-                        await Task.Delay(this.RetryInterval, token).ConfigureAwait(false);
-                    }
-
-                    //Call this again and open the database connection
-                    await this.OpenAsync(token).ConfigureAwait(false);
-                }
-                else
-                {
-                    //Throw this back to the caller
-                    throw;
-                }
-            }
-            finally
-            {
-                attemptsMade = 0;
-            }
         }
         #endregion
     }
