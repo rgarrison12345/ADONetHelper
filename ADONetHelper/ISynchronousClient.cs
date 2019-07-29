@@ -78,6 +78,14 @@ namespace ADONetHelper
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         IEnumerable<T> GetDataObjectEnumerable<T>(string query) where T : class;
         /// <summary>
+        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <param name="connection">An instance of <see cref="DbConnection"/></param>
+        /// <typeparam name="T">An instance of the type the caller wants create to from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        IEnumerable<T> GetDataObjectEnumerable<T>(string query, DbConnection connection) where T : class;
+        /// <summary>
         /// Utility method for returning a <see cref="DbDataReader"/> object created from the passed in query
         /// </summary>
         /// <param name="transact">An instance of <see cref="DbTransaction"/> to use with the passed in <paramref name="query"/></param>
