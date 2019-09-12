@@ -59,10 +59,10 @@ namespace ADONetHelper
         /// </summary>
         void ClearConnectionString();
         /// <summary>
-        /// Checks if the connection string in use contains the passed in <paramref name="keyword"/>
+        /// Checks if passed in <paramref name="keyword"/> is an allowable keyword in a connection string by the current provider
         /// </summary>
-        /// <param name="keyword">The keyword to verify is in a connection string</param>
-        /// <returns>Returns a <see cref="bool"/> indicating if a connection string contains the passed in <paramref name="keyword"/></returns>
-        bool ConnectionStringContainsKey(string keyword);
+        /// <param name="keyword">The keyword to check in the providers allowable connection string keywords</param>
+        /// <returns>Returns a <see cref="bool"/> indicating if the providers connection string allows the passed in keyword</returns>
+        bool ConnectionStringAllowsKey(string keyword);
     }
 }

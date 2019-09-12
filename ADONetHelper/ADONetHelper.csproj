@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.3.0</Version>
+    <Version>3.3.1</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -17,7 +17,7 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET helper library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Removing all retry code, this is better handled at a higher layer with a framework like Polly https://www.nuget.org/packages/Polly/https://www.nuget.org/packages/Polly/
+      Renaming ConnectionStringContainsKey to ConnectionStringAllowsKey to be more inline with provider implementations. DbClient constructor refactors
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>

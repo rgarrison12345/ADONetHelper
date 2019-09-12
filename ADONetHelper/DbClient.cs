@@ -213,6 +213,7 @@ namespace ADONetHelper
         /// Represents how a command should be interpreted by the data provider.  Default value is <see cref="CommandType.Text"/>
         /// </summary>
         public CommandType QueryCommandType { get; set; } = CommandType.Text;
+        
         /// Gets or sets the wait time in seconds before terminating the attempt to execute a command and generating an error.  Default value is 30
         /// </summary>
         public int CommandTimeout { get; set; } = 30;
@@ -241,9 +242,10 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="row">An instance of <see cref="DataRow"/> that contains the information to configure a <see cref="DbProviderFactory"/></param>
         /// <param name="connectionString">The connection string to be used to query a data store</param>
-        public DbClient(DataRow row, string connectionString) : this(connectionString, string.Empty)
+        public DbClient(DataRow row, string connectionString)
         {
             _executeSQL = new SqlExecutor(row);
+            this.ConnectionString = connectionString;
         }
 #endif
         /// <summary>
@@ -261,10 +263,11 @@ namespace ADONetHelper
         /// <param name="factory">An instance of a <see cref="DbProviderFactory"/> client class</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        public DbClient(string connectionString, CommandType queryCommandType, DbProviderFactory factory) : this(connectionString, string.Empty)
+        public DbClient(string connectionString, CommandType queryCommandType, DbProviderFactory factory)
         {
             //Set fields/properties
             _executeSQL = new SqlExecutor(factory);
+            this.ConnectionString = connectionString;
             this.QueryCommandType = queryCommandType;
         }
         /// <summary>
@@ -272,7 +275,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="factory">An instance of the <see cref="DbProviderFactory"/> client class</param>
         /// <param name="connectionString">The connection string used to query a data store</param>
-        public DbClient(string connectionString, DbProviderFactory factory) : this(connectionString, string.Empty)
+        public DbClient(string connectionString, DbProviderFactory factory)
         {
             //Set fields/properties
             _executeSQL = new SqlExecutor(factory);
@@ -322,10 +325,11 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="connectionString">The connection string used to query a database</param>
         /// <param name="factory">An instance of <see cref="IDbObjectFactory"/> to create the objects needed to help query a database</param>
-        public DbClient(string connectionString, IDbObjectFactory factory) : this(connectionString, string.Empty)
+        public DbClient(string connectionString, IDbObjectFactory factory)
         {
             //Set properties
             _executeSQL = new SqlExecutor(factory);
+            this.ConnectionString = connectionString;
         }
         #endregion
         #region Destructor
@@ -388,7 +392,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="keyword">The keyword to verify is in the current <see cref="ConnectionString"/></param>
         /// <returns>Returns a <see cref="bool"/> indicating if the <see cref="ConnectionString"/> contains the passed in <paramref name="keyword"/></returns>
-        public bool ConnectionStringContainsKey(string keyword)
+        public bool ConnectionStringAllowsKey(string keyword)
         {
             //Return this back to the caller
             return this.ExecuteSQL.ConnectionStringBuilder.ContainsKey(keyword);

@@ -90,7 +90,10 @@ namespace ADONetHelper
             get
             {
                 //Get the connection string builder
-                _connectionstringBuilder = _connectionstringBuilder ?? this.Factory.GetDbConnectionStringBuilder();
+                if (_connectionstringBuilder == null)
+                {
+                    _connectionstringBuilder = this.Factory.GetDbConnectionStringBuilder();
+                }
 
                 //Return this back to the caller
                 return _connectionstringBuilder;
