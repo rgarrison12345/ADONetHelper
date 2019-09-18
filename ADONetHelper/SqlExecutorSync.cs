@@ -952,13 +952,19 @@ namespace ADONetHelper
 #if !NET20 && !NET35 && !NET40
                     else if (p.PropertyType.GetTypeInfo().IsEnum)
                     {
-                        p.SetValue(returnType, Enum.Parse(p.PropertyType, value.ToString()), null);
+                        if (value != null)
+                        {
+                            p.SetValue(returnType, Enum.Parse(p.PropertyType, value.ToString()), null);
+                        }
                     }
 #else
                     //Check if this is an enum
                     else if (p.PropertyType.IsEnum)
                     {
-                        p.SetValue(returnType, Enum.Parse(p.PropertyType, results[p.Name].ToString()), null);
+                        if(value != null)
+                        {
+                            p.SetValue(returnType, Enum.Parse(p.PropertyType, results[p.Name].ToString()), null);
+                        }
                     }
 #endif
                     else
