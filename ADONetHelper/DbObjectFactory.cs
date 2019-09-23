@@ -27,9 +27,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
-#if NETSTANDARD2_0
-using System.Runtime.Loader;
-#endif
 #endregion
 
 namespace ADONetHelper
@@ -77,22 +74,22 @@ namespace ADONetHelper
             _dbProviderFactory = factory;
         }
         /// <summary>
-        /// Instantiates a new instance with the passed in <paramref name="providerName"/>
+        /// Instantiates a new instance with the passed in <paramref name="providerInvariantName"/>
         /// </summary>
-        /// <param name="providerName">The name of the data provider that the should be used to query a data store</param>
-        public DbObjectFactory(string providerName)
+        /// <param name="providerInvariantName">The name of the data provider that the should be used to query a data store</param>
+        public DbObjectFactory(string providerInvariantName)
         {
 #if NET20 || NET35 || NET40 || NET45 || NET451 || NETSTANDARD2_1
             try
             {
-                _dbProviderFactory = DbProviderFactories.GetFactory(providerName);
+                _dbProviderFactory = DbProviderFactories.GetFactory(providerInvariantName);
             }
             catch (Exception ex)
             {
-                _dbProviderFactory = GetProviderFactory(providerName);
+                _dbProviderFactory = GetProviderFactory(providerInvariantName);
             }
 #else
-            _dbProviderFactory = GetProviderFactory(providerName);
+            _dbProviderFactory = GetProviderFactory(providerInvariantName);
 #endif
         }
         /// <summary>
@@ -103,7 +100,7 @@ namespace ADONetHelper
         {
 #if !NET20 && !NET35 && !NET40 && !NETSTANDARD1_3 && !NETSTANDARD2_0
             _dbProviderFactory = DbProviderFactories.GetFactory(connection);
-#elif NET20 || NET35 || NET40 || NETSTANDARD2_0
+#elif NET20 || NET35 || NET40 || NETSTANDARD2_0 || NETSTANDARD2_1
             //Get the assembly from the dbconnection type
             _dbProviderFactory = GetProviderFactory(connection.GetType().Assembly);
 #else
@@ -458,28 +455,15 @@ namespace ADONetHelper
         }
         #endregion
         #region Helper Methods
-#if !NET20 && !NET35 && !NET40 && !NET45 && !NET451 && !NETSTANDARD1_3
         /// <summary>
-        /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClient.
-        /// Looks for the <paramref name="providerName"/> within the current <see cref="AssemblyLoadContext"/>
+        /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerInvariantName"/>, such as System.Data.SqlClientt
         /// </summary>
         /// <returns>Returns an instance of <see cref="DbProviderFactory"/></returns>
-        public static DbProviderFactory GetProviderFactory(string providerName)
+        public static DbProviderFactory GetProviderFactory(string providerInvariantName)
         {
             //Get the assembly
-            return GetProviderFactory(AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(providerName)));
+            return GetProviderFactory(Assembly.Load(new AssemblyName(providerInvariantName)));
         }
-#else
-        /// <summary>
-        /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClientt
-        /// </summary>
-        /// <returns>Returns an instance of <see cref="DbProviderFactory"/></returns>
-        public static DbProviderFactory GetProviderFactory(string providerName)
-        {
-            //Get the assembly
-            return GetProviderFactory(Assembly.Load(new AssemblyName(providerName)));
-        }
-#endif
         /// <summary>
         /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET driver <see cref="Assembly"/>
         /// Looks for the <see cref="DbProviderFactory"/> within the current <see cref="Assembly"/>

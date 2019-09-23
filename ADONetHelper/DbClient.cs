@@ -213,7 +213,7 @@ namespace ADONetHelper
         /// Represents how a command should be interpreted by the data provider.  Default value is <see cref="CommandType.Text"/>
         /// </summary>
         public CommandType QueryCommandType { get; set; } = CommandType.Text;
-        
+        /// <summary>
         /// Gets or sets the wait time in seconds before terminating the attempt to execute a command and generating an error.  Default value is 30
         /// </summary>
         public int CommandTimeout { get; set; } = 30;
@@ -342,7 +342,6 @@ namespace ADONetHelper
             Dispose(false);
         }
         #endregion
-        #region Utility Methods
         #region ConnectionString methods
         /// <summary>
         /// Adds a property name and value to the current connection string
@@ -763,7 +762,6 @@ namespace ADONetHelper
             return this.ExecuteSQL.Factory.GetDataSourceEnumerator();
         }
 #endif
-        #endregion
         #endregion
         #region IDisposable Support
         /// <summary>
