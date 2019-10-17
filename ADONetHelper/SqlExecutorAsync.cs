@@ -134,7 +134,7 @@ namespace ADONetHelper
             }
            
             //Open the connection if necessary
-            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = await this.GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleRow).ConfigureAwait(false))
@@ -150,7 +150,7 @@ namespace ADONetHelper
                 }
                 else
                 {
-                    List<T> list = await this.GetDynamicTypeAsync<T>(results).ConfigureAwait(false);
+                    List<T> list = GetDynamicTypeList<T>(results);
 
                     //Return this back to the caller
                     return list[0];
@@ -244,7 +244,7 @@ namespace ADONetHelper
             }
 
             //Open the connection if necessary
-            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = await this.GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleResult).ConfigureAwait(false))
@@ -253,7 +253,7 @@ namespace ADONetHelper
                 List<IDictionary<string, object>> results = await this.GetDynamicResultsAsync(reader, token).ConfigureAwait(false);
 
                 //Return this back to the caller
-                return await this.GetDynamicTypeAsync<T>(results).ConfigureAwait(false);
+                return GetDynamicTypeList<T>(results);
             }
         }
         /// <summary>
@@ -347,7 +347,7 @@ namespace ADONetHelper
             }
 
             //Open the database connection if necessary
-            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -449,7 +449,7 @@ namespace ADONetHelper
             }
 
             //Open the connection to the database
-            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -553,7 +553,7 @@ namespace ADONetHelper
             }
 
             //Open the database connection if necessary
-            await Utilites.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -612,7 +612,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, DbTransaction transact, string query, bool commitTransaction = true)
         {
             //Open the connection
-            await Utilites.OpenDbConnectionAsync(this.Connection).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(this.Connection).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically dispose of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, this.Connection, this.CommandTimeout))
@@ -664,7 +664,7 @@ namespace ADONetHelper
         public async Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the connection
-            await Utilites.OpenDbConnectionAsync(connection).ConfigureAwait(false);
+            await Utilities.OpenDbConnectionAsync(connection).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbTransaction transact = this.Factory.GetDbTransaction(this.Connection))
@@ -748,19 +748,6 @@ namespace ADONetHelper
             //Return this back to the caller
             return results;
         }
-        /// <summary>
-        /// Gets a <see cref="List{T}"/> from the passed in <see cref="IEnumerable{IDictionary}"/>
-        /// </summary>
-        /// <param name="dictList">An <see cref="IEnumerable{T}"/>/> with the results from a sql query</param>
-        /// <typeparam name="T">A <see cref="List{T}"/>that will be generated from the results of a sql query</typeparam>
-        /// <seealso cref="IEnumerable{IDictionary}"/>
-        /// <seealso cref="List{T}"/>
-        private async Task<List<T>> GetDynamicTypeAsync<T>(IEnumerable<IDictionary<string, object>> dictList)
-        {
-            //Return this back to the caller
-            return await Task.Factory.StartNew(() => this.GetDynamicTypeList<T>(dictList)).ConfigureAwait(false);
-        }
         #endregion
     }
 }
-

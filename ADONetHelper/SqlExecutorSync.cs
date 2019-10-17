@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 #endregion
 
 namespace ADONetHelper
@@ -56,7 +55,7 @@ namespace ADONetHelper
         public DataSet GetDataSet(CommandType queryCommandType, string query, DbConnection connection)
         {
 			//Open the database connection
-			Utilites.OpenDbConnection(connection);
+			Utilities.OpenDbConnection(connection);
 
 			//Wrap this automatically to dispose of resources
 			using (DbDataAdapter adap = this.Factory.GetDbDataAdapter())
@@ -96,7 +95,7 @@ namespace ADONetHelper
         public DataTable GetDataTable(CommandType queryCommandType, string query, DbConnection connection)
         {
 			//Open the database connection
-			Utilites.OpenDbConnection(connection);
+			Utilities.OpenDbConnection(connection);
 
 			//Return this back to the caller
 			using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, this.Connection))
@@ -151,7 +150,7 @@ namespace ADONetHelper
         public T GetDataObject<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class
         {
             //Open the database connection if necessary
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleRow))
@@ -170,7 +169,7 @@ namespace ADONetHelper
                 else
                 {
                     //Return this back to the caller
-                    return this.GetSingleDynamicType<T>(enumerator.Current);
+                    return Utilities.GetSingleDynamicType<T>(enumerator.Current);
                 }
             }
         }
@@ -214,7 +213,7 @@ namespace ADONetHelper
         public IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection if necessary
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleResult))
@@ -227,7 +226,7 @@ namespace ADONetHelper
                 while (enumerator.MoveNext() == true)
                 {
                     //Return this back to the caller
-                    yield return this.GetSingleDynamicType<T>(enumerator.Current);
+                    yield return Utilities.GetSingleDynamicType<T>(enumerator.Current);
                 }
             }
         }
@@ -272,7 +271,7 @@ namespace ADONetHelper
         public DbDataReader GetDbDataReader(CommandType queryCommandType, string query, DbConnection connection, CommandBehavior behavior = CommandBehavior.CloseConnection, DbTransaction transact = null)
         {
             //Open the database connection if necessary
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -316,7 +315,7 @@ namespace ADONetHelper
         public void GetDbDataReader(CommandType queryCommandType, string query, Action<DbDataReader> act, DbConnection connection)
         {
             //Open the database connection if necessary
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -376,7 +375,7 @@ namespace ADONetHelper
         public object GetScalarValue(CommandType queryCommandType, string query, DbConnection connection, DbTransaction transact = null)
         {
             //Open the connection to the database
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -436,7 +435,7 @@ namespace ADONetHelper
         public int ExecuteNonQuery(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
@@ -493,7 +492,7 @@ namespace ADONetHelper
             List<int> returnList = new List<int>();
 
             //Open the database connection
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(this.CommandTimeout))
@@ -543,7 +542,7 @@ namespace ADONetHelper
             using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
             {
                 //Open the database connection
-                Utilites.OpenDbConnection(connection);
+                Utilities.OpenDbConnection(connection);
 
                 //Wrap this in a using statement to automatically handle disposing of resources
                 using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
@@ -576,7 +575,7 @@ namespace ADONetHelper
         public int ExecuteTransactedNonQuery(CommandType queryCommandType, string query, DbConnection connection)
         {
             //Open the database connection
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
@@ -612,7 +611,7 @@ namespace ADONetHelper
             int recordsAffected = 0;
 
             //Open the database connection
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
@@ -703,7 +702,7 @@ namespace ADONetHelper
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands, DbConnection connection)
         {
             //Open the database connection
-            Utilites.OpenDbConnection(connection);
+            Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
@@ -726,7 +725,7 @@ namespace ADONetHelper
             try
             {
                 //Open the database connection
-                Utilites.OpenDbConnection(connection);
+                Utilities.OpenDbConnection(connection);
 
                 //Wrap this in a using statement to automatically handle disposing of resources
                 using (DbCommand command = this.Factory.GetDbCommand(connection, transact, this.CommandTimeout))
@@ -867,118 +866,12 @@ namespace ADONetHelper
             foreach (IDictionary<string, object> dict in results)
             {
                 //Keep adding this into the list
-                list.Add(this.GetSingleDynamicType<T>(dict));
+                list.Add(Utilities.GetSingleDynamicType<T>(dict));
             }
 
             //Return this back to the caller
             return list;
         }
-        /// <summary>
-        /// Gets the type of the single dynamic.
-        /// </summary>
-        /// <typeparam name="T">A type that will be generated from the results of a sql query</typeparam>
-        /// <param name="results">The results.</param>
-        /// <returns></returns>
-        private T GetSingleDynamicType<T>(IDictionary<string, object> results)
-        {
-            //Get an instance of the object passed in
-            object returnType = Activator.CreateInstance(typeof(T));
-            Type type = returnType.GetType();
-
-            //Loop through all properties
-            foreach (PropertyInfo p in type.GetProperties())
-            {
-                DbField field = null;
-                bool ignoredField = false;
-
-                //Get the dbfield attribute
-                foreach (object attribute in p.GetCustomAttributes(false))
-                {
-                    //Check if this is an ignored field
-                    if (attribute is DbFieldIgnore)
-                    {
-                        ignoredField = true;
-                        break;
-                    }
-                    //Check if this is a dbfield
-                    else if (attribute is DbField)
-                    {
-                        //Break out we're done
-                        field = (DbField)attribute;
-                    }
-                }
-
-                //Check if we should go on to the next loop
-                if (ignoredField == true)
-                {
-                    continue;
-                }
-
-                string fieldName = p.Name;
-                object value = null;
-
-                //Check if the cast took place
-                if (field != null && !string.IsNullOrEmpty(field.DatabaseFieldName))
-                {
-                    fieldName = field.DatabaseFieldName;
-                }
-
-                //Check if the field is present in the dynamic object
-                if (results.ContainsKey(fieldName) == true)
-                {
-                    //Get the current property value
-                    value = results[fieldName];
-
-                    //Check if DBNull
-                    if (field != null && (value == null || value == DBNull.Value))
-                    {
-                        //Set new value
-                        value = field.DefaultValueIfNull;
-                    }
-
-                    //Check if this is a nullable type
-                    if (Utilites.IsNullableGenericType(p.PropertyType))
-                    {
-                        if (value == null)
-                        {
-                            p.SetValue(returnType, null, null);
-                        }
-                        else
-                        {
-                            p.SetValue(returnType, Convert.ChangeType(value, Nullable.GetUnderlyingType(p.PropertyType)), null);
-                        }
-                    }
-                    //Check if an enum
-#if !NET20 && !NET35 && !NET40
-                    else if (p.PropertyType.GetTypeInfo().IsEnum)
-                    {
-                        if (value != null)
-                        {
-                            p.SetValue(returnType, Enum.Parse(p.PropertyType, value.ToString()), null);
-                        }
-                    }
-#else
-                    //Check if this is an enum
-                    else if (p.PropertyType.IsEnum)
-                    {
-                        if(value != null)
-                        {
-                            p.SetValue(returnType, Enum.Parse(p.PropertyType, results[p.Name].ToString()), null);
-                        }
-                    }
-#endif
-                    else
-                    {
-                        //This is a normal property
-                        p.SetValue(returnType, Convert.ChangeType(value, p.PropertyType), null);
-                    }
-                }
-            }
-
-            //Return this back to the caller
-            return (T)returnType;
-        }
         #endregion
     }
 }
-
