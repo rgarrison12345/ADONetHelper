@@ -16,7 +16,7 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET helper library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Adding .NET Standard 2.1 build.  Adding GetDbTransactionAsync into .NET standard build for IDbObjectFactory and DbObjectFactory.  Don't attempt to write to a read only property.
+      Adding .NET Standard 2.1 build.  Adding GetDbTransactionAsync into .NET standard 2.1 build for IDbObjectFactory and DbObjectFactory.  Don't attempt to write to a read only property.
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
