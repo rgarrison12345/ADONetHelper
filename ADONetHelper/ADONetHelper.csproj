@@ -4,7 +4,6 @@
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/rgarrison12345/ADONetHelper/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -17,7 +16,7 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET helper library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Adding .NET Standard 2.1 build
+      Adding .NET Standard 2.1 build.  Adding GetDbTransactionAsync into .NET standard build for IDbObjectFactory and DbObjectFactory.  Don't attempt to write to a read only property.
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
@@ -28,6 +27,7 @@
     <DefineConstants>TRACE;</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
     <Copyright>Copyright © Robert Garrison 2019</Copyright>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +44,7 @@
     <DefineConstants>RELEASE;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md"/>
     <None Include="..\CONTRIBUTING.md" Pack="true" PackagePath="CONTRIBUTING.md" />
     <None Include="..\README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
@@ -65,6 +65,10 @@
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.6.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.0.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="QueryBuilder.cs" />

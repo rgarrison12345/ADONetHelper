@@ -25,6 +25,10 @@ SOFTWARE.*/
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
+#if !NET20 && !NET35 && !NET40
+using System.Threading.Tasks;
+#endif
 #endregion
 
 namespace ADONetHelper
@@ -118,6 +122,23 @@ namespace ADONetHelper
         /// <param name="connection">An instance of <see cref="DbConnection"/></param>
         /// <returns>An instance of the <see cref="DbTransaction"/> object</returns>
         DbTransaction GetDbTransaction(DbConnection connection, IsolationLevel level);
+#if NETSTANDARD2_1
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        ValueTask<DbTransaction> GetDbTransactionAsync(DbConnection connection, CancellationToken token = default);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="level"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        ValueTask<DbTransaction> GetDbTransactionAsync(DbConnection connection, IsolationLevel level, CancellationToken token = default);
+#endif
         /// <summary>
         /// Instantiates a new instance of a <see cref="DbConnection"/> subclass based on the specified provider
         /// </summary>

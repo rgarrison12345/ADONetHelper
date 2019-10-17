@@ -27,6 +27,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
+using System.Threading;
+#if !NET20 && !NET35 && !NET40
+using System.Threading.Tasks;
+#endif
+#if NETSTANDARD2_0 || NETSTANDARD2_1
+using System.Runtime.Loader;
+#endif
 #endregion
 
 namespace ADONetHelper
@@ -453,17 +460,53 @@ namespace ADONetHelper
             //Return this back to the caller
             return connection.BeginTransaction(level);
         }
+#if NETSTANDARD2_1
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async ValueTask<DbTransaction> GetDbTransactionAsync(DbConnection connection, CancellationToken token = default)
+        {
+            return await connection.BeginTransactionAsync(token);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="level"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async ValueTask<DbTransaction> GetDbTransactionAsync(DbConnection connection, IsolationLevel level, CancellationToken token = default)
+        {
+            return await connection.BeginTransactionAsync(level, token);
+        }
+#endif
         #endregion
         #region Helper Methods
+#if NETSTANDARD2_0 || NETSTANDARD2_1
         /// <summary>
-        /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerInvariantName"/>, such as System.Data.SqlClientt
+        /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClient.
+        /// Looks for the <paramref name="providerName"/> within the current <see cref="AssemblyLoadContext"/>
         /// </summary>
         /// <returns>Returns an instance of <see cref="DbProviderFactory"/></returns>
-        public static DbProviderFactory GetProviderFactory(string providerInvariantName)
+        public static DbProviderFactory GetProviderFactory(string providerName)
         {
             //Get the assembly
-            return GetProviderFactory(Assembly.Load(new AssemblyName(providerInvariantName)));
+            return GetProviderFactory(AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(providerName)));
         }
+#else
+        /// <summary>
+        /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClientt
+        /// </summary>
+        /// <returns>Returns an instance of <see cref="DbProviderFactory"/></returns>
+        public static DbProviderFactory GetProviderFactory(string providerName)
+        {
+            //Get the assembly
+            return GetProviderFactory(Assembly.Load(new AssemblyName(providerName)));
+        }
+#endif
         /// <summary>
         /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET driver <see cref="Assembly"/>
         /// Looks for the <see cref="DbProviderFactory"/> within the current <see cref="Assembly"/>
