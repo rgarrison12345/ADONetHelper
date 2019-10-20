@@ -29,7 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endregion
 
-namespace ADONetHelper.Core
+namespace ADONetHelper
 {
     /// <summary>
     /// Contract class that defines asynchronous operations to be performed against a data store

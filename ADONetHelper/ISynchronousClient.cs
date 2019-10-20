@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 #endregion
 #region Using Statements
+using ADONetHelper.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 #endregion
 
-namespace ADONetHelper.Core
+namespace ADONetHelper
 {
     /// <summary>
     /// 
