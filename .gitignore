@@ -44,3 +44,12 @@
 /ADONetHelper.Snowflake/bin/Release
 /.vs
 /ADONetHelper.Tests.NetCore
+/ADONetHelper.Core/bin/Debug
+/ADONetHelper.Core/obj
+/ADONetHelper.Core/bin/Release
+/ADONetHelper.Polly/bin
+/ADONetHelper.Polly/obj
+/ADONetHelper.Polly.Tests/bin
+/ADONetHelper.Polly.Tests/obj/Debug/netcoreapp3.0
+/ADONetHelper.Polly.Tests/obj/Release/netcoreapp3.0
+/ADONetHelper.Polly.Tests/obj

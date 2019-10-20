@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 #endregion
 #region Using Statements
+using ADONetHelper.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,8 +34,18 @@ using System.Transactions;
 
 namespace ADONetHelper
 {
-    public partial class DbClient
+    public partial class DbClient : ISynchronousClient, IDisposable
     {
+        #region Destructor
+        /// <summary>
+        /// Finalizer for the class to release unmanaged resources
+        /// </summary>
+        ~DbClient()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
+        #endregion
         #region Data Retrieval
 #if !NETSTANDARD1_3
         /// <summary>
@@ -239,7 +250,7 @@ namespace ADONetHelper
         public DbTransaction GetDbTransaction()
         {
             //Return this back to the caller
-            return this.ExecuteSQL.Connection.BeginTransaction();
+            return ExecuteSQL.Connection.BeginTransaction();
         }
         /// <summary>
         /// Starts a <see cref="DbTransaction"/> using the underlying <see cref="DbConnection"/> with the <paramref name="level"/>
@@ -249,42 +260,46 @@ namespace ADONetHelper
         public DbTransaction GetDbTransaction(System.Data.IsolationLevel level)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.Connection.BeginTransaction(level);
+            return ExecuteSQL.Connection.BeginTransaction(level);
         }
+        /// <summary>
+        /// Changes the current <see cref="DbConnection"/> to target a different database
+        /// </summary>
+        /// <param name="databaseName">The name of a database as a <see cref="string"/></param>
+        public void ChangeDatabase(string databaseName)
+        {
+            //Now change the database
+            ExecuteSQL.Connection.ChangeDatabase(databaseName);
+        }
+        /// <summary>
+        /// Disposes of the <see cref="DbConnection"/> being used by this instance, clears any <see cref="DbParameter"/>
+        /// assocatied with the current <see cref="DbConnection"/>
+        /// </summary>
+        public void Close()
+        {
+            //Clear params from this connection
+            ClearParameters();
+
+            //Dispose of the database connection
+            ExecuteSQL.Connection.Dispose();
+        }
+        /// <summary>
+        /// Opens the connection to a database
+        /// </summary>
+        public void Open()
+        {
+            //Check if we need to set the connection string
+            if(ExecuteSQL.Connection.State == ConnectionState.Closed)
+            {
+                ExecuteSQL.Connection.ConnectionString = ConnectionString;
+            }
+
+            //Call this again
+            ExecuteSQL.Connection.Open();
+        }
+        #endregion
+        #region Other Methods
 #if !NETSTANDARD1_3
-        /// <summary>
-        /// Returns schema information for the data source of this <see cref="DbConnection"/> using the specified string for the schema name and the specified string array for the restriction values.
-        /// </summary>
-        /// <param name="collectionName">Name of the collection.</param>
-        /// <param name="restrictionValues">The restriction values.</param>
-        /// <returns>A <see cref="DataTable"/> that contains schema information</returns>
-        /// <remarks>If the connection is associated with a transaction, executing GetSchema calls may cause some providers to throw an exception</remarks>
-        public DataTable GetSchema(string collectionName, string[] restrictionValues)
-        {
-            //Return this back to the caller
-            return this.ExecuteSQL.Connection.GetSchema(collectionName, restrictionValues);
-        }
-        /// <summary>
-        /// Returns schema information for the data source of this <paramref name="collectionName"/> using the specified string for the schema name.
-        /// </summary>
-        /// <param name="collectionName">Name of the collection.</param>
-        /// <returns>A <see cref="DataTable"/> that contains schema information</returns>
-        /// <remarks>If the connection is associated with a transaction, executing GetSchema calls may cause some providers to throw an exception</remarks>
-        public DataTable GetSchema(string collectionName)
-        {
-            //Return this back to the caller
-            return this.ExecuteSQL.Connection.GetSchema(collectionName);
-        }
-        /// <summary>
-        /// Returns schema information for the data source of this <see cref="DbConnection"/>
-        /// </summary>
-        /// <returns>A <see cref="DataTable"/> that contains schema information</returns>
-        /// <remarks>If the connection is associated with a transaction, executing GetSchema calls may cause some providers to throw an exception</remarks>
-        public DataTable GetSchema()
-        {
-            //Return this back to the caller
-            return this.ExecuteSQL.Connection.GetSchema();
-        }
         /// <summary>
         /// Enlists the passed in <paramref name="transact"/> in a distributed transaction
         /// </summary>
@@ -295,38 +310,84 @@ namespace ADONetHelper
         /// </remarks>
         public void EnlistTransaction(Transaction transact)
         {
-            this.ExecuteSQL.Connection.EnlistTransaction(transact);
+            ExecuteSQL.Connection.EnlistTransaction(transact);
+        }
+        /// <summary>
+        /// Returns schema information for the data source of this <see cref="DbConnection"/> using the specified string for the schema name and the specified string array for the restriction values.
+        /// </summary>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <param name="restrictionValues">The restriction values.</param>
+        /// <returns>A <see cref="DataTable"/> that contains schema information</returns>
+        /// <remarks>If the connection is associated with a transaction, executing GetSchema calls may cause some providers to throw an exception</remarks>
+        public DataTable GetSchema(string collectionName, string[] restrictionValues)
+        {
+            //Return this back to the caller
+            return ExecuteSQL.Connection.GetSchema(collectionName, restrictionValues);
+        }
+        /// <summary>
+        /// Returns schema information for the data source of this <paramref name="collectionName"/> using the specified string for the schema name.
+        /// </summary>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <returns>A <see cref="DataTable"/> that contains schema information</returns>
+        /// <remarks>If the connection is associated with a transaction, executing GetSchema calls may cause some providers to throw an exception</remarks>
+        public DataTable GetSchema(string collectionName)
+        {
+            //Return this back to the caller
+            return ExecuteSQL.Connection.GetSchema(collectionName);
+        }
+        /// <summary>
+        /// Returns schema information for the data source of this <see cref="DbConnection"/>
+        /// </summary>
+        /// <returns>A <see cref="DataTable"/> that contains schema information</returns>
+        /// <remarks>If the connection is associated with a transaction, executing GetSchema calls may cause some providers to throw an exception</remarks>
+        public DataTable GetSchema()
+        {
+            //Return this back to the caller
+            return ExecuteSQL.Connection.GetSchema();
+        }
+        /// <summary>
+        /// Provides a mechanism for enumerating all available instances of database servers within the local network
+        /// </summary>
+        /// <returns>Returns a new instance of <see cref="DbDataSourceEnumerator"/> created by the current <see cref="DbProviderFactory"/></returns>
+        public DbDataSourceEnumerator GetDataSourceEnumerator()
+        {
+            //Return this back to the caller
+            return ExecuteSQL.Factory.GetDataSourceEnumerator();
         }
 #endif
+        #endregion
+        #region IDisposable Support
         /// <summary>
-        /// Changes the current <see cref="DbConnection"/> to target a different database
+        /// Dispose of any unmanged resorces if disposing passed in is true 
         /// </summary>
-        /// <param name="databaseName">The name of a database as a <see cref="string"/></param>
-        public void ChangeDatabase(string databaseName)
+        /// <param name="disposing">Whether or not we need to explicitly close unmanaged resources</param>
+        protected virtual void Dispose(bool disposing)
         {
-            //Now change the database
-            this.ExecuteSQL.Connection.ChangeDatabase(databaseName);
-        }
-        /// <summary>
-        /// Disposes of the <see cref="DbConnection"/> being used by this instance, clears any <see cref="DbParameter"/>
-        /// assocatied with the current <see cref="DbConnection"/>
-        /// </summary>
-        public void Close()
-        {
-            //Clear params from this connection
-            this.ClearParameters();
+            //Check if we have disposed before
+            if (!disposedValue)
+            {
+                //Check if we are disposing
+                if (disposing)
+                {
+                    //Close connection to the database
+                    Close();
+                }
 
-            //Dispose of the database connection
-            this.ExecuteSQL.Connection.Dispose();
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+                disposedValue = true;
+            }
         }
         /// <summary>
-        /// Opens the connection to a database
+        /// Dispose of any unmanged resources
         /// </summary>
-        public void Open()
+        public void Dispose()
         {
-            //Call this again
-            this.ExecuteSQL.Connection.Open();
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

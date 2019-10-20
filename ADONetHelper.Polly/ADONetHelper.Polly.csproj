@@ -1,28 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.3;net451;net45;net40;net35;net20</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>4.0.0</Version>
+    <Version>1.0.0</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
-    <Product>ADONetHelper</Product>
-    <Title>ADO.NET Helper</Title>
-    <PackageId>ADONetHelper</PackageId>
-    <Description>Generic ADO.NET client library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
+    <Product>ADONetHelper.Polly</Product>
+    <Title>ADO.NET Helper.Polly</Title>
+    <PackageId>ADONetHelper.Polly</PackageId>
+    <Description>Generic ADO.NET helper library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-     
+      Initial Release
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
-    <AssemblyName>ADONetHelper</AssemblyName>
-    <RootNamespace>ADONetHelper</RootNamespace>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.xml</DocumentationFile>
+    <AssemblyName>ADONetHelper.Polly</AssemblyName>
+    <RootNamespace>ADONetHelper.Polly</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Polly.xml</DocumentationFile>
     <NeutralLanguage>en-us</NeutralLanguage>
     <DefineConstants>TRACE;</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
@@ -45,8 +45,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
-    <None Include="..\CONTRIBUTING.md" Pack="true" PackagePath="CONTRIBUTING.md" />
-    <None Include="..\README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Debug'">
     <ProjectReference Include="..\ADONetHelper.Core\ADONetHelper.Core.csproj" />
@@ -54,19 +52,7 @@
   <ItemGroup Condition="'$(Configuration)'=='Release'">
     <PackageReference Include="ADONetHelper.Core" Version="1.0.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net20' or '$(TargetFramework)'=='net35' or '$(TargetFramework)'=='net40'">
-    <Compile Remove="DbAsynchronousClient.cs"></Compile>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net20' or '$(TargetFramework)'=='net35'">
-    <Reference Include="System.Transactions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"></Reference>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net40' or '$(TargetFramework)'=='net45' or '$(TargetFramework)'=='net451'">
-    <Reference Include="System.Transactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"></Reference>
-  </ItemGroup>
   <ItemGroup>
-    <Compile Remove="QueryBuilder.cs" />
-    <Compile Remove="SqlQueryListResult.cs" />
-    <Compile Remove="SqlQuerySingleResult.cs" />
-    <Compile Remove="DbObject.cs" />
+    <PackageReference Include="Polly" Version="7.1.1" />
   </ItemGroup>
 </Project>

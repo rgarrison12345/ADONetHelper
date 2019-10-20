@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 #endregion
 #region Using Declarations
+using ADONetHelper.Core;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -31,35 +32,9 @@ using System.Threading.Tasks;
 
 namespace ADONetHelper
 {
-    public partial class DbClient
+    public partial class DbClient : IAsynchronousClient
     {
         #region Data Retrieval
-        /// <summary>
-        /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type caller wants create from query passed into procedure</typeparam>
-        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine.
-        /// Or the default value of <typeparamref name="T"/> if there are no search results
-        /// </returns>
-        public async Task<T> GetDataObjectAsync<T>(string query, CancellationToken token = default) where T : class
-        {
-            //Return this back to the caller
-            return await this.ExecuteSQL.GetDataObjectAsync<T>(this.QueryCommandType, query, token).ConfigureAwait(false);
-        }
-        /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        public async Task<List<T>> GetDataObjectListAsync<T>(string query, CancellationToken token = default) where T : class
-        {
-            //Return this back to the caller
-            return await this.ExecuteSQL.GetDataObjectListAsync<T>(this.QueryCommandType, query, token).ConfigureAwait(false);
-        }
 #if !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/> asynchronously
@@ -67,11 +42,12 @@ namespace ADONetHelper
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="query">SQL query to use to build a <see cref="DataTable"/></param>
         /// <returns>Returns a <see cref="Task{DataTable}"/> of datatable</returns>
-        public async Task<DataTable> GetDataTableAsync(string query, CancellationToken token = default)
+        public virtual async Task<DataTable> GetDataTableAsync(string query, CancellationToken token = default)
         {
             DataTable dt = new DataTable();
+
             //Wrap this in a using statement to automatically dispose of resources
-            using (DbDataReader reader = await this.GetDbDataReaderAsync(query, token).ConfigureAwait(false))
+            using (DbDataReader reader = await GetDbDataReaderAsync(query, token).ConfigureAwait(false))
             {
                 dt.Load(reader);
             }
@@ -81,6 +57,32 @@ namespace ADONetHelper
         }
 #endif
         /// <summary>
+        /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants create from query passed into procedure</typeparam>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine.
+        /// Or the default value of <typeparamref name="T"/> if there are no search results
+        /// </returns>
+        public virtual async Task<T> GetDataObjectAsync<T>(string query, CancellationToken token = default) where T : class
+        {
+            //Return this back to the caller
+            return await ExecuteSQL.GetDataObjectAsync<T>(QueryCommandType, query, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public virtual async Task<List<T>> GetDataObjectListAsync<T>(string query, CancellationToken token = default) where T : class
+        {
+            //Return this back to the caller
+            return await ExecuteSQL.GetDataObjectListAsync<T>(QueryCommandType, query, token).ConfigureAwait(false);
+        }
+        /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object created from the passed in query
         /// </summary>
         /// <param name="transact">An instance of <see cref="DbTransaction"/></param>
@@ -88,10 +90,10 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>A <see cref="Task{DbDataReader}"/> object, the caller is responsible for handling closing the <see cref="DbDataReader"/>.  Once the data reader is closed, the database connection will be closed as well</returns>
-        public async Task<DbDataReader> GetDbDataReaderAsync(string query, CancellationToken token = default, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        public virtual async Task<DbDataReader> GetDbDataReaderAsync(string query, CancellationToken token = default, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return await this.ExecuteSQL.GetDbDataReaderAsync(this.QueryCommandType, query, token, behavior, transact).ConfigureAwait(false);
+            return await ExecuteSQL.GetDbDataReaderAsync(QueryCommandType, query, token, behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
@@ -99,44 +101,48 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Returns the value of the first column in the first row as <see cref="Task"/></returns>
-        public async Task<object> GetScalarValueAsync(string query, CancellationToken token = default)
+        public virtual async Task<object> GetScalarValueAsync(string query, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await this.ExecuteSQL.GetScalarValueAsync(this.QueryCommandType, query, token).ConfigureAwait(false);
+            return await ExecuteSQL.GetScalarValueAsync(QueryCommandType, query, token).ConfigureAwait(false);
         }
         #endregion
         #region Data Modifications
+#if NETSTANDARD2_1
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure with a transaction
         /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
-        public async Task<int> ExecuteTransactedNonQueryAsync(string query)
+        public virtual async Task<int> ExecuteTransactedNonQueryAsync(string query, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await this.ExecuteSQL.ExecuteTransactedNonQueryAsync(this.QueryCommandType, query).ConfigureAwait(false);
+            return await ExecuteTransactedNonQueryAsync(query, token).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
         /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="transact">An instance of a <see cref="DbTransaction"/> class</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query</returns>
-        public async Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact)
+        public virtual async Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await this.ExecuteSQL.ExecuteTransactedNonQueryAsync(this.QueryCommandType, transact, query).ConfigureAwait(false);
+            return await ExecuteSQL.ExecuteTransactedNonQueryAsync(QueryCommandType, transact, query).ConfigureAwait(false);
         }
+#endif
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
         /// </summary>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
-        public async Task<int> ExecuteNonQueryAsync(string query, CancellationToken token = default)
+        public virtual async Task<int> ExecuteNonQueryAsync(string query, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await this.ExecuteSQL.ExecuteNonQueryAsync(this.QueryCommandType, query, token).ConfigureAwait(false);
+            return await ExecuteSQL.ExecuteNonQueryAsync(QueryCommandType, query, token).ConfigureAwait(false);
         }
         #endregion
         #region Connection Methods
@@ -144,10 +150,17 @@ namespace ADONetHelper
         /// Opens the connection to a database asynchronously
         /// </summary>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        public async Task OpenAsync(CancellationToken token = default)
+        public virtual async Task OpenAsync(CancellationToken token = default)
         {
+            //Check if state is opened, might need a new connection string
+            if(ExecuteSQL.Connection.State == ConnectionState.Closed)
+            {
+                //Set the connection string
+                ExecuteSQL.Connection.ConnectionString = ConnectionString;
+            }
+
             //Open the database connection
-            await this.ExecuteSQL.Connection.OpenAsync(token).ConfigureAwait(false);
+            await ExecuteSQL.Connection.OpenAsync(token).ConfigureAwait(false);
         }
         #endregion
     }
