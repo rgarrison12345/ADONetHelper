@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.3;net451;net45;net40;net35;net20</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <Version>1.0.0</Version>
+    <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
+    <Authors>Robert Garrison</Authors>
+    <Company>Robert Garrison</Company>
+    <Product>ADONetHelper.Core</Product>
+    <Title>ADO.NET Helper Core</Title>
+    <PackageId>ADONetHelper.Core</PackageId>
+    <Description>Core functionality API objects for ADONetHelper based libraries</Description>
+    <PackageReleaseNotes>
+      Initial Release
+    </PackageReleaseNotes>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
+    <AssemblyName>ADONetHelper.Core</AssemblyName>
+    <RootNamespace>ADONetHelper.Core</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Core.xml</DocumentationFile>
+    <NeutralLanguage>en-us</NeutralLanguage>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Copyright>Copyright © Robert Garrison 2019</Copyright>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <DefineConstants>RELEASE;</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net20' or '$(TargetFramework)'=='net35' or '$(TargetFramework)'=='net40'">
+    <Compile Remove="IAsynchronousClient.cs"></Compile>
+    <Compile Remove="ISqlExecutorAsync.cs"></Compile>
+    <Compile Remove="SqlExecutorAsync.cs"></Compile>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.0.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.6.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.md" Link="LICENSE.md">
+      <PackagePath>LICENSE.md</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+</Project>
