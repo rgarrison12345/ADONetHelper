@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 namespace ADONetHelper.Core
 {
     /// <summary>
-    /// 
+    /// Contract class that defines asynchronous operations to be performed against a data store
     /// </summary>
     public interface IAsynchronousClient
     {
@@ -89,19 +89,23 @@ namespace ADONetHelper.Core
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         Task<int> ExecuteNonQueryAsync(string query, CancellationToken token = default);
+#if NETSTANDARD2_1
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure with a transaction
         /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
-        Task<int> ExecuteTransactedNonQueryAsync(string query);
+        Task<int> ExecuteTransactedNonQueryAsync(string query, CancellationToken token = default);
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
         /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="transact">An instance of a <see cref="DbTransaction"/> class</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query</returns>
-        Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact);
+        Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact, CancellationToken token = default);
+#endif
         #endregion
     }
 }
