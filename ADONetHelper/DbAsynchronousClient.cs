@@ -150,7 +150,7 @@ namespace ADONetHelper
         /// Opens the connection to a database asynchronously
         /// </summary>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        public virtual async Task OpenAsync(CancellationToken token = default)
+        public async Task OpenAsync(CancellationToken token = default)
         {
             //Check if state is opened, might need a new connection string
             if(ExecuteSQL.Connection.State == ConnectionState.Closed)
