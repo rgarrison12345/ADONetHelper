@@ -40,26 +40,9 @@ namespace ADONetHelper.Core
         /// <typeparam name="T">An instance of the type the caller wants create from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query) where T : class;
-        /// <summary>
-        /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type the caller wants create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, CancellationToken token) where T : class;
-        /// <summary>
-        /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type the caller wants create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <param name="connectionString">The connection string used to query a data store</param>
-        /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, string connectionString) where T : class;
+        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, CancellationToken token = default) where T : class;
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
         /// </summary>
@@ -69,16 +52,7 @@ namespace ADONetHelper.Core
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, string connectionString, CancellationToken token) where T : class;
-        /// <summary>
-        /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type the caller wants create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to connect to a datastore</param>
-        /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class;
+        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, string connectionString, CancellationToken token = default) where T : class;
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
         /// </summary>
@@ -88,15 +62,7 @@ namespace ADONetHelper.Core
         /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to connect to a datastore</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Gets an instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token) where T : class;
-        /// <summary>
-        /// Gets a <see cref="List{T}"/> based on the <typeparamref name="T"/> sent into the function to create an object list based on the query passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type caller wants to create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query) where T : class;
+        Task<T> GetDataObjectAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token = default) where T : class;
         /// <summary>
         /// Gets a <see cref="List{T}"/> based on the <typeparamref name="T"/> sent into the function to create an object list based on the query passed into the routine
         /// </summary>
@@ -105,16 +71,7 @@ namespace ADONetHelper.Core
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, CancellationToken token) where T : class;
-        /// <summary>
-        /// Gets a <see cref="List{T}"/> based on the <typeparamref name="T"/> sent into the function to create an object list based on the query passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type the caller wants create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <param name="connectionString">The connection string used to query a data store</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, string connectionString) where T : class;
+        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, CancellationToken token = default) where T : class;
         /// <summary>
         /// Gets a <see cref="List{T}"/> based on the <typeparamref name="T"/> sent into the function to create an object list based on the query passed into the routine
         /// </summary>
@@ -124,16 +81,7 @@ namespace ADONetHelper.Core
         /// <param name="connectionString">The connection string used to query a data store</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, string connectionString, CancellationToken token) where T : class;
-        /// <summary>
-        /// Gets a <see cref="List{T}"/> based on the <typeparamref name="T"/> sent into the function to create an object list based on the query passed into the routine
-        /// </summary>
-        /// <typeparam name="T">An instance of the type the caller wants to create from the query passed into procedure</typeparam>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to connect to a datastore</param>
-        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class;
+        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, string connectionString, CancellationToken token = default) where T : class;
         /// <summary>
         /// Gets a <see cref="List{T}"/> based on the <typeparamref name="T"/> sent into the function to create an object list based on the query passed into the routine
         /// </summary>
@@ -143,7 +91,7 @@ namespace ADONetHelper.Core
         /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to connect to a datastore</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
-        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token) where T : class;
+        Task<List<T>> GetDataObjectListAsync<T>(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token = default) where T : class;
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
         /// </summary>
@@ -206,26 +154,11 @@ namespace ADONetHelper.Core
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> from the database
         /// </summary>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns the value of the first column in the first row as an object</returns>
-        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query);
-        /// <summary>
-        /// Utility method for returning a <see cref="Task{Object}"/> from the database
-        /// </summary>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the value of the first column in the first row as an object</returns>
-        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, CancellationToken token);
-        /// <summary>
-        /// Utility method for returning a <see cref="Task{Object}"/> value from the database
-        /// </summary>
-        /// <param name="connectionString">The connection string used to query a data store</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns the value of the first column in the first row returned from the passed in query as an object</returns>
-        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, string connectionString);
+        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, CancellationToken token = default);
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> value from the database
         /// </summary>
@@ -234,15 +167,7 @@ namespace ADONetHelper.Core
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the value of the first column in the first row returned from the passed in query as an object</returns>
-        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, string connectionString, CancellationToken token);
-        /// <summary>
-        /// Utility method for returning a <see cref="Task{Object}"/> from the database
-        /// </summary>
-        /// <param name="connection">An instanace of the DbConnection object used to query a data store</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns the value of the first column in the first row as an object</returns>
-        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, DbConnection connection);
+        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, string connectionString, CancellationToken token = default);
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> from the database
         /// </summary>
@@ -251,16 +176,9 @@ namespace ADONetHelper.Core
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the value of the first column in the first row as an object</returns>
-        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token);
+        Task<object> GetScalarValueAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token = default);
         #endregion
         #region Data Modification
-        /// <summary>
-        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
-        /// </summary>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
-        Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query);
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
         /// </summary>
@@ -269,14 +187,6 @@ namespace ADONetHelper.Core
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, CancellationToken token);
-        /// <summary>
-        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
-        /// </summary>
-        /// <param name="connectionString">The connection string used to query a data store</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
-        Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, string connectionString);
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
         /// </summary>
@@ -289,36 +199,50 @@ namespace ADONetHelper.Core
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
         /// </summary>
-        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
-        Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection);
-        /// <summary>
-        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
-        /// </summary>
         /// <param name="token">Propagates notification that operations should be canceled</param>
         /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         Task<int> ExecuteNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token);
+#if NETSTANDARD2_1
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
         /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the number of rows affected by this query</returns>
-        Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query);
+        Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query, CancellationToken token = default);
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="connectionString">The connection string used to query a data store</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query, string connectionString, CancellationToken token = default);
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
         /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <returns>Returns the number of rows affected by this query</returns>
+        Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token = default);
+        /// <summary>
+        /// Utility method for executing a query or stored procedure in a SQL transaction
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="commitTransaction">Whether or not to commit this transaction after it was completed successfully</param>
         /// <param name="transact">An instance of a <see cref="DbTransaction"/> class</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <returns>Returns the number of rows affected by this query</returns>
-        Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, DbTransaction transact, string query, bool commitTransaction = true);
+        Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, DbTransaction transact, string query, bool commitTransaction = true, CancellationToken token = default);
+#endif
         #endregion
     }
 }
