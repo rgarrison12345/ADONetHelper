@@ -506,12 +506,12 @@ namespace ADONetHelper.Core
             await Utilities.OpenDbConnectionAsync(Connection, token).ConfigureAwait(false);
 
             //Wrap this in a using statement to automatically dispose of resources
-            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, Connection, CommandTimeout))
+            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, Connection, CommandTimeout, transact))
             {
                 try
                 {
                     //Get the number of records affected by this query
-                    int recordsAffected = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+                    int recordsAffected = await command.ExecuteNonQueryAsync(token).ConfigureAwait(false);
 
                     //Check if we need to commit this
                     if (commitTransaction == true)
