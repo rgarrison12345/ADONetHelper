@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -14,7 +14,7 @@
     <PackageId>ADONetHelper.Core</PackageId>
     <Description>Core functionality API objects for ADONetHelper based libraries</Description>
     <PackageReleaseNotes>
-      Initial Release
+      Removing IAsynchronousClient and ISynchronousClient and moving into ADONetHelper
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
