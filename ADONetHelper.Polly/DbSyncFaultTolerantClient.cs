@@ -25,8 +25,10 @@ SOFTWARE.*/
 using Polly;
 using Polly.Registry;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 #endregion
 
 namespace ADONetHelper.Polly
@@ -34,7 +36,7 @@ namespace ADONetHelper.Polly
     /// <summary>
     /// 
     /// </summary>
-    public partial class DbFaultTolerantClient : IDisposable
+    public partial class DbFaultTolerantClient : ISyncFaultTolerantClient, IDisposable
     {
         #region Fields/Properties
         private PolicyRegistry _syncPolicyRegistry = null;
@@ -59,7 +61,342 @@ namespace ADONetHelper.Polly
             }
         }
         #endregion
-        #region Utility Methods                
+        #region Data Retrieval   
+        /// <summary>
+        /// Executes the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <returns></returns>
+        public DbDataReader ExecuteGetDataReader(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        {
+            return ExecuteGetDataReader(query, DefaultSyncPolicyKey, behavior, transact);
+        }
+        /// <summary>
+        /// Executes the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <returns></returns>
+        public DbDataReader ExecuteGetDataReader(string query, string policyName, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        {
+            return ExecuteGetDataReader(query, GetSyncPolicy<ISyncPolicy>(policyName), behavior, transact);
+        }
+        /// <summary>
+        /// Executes the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <returns></returns>
+        public DbDataReader ExecuteGetDataReader(string query, ISyncPolicy policy, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        {
+            return policy.Execute(() => ExecuteSQL.GetDbDataReader(QueryCommandType, query, behavior, transact));
+        }
+        /// <summary>
+        /// Captures the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <returns></returns>
+        public PolicyResult<DbDataReader> CaptureGetDataReader(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        {
+            return CaptureGetDataReader(query, DefaultSyncPolicyKey, behavior, transact);
+        }
+        /// <summary>
+        /// Captures the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <returns></returns>
+        public PolicyResult<DbDataReader> CaptureGetDataReader(string query, string policyName, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        {
+            return CaptureGetDataReader(query, GetSyncPolicy<ISyncPolicy>(policyName), behavior, transact);
+        }
+        /// <summary>
+        /// Captures the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <returns></returns>
+        public PolicyResult<DbDataReader> CaptureGetDataReader(string query, ISyncPolicy policy, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
+        {
+            return policy.ExecuteAndCapture(() => ExecuteSQL.GetDbDataReader(QueryCommandType, query, behavior, transact));
+        }
+        /// <summary>
+        /// Executes the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        public T ExecuteGetDataObject<T>(string query) where T : class
+        {
+            return ExecuteGetDataObject<T>(query, DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Executes the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <returns></returns>
+        public T ExecuteGetDataObject<T>(string query, string policyName) where T : class
+        {
+            //Return this back to the caller
+            return ExecuteGetDataObject<T>(query, GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Executes the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">policy</exception>
+        public T ExecuteGetDataObject<T>(string query, ISyncPolicy policy) where T : class
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+
+            //Return this back to the caller
+            return policy.Execute(() => ExecuteSQL.GetDataObject<T>(QueryCommandType, query));
+        }
+        /// <summary>
+        /// Captures the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        public PolicyResult<T> CaptureGetDataObject<T>(string query) where T : class
+        {
+            //Return this back to the caller
+            return CaptureGetDataObject<T>(query, DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Captures the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <returns></returns>
+        public PolicyResult<T> CaptureGetDataObject<T>(string query, string policyName) where T : class
+        {
+            //Return this back to the caller
+            return CaptureGetDataObject<T>(query, GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Captures the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">policy</exception>
+        public PolicyResult<T> CaptureGetDataObject<T>(string query, ISyncPolicy policy) where T : class
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+
+            //Return this back to the caller
+            return policy.ExecuteAndCapture(() => ExecuteSQL.GetDataObject<T>(QueryCommandType, query));
+        }
+        /// <summary>
+        /// Executes the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        public IEnumerable<T> ExecuteGetDataObjectEnumerable<T>(string query) where T : class
+        {
+            return ExecuteGetDataObjectEnumerable<T>(query, DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Executes the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <returns></returns>
+        public IEnumerable<T> ExecuteGetDataObjectEnumerable<T>(string query, string policyName) where T : class
+        {
+            //Return this back to the caller
+            return ExecuteGetDataObjectEnumerable<T>(query, GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Executes the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">policy</exception>
+        public IEnumerable<T> ExecuteGetDataObjectEnumerable<T>(string query, ISyncPolicy policy) where T : class
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+
+            //Return this back to the caller
+            return policy.Execute(() => ExecuteSQL.GetDataObjectEnumerable<T>(QueryCommandType, query));
+        }
+        /// <summary>
+        /// Captures the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        public PolicyResult<IEnumerable<T>> CaptureGetDataObjectEnumerable<T>(string query) where T : class
+        {
+            return CaptureGetDataObjectEnumerable<T>(query, DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Captures the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <returns></returns>
+        public PolicyResult<IEnumerable<T>> CaptureGetDataObjectEnumerable<T>(string query, string policyName) where T : class
+        {
+            //Return this back to the caller
+            return CaptureGetDataObjectEnumerable<T>(query, GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Captures the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">policy</exception>
+        public PolicyResult<IEnumerable<T>> CaptureGetDataObjectEnumerable<T>(string query, ISyncPolicy policy) where T : class
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+
+            //Return this back to the caller
+            return policy.ExecuteAndCapture(() => ExecuteSQL.GetDataObjectEnumerable<T>(QueryCommandType, query));
+        }
+        #endregion
+        #region Data Modification
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="int"/></returns>
+        public int ExecuteNonQuery(string query)
+        {
+            //Return this back to the caller
+            return ExecuteNonQuery(query, DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policyName"></param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="int"/></returns>
+        public int ExecuteNonQuery(string query, string policyName)
+        {
+            //Return this back to the caller
+            return ExecuteNonQuery(query, GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policy"></param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="int"/></returns>
+        public int ExecuteNonQuery(string query, ISyncPolicy policy)
+
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+
+            //Return this back to the caller
+            return policy.Execute(() => ExecuteSQL.ExecuteNonQuery(QueryCommandType, query));
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="int"/></returns>
+        public PolicyResult<int> CaptureNonQuery(string query)
+        {
+            return CaptureNonQuery(query, DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policyName"></param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="int"/></returns>
+        public PolicyResult<int> CaptureNonQuery(string query, string policyName)
+        {
+            //Return this back to the caller
+            return CaptureNonQuery(query, GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policy"></param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="int"/></returns>
+        public PolicyResult<int> CaptureNonQuery(string query, ISyncPolicy policy)
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+
+            //Return this back to the caller
+            return policy.ExecuteAndCapture(() => ExecuteSQL.ExecuteNonQuery(QueryCommandType, query));
+        }
+        #endregion
+        #region Utility Methods              
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="policies"></param>
+        public void AddSyncPolicyRange(IEnumerable<ISyncPolicy> policies)
+        {
+            bool noNamePolicies = policies.Where(x => string.IsNullOrWhiteSpace(x.PolicyKey) == true).Count() > 0;
+
+            //Check that we had policies with names
+            if (noNamePolicies == true)
+            {
+                throw new ArgumentException($"{nameof(policies)} had policies with no keys");
+            }
+
+            //Loop through each and see if there's a key
+            foreach (ISyncPolicy policy in policies)
+            {
+                SyncRegistry.Add(policy.PolicyKey, policy);
+            }
+        }
         /// <summary>
         /// Gets the synchronize policy.
         /// </summary>
@@ -130,12 +467,48 @@ namespace ADONetHelper.Polly
             ExecuteSQL.Connection.Dispose();
         }
         /// <summary>
+        /// Executes the open.
+        /// </summary>
+        public void ExecuteOpen()
+        {
+            ExecuteOpen(DefaultSyncPolicyKey);
+        }
+        /// <summary>
         /// Opens the connection to a database
         /// </summary>
-        public void Open()
+        public void ExecuteOpen(string policyName)
         {
-            //Call this again
-            ExecuteSQL.Connection.Open();
+            ExecuteOpen(GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Executes the open.
+        /// </summary>
+        /// <param name="policy">The policy.</param>
+        public void ExecuteOpen(ISyncPolicy policy)
+        {
+            policy.Execute(() => ExecuteSQL.Connection.Open());
+        }
+        /// <summary>
+        /// Executes the open.
+        /// </summary>
+        public PolicyResult CaptureOpen()
+        {
+            return CaptureOpen(DefaultSyncPolicyKey);
+        }
+        /// <summary>
+        /// Opens the connection to a database
+        /// </summary>
+        public PolicyResult CaptureOpen(string policyName)
+        {
+            return CaptureOpen(GetSyncPolicy<ISyncPolicy>(policyName));
+        }
+        /// <summary>
+        /// Executes the open.
+        /// </summary>
+        /// <param name="policy">The policy.</param>
+        public PolicyResult CaptureOpen(ISyncPolicy policy)
+        {
+            return policy.ExecuteAndCapture(() => ExecuteSQL.Connection.Open());
         }
         #endregion
         #region IDisposable Support
