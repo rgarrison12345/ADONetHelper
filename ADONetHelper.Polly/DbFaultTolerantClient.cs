@@ -30,10 +30,12 @@ using System.Data.Common;
 namespace ADONetHelper.Polly
 {
     /// <summary>
-    /// 
+    /// Specialized instance of <see cref="DbProvider"/> with a focus on fault tolerance and resilience
     /// </summary>
     /// <seealso cref="DbProvider"/>
-    public partial class DbFaultTolerantClient : DbProvider
+    /// <seealso cref="IAsyncFaultTolerantClient"/>
+    /// <seealso cref="ISyncFaultTolerantClient"/>
+    public partial class DbFaultTolerantClient : DbProvider, IDbFaultTolerantClient
     {
         #region Variables
         /// <summary>
@@ -41,7 +43,21 @@ namespace ADONetHelper.Polly
         /// </summary>
         protected bool disposedValue = false;
         #endregion
-        #region Fields/Properties
+        #region Fields/Properties        
+        /// <summary>
+        /// Gets or sets the default asynchronous policy key.
+        /// </summary>
+        /// <value>
+        /// The default asynchronous policy key.
+        /// </value>
+        public string DefaultAsyncPolicyKey { get; set; }
+        /// <summary>
+        /// Gets or sets the default synchronize policy key.
+        /// </summary>
+        /// <value>
+        /// The default synchronize policy key.
+        /// </value>
+        public string DefaultSyncPolicyKey { get; set; }
         #endregion
         #region Constructors        
         /// <summary>
