@@ -50,7 +50,7 @@
     <ProjectReference Include="..\ADONetHelper.Core\ADONetHelper.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Release'">
-    <PackageReference Include="ADONetHelper.Core" Version="1.0.0" />
+    <PackageReference Include="ADONetHelper.Core" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Polly" Version="7.1.1" />

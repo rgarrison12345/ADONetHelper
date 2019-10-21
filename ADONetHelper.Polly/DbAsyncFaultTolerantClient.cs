@@ -27,6 +27,8 @@ using Polly.Registry;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -36,7 +38,7 @@ namespace ADONetHelper.Polly
     /// <summary>
     /// 
     /// </summary>
-    public partial class DbFaultTolerantClient
+    public partial class DbFaultTolerantClient : IAsyncFaultTolerantClient
     {
         #region Fields/Properties
         private PolicyRegistry _asyncPolicyRegistry;
@@ -52,7 +54,7 @@ namespace ADONetHelper.Polly
             get
             {
                 //Check for null, might need to instantiate a new instance
-                if(_asyncPolicyRegistry == null)
+                if (_asyncPolicyRegistry == null)
                 {
                     _asyncPolicyRegistry = new PolicyRegistry();
                 }
@@ -61,7 +63,94 @@ namespace ADONetHelper.Polly
             }
         }
         #endregion
-        #region Data Retrieval             
+        #region Data Retrieval       
+        /// <summary>
+        /// Executes the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<DbDataReader> ExecuteGetDataReaderAsync(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null, CancellationToken token = default)
+        {
+            return await ExecuteGetDataReaderAsync(query, DefaultAsyncPolicyKey, behavior, transact, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Executes the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<DbDataReader> ExecuteGetDataReaderAsync(string query, string policyName, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null, CancellationToken token = default)
+        {
+            return await ExecuteGetDataReaderAsync(query, GetAsyncPolicy<IAsyncPolicy>(policyName), behavior, transact, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Executes the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<DbDataReader> ExecuteGetDataReaderAsync(string query, IAsyncPolicy policy, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null, CancellationToken token = default)
+        {
+            return await policy.ExecuteAsync(async (token) => await ExecuteSQL.GetDbDataReaderAsync(QueryCommandType, query, token, behavior, transact), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Captures the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<PolicyResult<DbDataReader>> CaptureGetDataReaderAsync(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null, CancellationToken token = default)
+        {
+            return await CaptureGetDataReaderAsync(query, DefaultAsyncPolicyKey, behavior, transact, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Captures the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policyName">Name of the policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<PolicyResult<DbDataReader>> CaptureGetDataReaderAsync(string query, string policyName, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null, CancellationToken token = default)
+        {
+            return await CaptureGetDataReaderAsync(query, GetAsyncPolicy<IAsyncPolicy>(policyName), behavior, transact, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Captures the get data reader asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="policy">The policy.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="transact">The transact.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<PolicyResult<DbDataReader>> CaptureGetDataReaderAsync(string query, IAsyncPolicy policy, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null, CancellationToken token = default)
+        {
+            return await policy.ExecuteAndCaptureAsync(async (token) => await ExecuteSQL.GetDbDataReaderAsync(QueryCommandType, query, token, behavior, transact), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Executes the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<T> ExecuteGetDataObjectAsync<T>(string query, CancellationToken token = default) where T : class
+        {
+            return await ExecuteGetDataObjectAsync<T>(query, DefaultAsyncPolicyKey, token).ConfigureAwait(false);
+        }
         /// <summary>
         /// Executes the get data object asynchronous.
         /// </summary>
@@ -83,7 +172,7 @@ namespace ADONetHelper.Polly
         /// <param name="policy">The policy.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">policy</exception>
+        /// <exception cref="ArgumentNullException">policy</exception>
         public async Task<T> ExecuteGetDataObjectAsync<T>(string query, IAsyncPolicy policy, CancellationToken token = default) where T : class
         {
             //Check for null 
@@ -91,21 +180,38 @@ namespace ADONetHelper.Polly
             {
                 throw new ArgumentNullException(nameof(policy));
             }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
 
             //Return this back to the caller
-            return await policy.ExecuteAsync(async () => await ExecuteSQL.GetDataObjectAsync<T>(QueryCommandType, query, token)).ConfigureAwait(false);
+            return await policy.ExecuteAsync(async (token) => await ExecuteSQL.GetDataObjectAsync<T>(QueryCommandType, query, token), token).ConfigureAwait(false);
         }
         /// <summary>
         /// Captures the get data object asynchronous.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query">The query.</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<PolicyResult<T>> CaptureGetDataObjectAsync<T>(string query, CancellationToken token = default) where T : class
+        {
+            return await CaptureGetDataObjectAsync<T>(query, DefaultAsyncPolicyKey, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Captures the get data object asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="token"></param>
+        /// <param name="query">The query.</param>
         /// <param name="policyName">Name of the policy.</param>
         /// <returns></returns>
-        public async Task<PolicyResult<T>> CaptureGetDataObjectAsync<T>(string query, string policyName) where T : class
+        public async Task<PolicyResult<T>> CaptureGetDataObjectAsync<T>(string query, string policyName, CancellationToken token = default) where T : class
         {
             //Return this back to the caller
-            return await CaptureGetDataObjectAsync<T>(query, GetAsyncPolicy<IAsyncPolicy>(policyName)).ConfigureAwait(false);
+            return await CaptureGetDataObjectAsync<T>(query, GetAsyncPolicy<IAsyncPolicy>(policyName), token).ConfigureAwait(false);
         }
         /// <summary>
         /// Captures the get data object asynchronous.
@@ -116,16 +222,32 @@ namespace ADONetHelper.Polly
         /// <param name="token">The token.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">policy</exception>
-        public async Task<PolicyResult<T>> CaptureGetDataObjectAsync<T>(string query, IAsyncPolicy policy,CancellationToken token = default) where T : class
+        public async Task<PolicyResult<T>> CaptureGetDataObjectAsync<T>(string query, IAsyncPolicy policy, CancellationToken token = default) where T : class
         {
             //Check for null 
-            if(policy == null)
+            if (policy == null)
             {
                 throw new ArgumentNullException(nameof(policy));
+            }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
             }
 
             //Return this back to the caller
             return await policy.ExecuteAndCaptureAsync(async () => await ExecuteSQL.GetDataObjectAsync<T>(QueryCommandType, query, token)).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Executes the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<List<T>> ExecuteGetDataObjectEnumerableAsync<T>(string query, CancellationToken token = default) where T : class
+        {
+            return await ExecuteGetDataObjectEnumerableAsync<T>(query, DefaultAsyncPolicyKey, token).ConfigureAwait(false);
         }
         /// <summary>
         /// Executes the get data object enumerable asynchronous.
@@ -148,17 +270,33 @@ namespace ADONetHelper.Polly
         /// <param name="policy">The policy.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">policy</exception>
-        public async Task<List<T>>ExecuteGetDataObjectEnumerableAsync<T>(string query, IAsyncPolicy policy, CancellationToken token = default) where T : class
+        /// <exception cref=ArgumentNullException">policy</exception>
+        public async Task<List<T>> ExecuteGetDataObjectEnumerableAsync<T>(string query, IAsyncPolicy policy, CancellationToken token = default) where T : class
         {
-            //Check for null
+            //Check for null 
             if (policy == null)
             {
                 throw new ArgumentNullException(nameof(policy));
             }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
 
             //Return this back to the caller
             return await policy.ExecuteAsync(async (token) => await ExecuteSQL.GetDataObjectListAsync<T>(QueryCommandType, query, token), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Captures the get data object enumerable asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<PolicyResult<List<T>>> CaptureGetDataObjectEnumerableAsync<T>(string query, CancellationToken token = default) where T : class
+        {
+            return await CaptureGetDataObjectEnumerableAsync<T>(query, DefaultAsyncPolicyKey, token).ConfigureAwait(false);
         }
         /// <summary>
         /// Captures the get data object enumerable asynchronous.
@@ -181,7 +319,7 @@ namespace ADONetHelper.Polly
         /// <param name="policy">The policy.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">policy</exception>
+        /// <exception cref="ArgumentNullException">policy</exception>
         public async Task<PolicyResult<List<T>>> CaptureGetDataObjectEnumerableAsync<T>(string query, IAsyncPolicy policy, CancellationToken token = default) where T : class
         {
             //Check for null 
@@ -189,12 +327,107 @@ namespace ADONetHelper.Polly
             {
                 throw new ArgumentNullException(nameof(policy));
             }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
 
             //Return this back to the caller
             return await policy.ExecuteAndCaptureAsync(async (token) => await ExecuteSQL.GetDataObjectListAsync<T>(QueryCommandType, query, token), token).ConfigureAwait(false);
         }
         #endregion
         #region Data Modification
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public async Task<int> ExecuteNonQueryAsync(string query, CancellationToken token = default)
+        {
+            return await ExecuteNonQueryAsync(query, DefaultAsyncPolicyKey, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policyName"></param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public async Task<int> ExecuteNonQueryAsync(string query, string policyName, CancellationToken token = default)
+        {
+            //Return this back to the caller
+            return await ExecuteNonQueryAsync(query, GetAsyncPolicy<IAsyncPolicy>(policyName), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policy"></param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public async Task<int> ExecuteNonQueryAsync(string query, IAsyncPolicy policy, CancellationToken token = default)
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
+            //Return this back to the caller
+            return await policy.ExecuteAsync(async (token) => await ExecuteSQL.ExecuteNonQueryAsync(QueryCommandType, query, token), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public async Task<PolicyResult<int>> CaptureNonQueryAsync(string query, CancellationToken token = default)
+        {
+            return await CaptureNonQueryAsync(query, DefaultAsyncPolicyKey, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policyName"></param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public async Task<PolicyResult<int>> CaptureNonQueryAsync(string query, string policyName, CancellationToken token = default)
+        {
+            //Return this back to the caller
+            return await CaptureNonQueryAsync(query, GetAsyncPolicy<IAsyncPolicy>(policyName), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
+        /// </summary>
+        /// <param name="policy"></param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public async Task<PolicyResult<int>> CaptureNonQueryAsync(string query, IAsyncPolicy policy, CancellationToken token = default)
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
+            //Return this back to the caller
+            return await policy.ExecuteAndCaptureAsync(async (token) => await ExecuteSQL.ExecuteNonQueryAsync(QueryCommandType, query, token), token).ConfigureAwait(false);
+        }
         #endregion
         #region Utility Methods     
         /// <summary>
@@ -205,6 +438,26 @@ namespace ADONetHelper.Polly
         public void AddAsyncPolicy(string key, IAsyncPolicy policy)
         {
             AsyncRegistry.Add(key, policy);
+        }
+        /// <summary>
+        /// Adds the asynchronous policy range.
+        /// </summary>
+        /// <param name="policies">The policies.</param>
+        public void AddAsyncPolicyRange(IEnumerable<IAsyncPolicy> policies)
+        {
+            bool noNamePolicies = (policies.Where(x => string.IsNullOrWhiteSpace(x.PolicyKey) == true).Count() > 0);
+
+            //Check that we had policies with names
+            if(noNamePolicies == true)
+            {
+                throw new ArgumentException($"{nameof(policies)} had policies with no keys");
+            }
+
+            //Loop through each and see if there's a key
+            foreach(IAsyncPolicy policy in policies)
+            {
+                AsyncRegistry.Add(policy.PolicyKey, policy);
+            }
         }
         /// <summary>
         /// Gets the policy.
@@ -230,6 +483,15 @@ namespace ADONetHelper.Polly
         /// <summary>
         /// Opens the asynchronous.
         /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task ExecuteOpenAsync(CancellationToken token = default)
+        {
+            await ExecuteOpenAsync(GetAsyncPolicy<IAsyncPolicy>(DefaultAsyncPolicyKey), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Opens the asynchronous.
+        /// </summary>
         /// <param name="keyName">Name of the key.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
@@ -244,13 +506,32 @@ namespace ADONetHelper.Polly
         /// <param name="token">The token.</param>
         /// <returns></returns>
         public async Task ExecuteOpenAsync(IAsyncPolicy policy, CancellationToken token = default)
-        { 
-            if(ExecuteSQL.Connection.State == ConnectionState.Closed)
+        {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+            if (ExecuteSQL.Connection.State == ConnectionState.Closed)
             {
                 ExecuteSQL.Connection.ConnectionString = ConnectionString;
             }
 
             await policy.ExecuteAsync(async (token) => await ExecuteSQL.Connection.OpenAsync(token), token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Opens the asynchronous.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async Task<PolicyResult> CaptureOpenAsync(CancellationToken token = default)
+        {
+            return await CaptureOpenAsync(DefaultAsyncPolicyKey, token).ConfigureAwait(false);
         }
         /// <summary>
         /// Opens the asynchronous.
@@ -271,9 +552,20 @@ namespace ADONetHelper.Polly
         /// <returns></returns>
         public async Task<PolicyResult> CaptureOpenAsync(IAsyncPolicy policy, CancellationToken token = default)
         {
+            //Check for null 
+            if (policy == null)
+            {
+                throw new ArgumentNullException(nameof(policy));
+            }
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
             //Return thsi back to the caller
             return await policy.ExecuteAndCaptureAsync(async (token) => await ExecuteSQL.Connection.OpenAsync(token), token).ConfigureAwait(false);
         }
         #endregion
     }
-}
+};
