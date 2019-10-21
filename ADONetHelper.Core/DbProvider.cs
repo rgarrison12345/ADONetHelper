@@ -31,8 +31,11 @@ using System.Data.Common;
 namespace ADONetHelper.Core
 {
     /// <summary>
-    /// 
+    /// Base class that implements the basic functionality of an ADO.NET driver
     /// </summary>
+    /// <seealso cref="IDbProvider"/>
+    /// <seealso cref="IConnectionStringUtility"/>
+    /// <seealso cref="IDbParameterUtility"/>
     public abstract class DbProvider : IDbProvider, IConnectionStringUtility, IDbParameterUtility
     {
         #region Events        
@@ -47,17 +50,17 @@ namespace ADONetHelper.Core
             add
             {
                 //Get an exclusive lock first
-                lock (this.ExecuteSQL.Connection)
+                lock (ExecuteSQL.Connection)
                 {
-                    this.ExecuteSQL.Connection.StateChange += value;
+                    ExecuteSQL.Connection.StateChange += value;
                 }
             }
             remove
             {
                 //Get an exclusive lock first
-                lock (this.ExecuteSQL.Connection)
+                lock (ExecuteSQL.Connection)
                 {
-                    this.ExecuteSQL.Connection.StateChange -= value;
+                    ExecuteSQL.Connection.StateChange -= value;
                 }
             }
         }
@@ -77,7 +80,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.Factory.CanCreateDataSourceEnumerator;
+                return ExecuteSQL.Factory.CanCreateDataSourceEnumerator;
             }
         }
         /// <summary>
@@ -88,7 +91,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
+                return ExecuteSQL.ConnectionStringBuilder.IsReadOnly;
             }
         }
         /// <summary>
@@ -99,7 +102,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.ConnectionStringBuilder.IsFixedSize;
+                return ExecuteSQL.ConnectionStringBuilder.IsFixedSize;
             }
         }
 #endif
@@ -111,7 +114,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.ConnectionStringBuilder.Count;
+                return ExecuteSQL.ConnectionStringBuilder.Count;
             }
         }
         /// <summary>
@@ -122,7 +125,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Set the command and connection timeout
-                _executeSQL.CommandTimeout = this.CommandTimeout;
+                _executeSQL.CommandTimeout = CommandTimeout;
 
                 //Return this back to the caller
                 return _executeSQL;
@@ -136,7 +139,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.Connection.ServerVersion;
+                return ExecuteSQL.Connection.ServerVersion;
             }
         }
         /// <summary>
@@ -147,7 +150,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.Connection.State;
+                return ExecuteSQL.Connection.State;
             }
         }
         /// <summary>
@@ -158,7 +161,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.Connection.Database;
+                return ExecuteSQL.Connection.Database;
             }
         }
         /// <summary>
@@ -169,7 +172,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.Connection.DataSource;
+                return ExecuteSQL.Connection.DataSource;
             }
         }
         /// <summary>
@@ -180,12 +183,12 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.ConnectionStringBuilder.ConnectionString;
+                return ExecuteSQL.ConnectionStringBuilder.ConnectionString;
             }
             set
             {
                 //Set the connection string
-                this.ExecuteSQL.ConnectionStringBuilder.ConnectionString = value;
+                ExecuteSQL.ConnectionStringBuilder.ConnectionString = value;
             }
         }
         /// <summary>
@@ -220,7 +223,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Return this back to the caller
-                return this.ExecuteSQL.Connection.ConnectionTimeout;
+                return ExecuteSQL.Connection.ConnectionTimeout;
             }
         }
         #endregion
@@ -480,7 +483,7 @@ namespace ADONetHelper.Core
         public void ReplaceParameter(string parameterName, DbParameter param)
         {
             //Get index of this parameter
-            int index = ExecuteSQL.Parameters.FindIndex(i => i.ParameterName.ToUpper() == (VariableBinder + parameterName.ToUpper()));
+            int index = ExecuteSQL.Parameters.FindIndex(i => string.Equals(i.ParameterName, string.Concat(VariableBinder, parameterName), StringComparison.OrdinalIgnoreCase) == true);
 
             //Do a replace of the parameter
             ExecuteSQL.Parameters[index] = param;
@@ -504,7 +507,7 @@ namespace ADONetHelper.Core
         public void SetParamaterValue(string parameterName, object value)
         {
             //Get index of this parameter
-            int index = ExecuteSQL.Parameters.FindIndex(i => i.ParameterName.ToUpper() == (VariableBinder + parameterName.ToUpper()));
+            int index = ExecuteSQL.Parameters.FindIndex(i => string.Equals(i.ParameterName, string.Concat(VariableBinder, parameterName), StringComparison.OrdinalIgnoreCase) == true);
 
             //Change the value
             SetParamaterValue(index, value);
@@ -630,7 +633,7 @@ namespace ADONetHelper.Core
                 ExecuteSQL.Parameters.Add(param);
 
                 //Return this back to the caller
-                return GetParameter(param.ParameterName);
+                return param;
             }
         }
         /// <summary>
