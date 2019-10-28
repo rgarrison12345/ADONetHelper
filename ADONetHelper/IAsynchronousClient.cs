@@ -37,7 +37,6 @@ namespace ADONetHelper
     public interface IAsynchronousClient
     {
         #region Data Retrieval
-#if !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/> asynchronously
         /// </summary>
@@ -45,7 +44,6 @@ namespace ADONetHelper
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <returns>Returns a <see cref="Task{TResult}"/> of datatable</returns>
         Task<DataTable> GetDataTableAsync(string query, CancellationToken token = default);
-#endif
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
         /// </summary>
@@ -56,6 +54,14 @@ namespace ADONetHelper
         /// Or the default value of <typeparamref name="T"/> if there are no search results
         /// </returns>
         Task<T> GetDataObjectAsync<T>(string query, CancellationToken token = default) where T : class;
+        /// <summary>
+        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <returns>Returns a list of type parameter object based on the fields in the passed in query</returns>
+        IAsyncEnumerable<T> GetDataObjectEnumerableAsync<T>(string query, CancellationToken token = default) where T : class;
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>

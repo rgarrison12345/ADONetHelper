@@ -47,7 +47,6 @@ namespace ADONetHelper
         }
         #endregion
         #region Data Retrieval
-#if !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
         /// </summary>
@@ -56,7 +55,7 @@ namespace ADONetHelper
         public DataSet GetDataSet(string query)
         {
             //Return this back to the caller
-            return this.GetDataSet(query, this.ExecuteSQL.Connection);
+            return GetDataSet(query, ExecuteSQL.Connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
@@ -67,7 +66,7 @@ namespace ADONetHelper
         public DataSet GetDataSet(string query, DbConnection connection)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.GetDataSet(this.QueryCommandType, query, connection);
+            return ExecuteSQL.GetDataSet(QueryCommandType, query, connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/>
@@ -77,7 +76,7 @@ namespace ADONetHelper
         public DataTable GetDataTable(string query)
         {
             //Return this back to the caller
-            return this.GetDataTable(query, this.ExecuteSQL.Connection);
+            return GetDataTable(query, ExecuteSQL.Connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/>
@@ -88,9 +87,8 @@ namespace ADONetHelper
         public DataTable GetDataTable(string query, DbConnection connection)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.GetDataTable(this.QueryCommandType, query, connection);
+            return ExecuteSQL.GetDataTable(QueryCommandType, query, connection);
         }
-#endif
         /// <summary>
         /// Utility method for returning a <see cref="DbDataReader"/> object created from the passed in query
         /// </summary>
@@ -101,7 +99,7 @@ namespace ADONetHelper
         public DbDataReader GetDbDataReader(string query, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.GetDbDataReader(this.QueryCommandType, query, behavior, transact);
+            return ExecuteSQL.GetDbDataReader(QueryCommandType, query, behavior, transact);
         }
         /// <summary>
         /// Utility method for acting on a <see cref="DbDataReader"/>
@@ -113,7 +111,7 @@ namespace ADONetHelper
         {
 
             //Return this back to the caller
-            this.ExecuteSQL.GetDbDataReader(this.QueryCommandType, query, act);
+            ExecuteSQL.GetDbDataReader(QueryCommandType, query, act);
         }
         /// <summary>
         /// Utility method for returning a scalar value as an <see cref="object"/> from the database
@@ -124,7 +122,7 @@ namespace ADONetHelper
         public object GetScalarValue(string query, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.GetScalarValue(this.QueryCommandType, query, transact);
+            return ExecuteSQL.GetScalarValue(QueryCommandType, query, transact);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -137,7 +135,7 @@ namespace ADONetHelper
         public T GetDataObject<T>(string query) where T : class
         {
             //Return this back to the caller
-            return this.GetDataObject<T>(query, this.ExecuteSQL.Connection);
+            return GetDataObject<T>(query, ExecuteSQL.Connection);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -151,7 +149,7 @@ namespace ADONetHelper
         public T GetDataObject<T>(string query, DbConnection connection) where T : class
         {
             //Return this back to the caller
-            return this.ExecuteSQL.GetDataObject<T>(this.QueryCommandType, query, connection);
+            return ExecuteSQL.GetDataObject<T>(QueryCommandType, query, connection);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -162,7 +160,7 @@ namespace ADONetHelper
         public IEnumerable<T> GetDataObjectEnumerable<T>(string query) where T : class
         {
             //Return this back to the caller
-            return this.GetDataObjectEnumerable<T>(query, this.ExecuteSQL.Connection);
+            return GetDataObjectEnumerable<T>(query, ExecuteSQL.Connection);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -174,7 +172,7 @@ namespace ADONetHelper
         public IEnumerable<T> GetDataObjectEnumerable<T>(string query, DbConnection connection) where T : class
         {
             //Return this back to the caller
-            return this.ExecuteSQL.GetDataObjectEnumerable<T>(this.QueryCommandType, query, connection);
+            return ExecuteSQL.GetDataObjectEnumerable<T>(QueryCommandType, query, connection);
         }
         #endregion
         #region Data Modifications
@@ -186,7 +184,7 @@ namespace ADONetHelper
         public int ExecuteNonQuery(string query)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.ExecuteNonQuery(this.QueryCommandType, query);
+            return ExecuteSQL.ExecuteNonQuery(QueryCommandType, query);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -196,7 +194,7 @@ namespace ADONetHelper
         public List<int> ExecuteBatchedNonQuery(IEnumerable<SQLQuery> commands)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.ExecuteBatchedNonQuery(commands);
+            return ExecuteSQL.ExecuteBatchedNonQuery(commands);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -206,7 +204,7 @@ namespace ADONetHelper
         public int ExecuteTransactedNonQuery(string query)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.ExecuteTransactedNonQuery(this.QueryCommandType, query);
+            return ExecuteSQL.ExecuteTransactedNonQuery(QueryCommandType, query);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -218,7 +216,7 @@ namespace ADONetHelper
         public int ExecuteTransactedNonQuery(string query, DbTransaction transact, bool commitTransaction = true)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.ExecuteTransactedNonQuery(this.QueryCommandType, transact, query, commitTransaction);
+            return ExecuteSQL.ExecuteTransactedNonQuery(QueryCommandType, transact, query, commitTransaction);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -228,7 +226,7 @@ namespace ADONetHelper
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.ExecuteBatchedNonQuery(commands);
+            return ExecuteSQL.ExecuteBatchedNonQuery(commands);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -239,7 +237,7 @@ namespace ADONetHelper
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands, DbTransaction transact)
         {
             //Return this back to the caller
-            return this.ExecuteSQL.ExecuteTransactedBatchedNonQuery(commands, transact);
+            return ExecuteSQL.ExecuteTransactedBatchedNonQuery(commands, transact);
         }
         #endregion
         #region Connection Methods
@@ -299,7 +297,6 @@ namespace ADONetHelper
         }
         #endregion
         #region Other Methods
-#if !NETSTANDARD1_3
         /// <summary>
         /// Enlists the passed in <paramref name="transact"/> in a distributed transaction
         /// </summary>
@@ -354,7 +351,6 @@ namespace ADONetHelper
             //Return this back to the caller
             return ExecuteSQL.Factory.GetDataSourceEnumerator();
         }
-#endif
         #endregion
         #region IDisposable Support
         /// <summary>
