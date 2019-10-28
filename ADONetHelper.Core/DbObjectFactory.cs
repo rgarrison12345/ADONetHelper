@@ -30,9 +30,9 @@ using System.Reflection;
 using System.Threading;
 #if NETSTANDARD2_0 || NETSTANDARD2_1
 using System.Runtime.Loader;
+#endif
 #if NETSTANDARD2_1
 using System.Threading.Tasks;
-#endif
 #endif
 #endregion
 
