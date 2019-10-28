@@ -57,7 +57,7 @@ namespace ADONetHelper.Core
         /// The character symbol to use when binding a variable in a given providers SQL query
         /// </summary>
         public string VariableBinder { get; set; } = "";
-#if !NETSTANDARD1_3
+
         /// <summary>
         /// Whether or not the passed in provider is capable of creating a data source enumerator
         /// </summary>
@@ -69,7 +69,6 @@ namespace ADONetHelper.Core
                 return this._dbProviderFactory.CanCreateDataSourceEnumerator;
             }
         }
-#endif
         #endregion
         #region Constructors
         /// <summary>
