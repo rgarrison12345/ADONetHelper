@@ -43,7 +43,6 @@ namespace ADONetHelper.Core
         event StateChangeEventHandler StateChange;
         #endregion
         #region Fields/Properties
-#if !NETSTANDARD1_3
         /// <summary>
         /// Whether or not the passed in provider is capable of creating a data source enumerator
         /// </summary>
@@ -56,7 +55,6 @@ namespace ADONetHelper.Core
         /// Whether the <see cref="ConnectionString"/> has a fixed size
         /// </summary>
         bool ConnectionStringFixedSize { get; }
-#endif
         /// <summary>
         /// Gets the current number of keys that are contained within the <see cref="ConnectionString"/> property
         /// </summary>

@@ -26,9 +26,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading;
-#if !NET20 && !NET35 && !NET40
 using System.Threading.Tasks;
-#endif
 #endregion
 
 namespace ADONetHelper.Core
@@ -43,15 +41,12 @@ namespace ADONetHelper.Core
         /// The character symbol to use when binding a variable in a given providers SQL query
         /// </summary>
         string VariableBinder { get; set; }
-#if !NETSTANDARD1_3
         /// <summary>
         /// Whether or not the passed in provider is capable of creating a data source enumerator
         /// </summary>
         bool CanCreateDataSourceEnumerator { get; }
-#endif
         #endregion
         #region Utility Methods
-#if !NETSTANDARD1_3
         /// <summary>
         /// Provides a mechanism for enumerating all available instances of database servers within the local network
         /// </summary>
@@ -67,7 +62,6 @@ namespace ADONetHelper.Core
         /// </summary>
         /// <returns>Returns an instance of <see cref="DbDataAdapter"/></returns>
         DbDataAdapter GetDbDataAdapter();
-#endif
         /// <summary>
         /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class
         /// </summary>
@@ -171,7 +165,6 @@ namespace ADONetHelper.Core
         /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
         DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, ParameterDirection paramDirection);
-#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -183,7 +176,6 @@ namespace ADONetHelper.Core
         /// <param name="paramDirection">The direction of the parameter, defaults to <see cref="ParameterDirection.Input"/></param>
         /// <returns>Returns an instance of <see cref="DbParameter"/> object with information passed into procedure</returns>
         DbParameter GetFixedSizeDbParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input);
-#endif
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>

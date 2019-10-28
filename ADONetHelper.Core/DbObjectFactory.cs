@@ -28,11 +28,11 @@ using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Threading;
-#if !NET20 && !NET35 && !NET40
-using System.Threading.Tasks;
-#endif
 #if NETSTANDARD2_0 || NETSTANDARD2_1
 using System.Runtime.Loader;
+#if NETSTANDARD2_1
+using System.Threading.Tasks;
+#endif
 #endif
 #endregion
 
@@ -86,7 +86,7 @@ namespace ADONetHelper.Core
         /// <param name="providerInvariantName">The name of the data provider that the should be used to query a data store</param>
         public DbObjectFactory(string providerInvariantName)
         {
-#if NET20 || NET35 || NET40 || NET45 || NET451 || NETSTANDARD2_1
+#if !NETSTANDARD2_0
             try
             {
                 _dbProviderFactory = DbProviderFactories.GetFactory(providerInvariantName);
@@ -105,17 +105,14 @@ namespace ADONetHelper.Core
         /// <param name="connection">An instance of <see cref="DbConnection"/> </param>
         public DbObjectFactory(DbConnection connection)
         {
-#if !NET20 && !NET35 && !NET40 && !NETSTANDARD1_3 && !NETSTANDARD2_0
+#if !NETSTANDARD2_0
             _dbProviderFactory = DbProviderFactories.GetFactory(connection);
-#elif NET20 || NET35 || NET40 || NETSTANDARD2_0 || NETSTANDARD2_1
+#elif NETSTANDARD2_0
             //Get the assembly from the dbconnection type
             _dbProviderFactory = GetProviderFactory(connection.GetType().Assembly);
-#else
-            //Get the assembly from the dbconnection type
-            _dbProviderFactory = GetProviderFactory(connection.GetType().AssemblyQualifiedName);
 #endif
         }
-#if !NETSTANDARD1_3 && !NETSTANDARD2_0
+#if !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance with the passed in <paramref name="row"/>
         /// </summary>
@@ -127,7 +124,6 @@ namespace ADONetHelper.Core
 #endif
         #endregion
         #region Utility Methods
-#if !NETSTANDARD1_3
         /// <summary>
         /// Provides a mechanism for enumerating all available instances of database servers within the local network
         /// </summary>
@@ -135,7 +131,7 @@ namespace ADONetHelper.Core
         public DbDataSourceEnumerator GetDataSourceEnumerator()
         {
             //Return this back to the caller
-            return this._dbProviderFactory.CreateDataSourceEnumerator();
+            return _dbProviderFactory.CreateDataSourceEnumerator();
         }
         /// <summary>
         /// Gets a <see cref="DbDataAdapter"/> based on the provider the <see cref="DbObjectFactory"/> is utilizing
@@ -144,7 +140,7 @@ namespace ADONetHelper.Core
         public DbDataAdapter GetDbDataAdapter()
         {
             //Return this back to the caller
-            return this._dbProviderFactory.CreateDataAdapter();
+            return _dbProviderFactory.CreateDataAdapter();
         }
         /// <summary>
         /// Gets a <see cref="DbCommandBuilder"/> based on the provider the <see cref="DbObjectFactory"/> is utilizing
@@ -153,9 +149,8 @@ namespace ADONetHelper.Core
         public DbCommandBuilder GetDbCommandBuilder()
         {
             //Return this back to the caller
-            return this._dbProviderFactory.CreateCommandBuilder();
+            return _dbProviderFactory.CreateCommandBuilder();
         }
-#endif
         /// <summary>
         /// Gets a <see cref="DbConnectionStringBuilder"/> based off the provider passed into class using the passed in <paramref name="connectionString"/>
         /// </summary>
@@ -163,7 +158,7 @@ namespace ADONetHelper.Core
         /// <returns>Returns a <see cref="DbConnectionStringBuilder"/> based off of target .NET framework data provider</returns>
         public DbConnectionStringBuilder GetDbConnectionStringBuilder(string connectionString)
         {
-            DbConnectionStringBuilder builder = this.GetDbConnectionStringBuilder();
+            DbConnectionStringBuilder builder = GetDbConnectionStringBuilder();
 
             //Don't set if empty
             if (!string.IsNullOrEmpty(connectionString) || connectionString.Trim() != string.Empty)
@@ -181,7 +176,7 @@ namespace ADONetHelper.Core
         public DbConnectionStringBuilder GetDbConnectionStringBuilder()
         {
             //Return this back to the caller
-            return this._dbProviderFactory.CreateConnectionStringBuilder();
+            return _dbProviderFactory.CreateConnectionStringBuilder();
         }
         /// <summary>
         /// Gets an instance of a formatted <see cref="DbCommand"/> object based on the specified provider
@@ -196,7 +191,7 @@ namespace ADONetHelper.Core
         public DbCommand GetDbCommand(CommandType queryCommandType, string query, IEnumerable<DbParameter> parameters, DbConnection connection, int commandTimeout, DbTransaction transact = null)
         {
             //Get the DbCommand object
-            DbCommand dCommand = this.GetDbCommand(connection, transact, commandTimeout);
+            DbCommand dCommand = GetDbCommand(connection, transact, commandTimeout);
 
             //Set query and command type
             dCommand.CommandType = queryCommandType;
@@ -225,7 +220,7 @@ namespace ADONetHelper.Core
         public DbCommand GetDbCommand(DbConnection connection, DbTransaction transact, int commandTimeout)
         {
             //Get the DbCommand object
-            DbCommand dCommand = this.GetDbCommand(commandTimeout);
+            DbCommand dCommand = GetDbCommand(commandTimeout);
 
             //Set query and command type
             dCommand.Connection = connection;
@@ -241,7 +236,7 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of <see cref="DbCommand"/> object</returns>
         public DbCommand GetDbCommand(int commandTimeout)
         {
-            DbCommand command = this.GetDbCommand();
+            DbCommand command = GetDbCommand();
             command.CommandTimeout = commandTimeout;
 
             //Return this back to the caller
@@ -253,8 +248,13 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of <see cref="DbCommand"/> object</returns>
         public DbCommand GetDbCommand()
         {
+            DbCommand command = _dbProviderFactory.CreateCommand();
+
+            //Dispose interfaces to clear up any resources used by this instance
+            command.Disposed += DbCommand_Disposed;
+
             //Return this back to the caller
-            return this._dbProviderFactory.CreateCommand();
+            return command;
         }
         /// <summary>
         /// Instantiates a new instance of the <see cref="DbConnection"/> object based on the specified provider
@@ -264,7 +264,7 @@ namespace ADONetHelper.Core
         public DbConnection GetDbConnection(string connectionString)
         {
             //Get the DbConnection object
-            DbConnection db = this.GetDbConnection();
+            DbConnection db = GetDbConnection();
 
             //Set the connection string
             db.ConnectionString = connectionString;
@@ -279,9 +279,8 @@ namespace ADONetHelper.Core
         public DbConnection GetDbConnection()
         {
             //Return this back to the caller
-            return this._dbProviderFactory.CreateConnection();
+            return _dbProviderFactory.CreateConnection();
         }
-#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -295,7 +294,7 @@ namespace ADONetHelper.Core
         public DbParameter GetFixedSizeDbParameter(string parameterName, object parameterValue, DbType dataType, byte? scale = null, byte? precision = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
             //Get the DbParameter object
-            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue, dataType, paramDirection);
+            DbParameter parameter = GetDbParameter(parameterName, parameterValue, dataType, paramDirection);
 
             //Check for values
             if (precision.HasValue == true)
@@ -310,7 +309,6 @@ namespace ADONetHelper.Core
             //Return this back to the caller
             return parameter;
         }
-#endif
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -324,7 +322,7 @@ namespace ADONetHelper.Core
         public DbParameter GetVariableSizeDbParameter(string parameterName, object parameterValue, DbType dataType, int? size = null, ParameterDirection paramDirection = ParameterDirection.Input)
         {
             //Get the DbParameter object
-            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue, dataType, paramDirection);
+            DbParameter parameter = GetDbParameter(parameterName, parameterValue, dataType, paramDirection);
 
             //Check for value
             if (size.HasValue == true)
@@ -369,7 +367,7 @@ namespace ADONetHelper.Core
         public DbParameter GetDbParameter(string parameterName, object parameterValue, DbType dataType, ParameterDirection paramDirection)
         {
             //Get the DbParameter object
-            DbParameter parameter = this.GetDbParameter(parameterName, parameterValue);
+            DbParameter parameter = GetDbParameter(parameterName, parameterValue);
 
             //Set parameter properties
             parameter.DbType = dataType;
@@ -387,7 +385,7 @@ namespace ADONetHelper.Core
         public DbParameter GetDbParameter(string parameterName, object parameterValue)
         {
             //Get the DbParameter object
-            DbParameter parameter = this.GetDbParameter();
+            DbParameter parameter = GetDbParameter();
 
             parameter.Value = parameterValue ?? DBNull.Value;
 
@@ -405,9 +403,9 @@ namespace ADONetHelper.Core
             }
 
             //Check for null or empty
-            if (!string.IsNullOrEmpty(this.VariableBinder) || this.VariableBinder.Trim() != string.Empty)
+            if (!string.IsNullOrEmpty(VariableBinder) || VariableBinder.Trim() != string.Empty)
             {
-                parameter.ParameterName = this.VariableBinder + parameterName.Replace(this.VariableBinder, "");
+                parameter.ParameterName = VariableBinder + parameterName.Replace(VariableBinder, "");
             }
             else
             {
@@ -437,7 +435,7 @@ namespace ADONetHelper.Core
         public DbParameter GetDbParameter()
         {
             //Return this back to the caller
-            return this._dbProviderFactory.CreateParameter();
+            return _dbProviderFactory.CreateParameter();
         }
         /// <summary>
         /// Gets an instace of the <see cref="DbTransaction"/> object based on the <see cref="DbConnection"/> object passed in
@@ -484,7 +482,16 @@ namespace ADONetHelper.Core
         }
 #endif
         #endregion
-        #region Helper Methods
+        #region Helper Methods        
+        /// <summary>
+        /// Databases the command disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        public void DbCommand_Disposed(object sender, EventArgs e)
+        {
+            ((DbCommand)sender).Parameters.Clear();
+        }
 #if NETSTANDARD2_0 || NETSTANDARD2_1
         /// <summary>
         /// Gets an instance of <see cref="DbProviderFactory"/> based off a .NET drivers <paramref name="providerName"/>, such as System.Data.SqlClient.
@@ -519,21 +526,13 @@ namespace ADONetHelper.Core
             //Get the type that inherits from DbProviderFactory
             foreach (Type t in assembly.GetTypes())
             {
-#if !NET20 && !NET35 && !NET40
+
                 //Check if this is a dbproviderfactory
                 if (t.GetTypeInfo().BaseType == typeof(DbProviderFactory))
                 {
                     providerFactory = t;
                     break;
                 }
-#else
-                //Check if this is a dbproviderfactory
-                if (t.BaseType == typeof(DbProviderFactory))
-                {
-                    providerFactory = t;
-                    break;
-                }
-#endif
             }
 
             //Get the field to get the factory instance

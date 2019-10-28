@@ -71,7 +71,6 @@ namespace ADONetHelper.Core
         /// </summary>
         private readonly ISqlExecutor _executeSQL;
 
-#if !NETSTANDARD1_3
         /// <summary>
         /// Whether or not the passed in provider is capable of creating a data source enumerator
         /// </summary>
@@ -105,7 +104,6 @@ namespace ADONetHelper.Core
                 return ExecuteSQL.ConnectionStringBuilder.IsFixedSize;
             }
         }
-#endif
         /// <summary>
         /// Gets the current number of keys that are contained within the <see cref="ConnectionString"/> property
         /// </summary>
@@ -228,7 +226,7 @@ namespace ADONetHelper.Core
         }
         #endregion
         #region Constructors
-#if !NETSTANDARD1_3 && !NETSTANDARD2_0
+#if !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance of <see cref="DbProvider"/> with the passed in <paramref name="row"/> and <paramref name="connectionString"/>
         /// </summary>
@@ -528,7 +526,6 @@ namespace ADONetHelper.Core
             //Change the value
             ExecuteSQL.Parameters[index] = param;
         }
-#if !NET20 && !NET35 && !NET40 && !NET45
         /// <summary>
         /// Gets an initialized instance of a <see cref="DbParameter"/> object based on the specified provider
         /// </summary>
@@ -556,7 +553,6 @@ namespace ADONetHelper.Core
                 return GetParameter(parameterName);
             }
         }
-#endif
         /// <summary>
         /// Adds a new <see cref="DbParameter"/> to the parameters collection for the current <see cref="DbConnection"/>
         /// </summary>
