@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.3;net451;net45;net40;net35;net20</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net461;</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -14,7 +14,7 @@
     <PackageId>ADONetHelper.Core</PackageId>
     <Description>Core functionality API objects for ADONetHelper based libraries</Description>
     <PackageReleaseNotes>
-      Removing IAsynchronousClient and ISynchronousClient and moving into ADONetHelper
+      Only .NET Standard 2.0/2.1 and .NET Framework 4.6.1 builds.  Adding asynchronous iterator function GetDataObjectEnumerable that utilizes IAsyncEnumerable
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
@@ -41,20 +41,12 @@
     <OutputPath>.\bin\Release</OutputPath>
     <DefineConstants>RELEASE;</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net20' or '$(TargetFramework)'=='net35' or '$(TargetFramework)'=='net40'">
-    <Compile Remove="IAsynchronousClient.cs"></Compile>
-    <Compile Remove="ISqlExecutorAsync.cs"></Compile>
-    <Compile Remove="SqlExecutorAsync.cs"></Compile>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'">
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0' or '$(TargetFramework)'=='netstandard2.1'">
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.0.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Reflection" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.6.0" />
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE.md" Link="LICENSE.md">

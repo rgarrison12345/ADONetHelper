@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 #endregion
 #region Using Declarations
-using ADONetHelper.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,7 +33,6 @@ namespace ADONetHelper.Core
     public partial class SqlExecutor
     {
         #region Data Retrieval
-#if !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
         /// </summary>
@@ -43,8 +41,8 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of <see cref="DataSet"/> based on the <paramref name="query"/> passed into the routine</returns>
         public DataSet GetDataSet(CommandType queryCommandType, string query)
         {
-			//Return this back to the caller
-			return this.GetDataSet(queryCommandType, query, this.Connection);
+            //Return this back to the caller
+            return GetDataSet(queryCommandType, query, Connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
@@ -55,24 +53,24 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of <see cref="DataSet"/> based on the <paramref name="query"/> passed into the routine</returns>
         public DataSet GetDataSet(CommandType queryCommandType, string query, DbConnection connection)
         {
-			//Open the database connection
-			Utilities.OpenDbConnection(connection);
+            //Open the database connection
+            Utilities.OpenDbConnection(connection);
 
-			//Wrap this automatically to dispose of resources
-			using (DbDataAdapter adap = this.Factory.GetDbDataAdapter())
+            //Wrap this automatically to dispose of resources
+            using (DbDataAdapter adap = Factory.GetDbDataAdapter())
             {
-				//Wrap this automatically to dispose of resources
-				using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
-				{
-					DataSet set = new DataSet();
+                //Wrap this automatically to dispose of resources
+                using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout))
+                {
+                    DataSet set = new DataSet();
 
-					//Fill out the dataset
-					adap.SelectCommand = command;
-					adap.Fill(set);
+                    //Fill out the dataset
+                    adap.SelectCommand = command;
+                    adap.Fill(set);
 
-					//Return this back to the caller
-					return set;
-				}
+                    //Return this back to the caller
+                    return set;
+                }
             }
         }
         /// <summary>
@@ -83,8 +81,8 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(CommandType queryCommandType, string query)
         {
-			//Return this back to the caller
-			return this.GetDataTable(queryCommandType, query, this.Connection);
+            //Return this back to the caller
+            return GetDataTable(queryCommandType, query, Connection);
         }
         /// <summary>
         /// Gets an instance of <see cref="DataTable"/>
@@ -95,22 +93,21 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         public DataTable GetDataTable(CommandType queryCommandType, string query, DbConnection connection)
         {
-			//Open the database connection
-			Utilities.OpenDbConnection(connection);
+            //Open the database connection
+            Utilities.OpenDbConnection(connection);
 
-			//Return this back to the caller
-			using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, this.Connection))
+            //Return this back to the caller
+            using (DbDataReader reader = GetDbDataReader(queryCommandType, query, Connection))
             {
-				DataTable dt = new DataTable();
+                DataTable dt = new DataTable();
 
-				//Load in the result set
-				dt.Load(reader);
+                //Load in the result set
+                dt.Load(reader);
 
                 //Return this back to the caller
                 return dt;
             }
         }
-#endif
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
         /// </summary>
@@ -121,7 +118,7 @@ namespace ADONetHelper.Core
         public T GetDataObject<T>(CommandType queryCommandType, string query) where T : class
         {
             //Return this back to the caller
-            return this.GetDataObject<T>(queryCommandType, query, this.Connection);
+            return GetDataObject<T>(queryCommandType, query, Connection);
         }
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
@@ -134,10 +131,10 @@ namespace ADONetHelper.Core
         public T GetDataObject<T>(CommandType queryCommandType, string query, string connectionString) where T : class
         {
             //Wrap this in a using statement to automatically dispose of resources
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 //Return this back to the caller
-                return this.GetDataObject<T>(queryCommandType, query, connection);
+                return GetDataObject<T>(queryCommandType, query, connection);
             }
         }
         /// <summary>
@@ -154,10 +151,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this to automatically handle disposing of resources
-            using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleRow))
+            using (DbDataReader reader = GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleRow))
             {
                 //Get the field name and value pairs out of this query
-                IEnumerable<IDictionary<string, object>> results = this.GetDynamicResults(reader);
+                IEnumerable<IDictionary<string, object>> results = Utilities.GetDynamicResultsEnumerable(reader);
                 IEnumerator<IDictionary<string, object>> enumerator = results.GetEnumerator();
                 bool canMove = enumerator.MoveNext();
 
@@ -165,7 +162,7 @@ namespace ADONetHelper.Core
                 if (canMove == false)
                 {
                     //Return the default for the type back to the caller
-                    return default(T);
+                    return default;
                 }
                 else
                 {
@@ -175,7 +172,56 @@ namespace ADONetHelper.Core
             }
         }
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query)
+        {
+            //Return this back to the caller
+            return GetDataObjectList<T>(queryCommandType, query, Connection);
+        }
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connectionString">The connection string used to query a data store</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, string connectionString)
+        {
+            //Wrap this in a using statement to automatically dispose of resources
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
+            {
+                //Return this back to the caller
+                return GetDataObjectList<T>(queryCommandType, query, connection);
+            }
+        }
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection)
+        {
+            //Open the database connection if necessary
+            Utilities.OpenDbConnection(connection);
+
+            //Wrap this to automatically handle disposing of resources
+            using (DbDataReader reader = GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleResult))
+            {
+                //Return this back to the caller
+                return Utilities.GetDynamicTypeList<T>(Utilities.GetDynamicResultsList(reader));
+            }
+        }
+        /// <summary>
+        /// Gets a <see cref="IEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
@@ -184,7 +230,7 @@ namespace ADONetHelper.Core
         public IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query)
         {
             //Return this back to the caller
-            return this.GetDataObjectEnumerable<T>(queryCommandType, query, this.Connection);
+            return GetDataObjectEnumerable<T>(queryCommandType, query, Connection);
         }
         /// <summary>
         /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
@@ -197,10 +243,10 @@ namespace ADONetHelper.Core
         public IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query, string connectionString)
         {
             //Wrap this in a using statement to automatically dispose of resources
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 //Return this back to the caller
-                return this.GetDataObjectEnumerable<T>(queryCommandType, query, connection);
+                return GetDataObjectEnumerable<T>(queryCommandType, query, connection);
             }
         }
         /// <summary>
@@ -217,10 +263,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this to automatically handle disposing of resources
-            using (DbDataReader reader = this.GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleResult))
+            using (DbDataReader reader = GetDbDataReader(queryCommandType, query, connection, CommandBehavior.SingleResult))
             {
                 //Get the field name and value pairs out of this query
-                IEnumerable<IDictionary<string, object>> results = this.GetDynamicResults(reader);
+                IEnumerable<IDictionary<string, object>> results = Utilities.GetDynamicResultsEnumerable(reader);
                 IEnumerator<IDictionary<string, object>> enumerator = results.GetEnumerator();
 
                 //Keep moving through the enumerator
@@ -242,7 +288,7 @@ namespace ADONetHelper.Core
         public DbDataReader GetDbDataReader(CommandType queryCommandType, string query, CommandBehavior behavior = CommandBehavior.CloseConnection, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return this.GetDbDataReader(queryCommandType, query, this.Connection, behavior, transact);
+            return GetDbDataReader(queryCommandType, query, Connection, behavior, transact);
         }
         /// <summary>
         /// Utility method for returning a <see cref="DbDataReader"/> object created from the passed in Db Helper object
@@ -255,10 +301,10 @@ namespace ADONetHelper.Core
         public DbDataReader GetDbDataReader(CommandType queryCommandType, string connectionString, string query, CommandBehavior behavior = CommandBehavior.CloseConnection)
         {
             //Wrap this in a using statement to handle disposing of resources
-            DbConnection connection = this.Factory.GetDbConnection(connectionString);
+            DbConnection connection = Factory.GetDbConnection(connectionString);
 
             //Return the reader back to the caller
-            return this.GetDbDataReader(queryCommandType, query, connection, behavior);
+            return GetDbDataReader(queryCommandType, query, connection, behavior);
         }
         /// <summary>
         /// Utility method for returning a <see cref="DbDataReader"/> object
@@ -275,22 +321,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
-            using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
+            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout, transact))
             {
-                try
-                {
-                    //Return this back to the caller
-                    return command.ExecuteReader(behavior);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    this._parameters = this.GetParameterList(command);
-                }
+                //Return this back to the caller
+                return command.ExecuteReader(behavior);
             }
         }
         /// <summary>
@@ -303,7 +337,7 @@ namespace ADONetHelper.Core
         public void GetDbDataReader(CommandType queryCommandType, string query, Action<DbDataReader> act)
         {
             //Return this back to the caller
-            this.GetDbDataReader(queryCommandType, query, act, this.Connection);
+            GetDbDataReader(queryCommandType, query, act, Connection);
         }
         /// <summary>
         /// Utility method for returning a <see cref="DbDataReader"/>
@@ -319,22 +353,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
-            using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
+            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout))
             {
-                try
-                {
-                    //Invoke the method
-                    act(command.ExecuteReader());
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    this._parameters = this.GetParameterList(command);
-                }
+                //Invoke the method
+                act(command.ExecuteReader());
             }
         }
         /// <summary>
@@ -347,7 +369,7 @@ namespace ADONetHelper.Core
         public object GetScalarValue(CommandType queryCommandType, string query, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return this.GetScalarValue(queryCommandType, query, this.Connection, transact);
+            return GetScalarValue(queryCommandType, query, Connection, transact);
         }
         /// <summary>
         /// Utility method for returning a scalar value from the database
@@ -359,10 +381,10 @@ namespace ADONetHelper.Core
         public object GetScalarValue(CommandType queryCommandType, string query, string connectionString)
         {
             //Wrap this in a using statement to handle disposing of resources
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 //Return this back to the caller
-                return this.GetScalarValue(queryCommandType, query, connection);
+                return GetScalarValue(queryCommandType, query, connection);
             }
         }
         /// <summary>
@@ -379,22 +401,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to handle disposing of resources
-            using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
+            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout, transact))
             {
-                try
-                {
-                    //Return this back to the caller
-                    return command.ExecuteScalar();
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    this._parameters = this.GetParameterList(command);
-                }
+                //Return this back to the caller
+                return command.ExecuteScalar();
             }
         }
         #endregion
@@ -408,7 +418,7 @@ namespace ADONetHelper.Core
         public int ExecuteNonQuery(CommandType queryCommandType, string query)
         {
             //Execute this query
-            return this.ExecuteNonQuery(queryCommandType, query, this.Connection);
+            return ExecuteNonQuery(queryCommandType, query, Connection);
         }
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure without a transaction
@@ -420,10 +430,10 @@ namespace ADONetHelper.Core
         public int ExecuteNonQuery(CommandType queryCommandType, string query, string connectionString)
         {
             //Wrap this in a using statement to handle disposing of resources
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 //Execute this query
-                return this.ExecuteNonQuery(queryCommandType, query, connection);
+                return ExecuteNonQuery(queryCommandType, query, connection);
             }
         }
         /// <summary>
@@ -439,22 +449,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout))
+            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout))
             {
-                try
-                {
-                    //Return the amount of records affected by this query back to the caller
-                    return command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    this._parameters = this.GetParameterList(command);
-                }
+                //Return the amount of records affected by this query back to the caller
+                return command.ExecuteNonQuery();
             }
         }
         /// <summary>
@@ -465,7 +463,7 @@ namespace ADONetHelper.Core
         public List<int> ExecuteBatchedNonQuery(IEnumerable<SQLQuery> commands)
         {
             //Return this back to the caller
-            return this.ExecuteBatchedNonQuery(commands, this.Connection);
+            return ExecuteBatchedNonQuery(commands, Connection);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -476,10 +474,10 @@ namespace ADONetHelper.Core
         public List<int> ExecuteBatchedNonQuery(string connectionString, IEnumerable<SQLQuery> commands)
         {
             //Open the connection to the database if necessary
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 //Return this back to the caller
-                return this.ExecuteBatchedNonQuery(commands, connection);
+                return ExecuteBatchedNonQuery(commands, connection);
             }
         }
         /// <summary>
@@ -496,7 +494,7 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbCommand command = this.Factory.GetDbCommand(this.CommandTimeout))
+            using (DbCommand command = Factory.GetDbCommand(CommandTimeout))
             {
                 command.Connection = connection;
 
@@ -510,9 +508,6 @@ namespace ADONetHelper.Core
 
                     //Now execute the query
                     returnList.Add(command.ExecuteNonQuery());
-
-                    //Set the output parameters
-                    query.ParameterList = this.GetParameterList(command);
                 }
             }
 
@@ -528,7 +523,7 @@ namespace ADONetHelper.Core
         public int ExecuteTransactedNonQuery(CommandType queryCommandType, string query)
         {
             //Return this back to the caller
-            return this.ExecuteTransactedNonQuery(queryCommandType, query, this.Connection);
+            return ExecuteTransactedNonQuery(queryCommandType, query, Connection);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -540,16 +535,16 @@ namespace ADONetHelper.Core
         public int ExecuteTransactedNonQuery(CommandType queryCommandType, string query, string connectionString)
         {
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 //Open the database connection
                 Utilities.OpenDbConnection(connection);
 
                 //Wrap this in a using statement to automatically handle disposing of resources
-                using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
+                using (DbTransaction transact = Factory.GetDbTransaction(connection))
                 {
                     //Get records affected
-                    return this.ExecuteTransactedNonQuery(queryCommandType, connection, transact, query, true);
+                    return ExecuteTransactedNonQuery(queryCommandType, connection, transact, query, true);
                 }
             }
         }
@@ -564,7 +559,7 @@ namespace ADONetHelper.Core
         public int ExecuteTransactedNonQuery(CommandType queryCommandType, string query, DbConnection connection, DbTransaction transact)
         {
             //Return this back to the caller
-            return this.ExecuteTransactedNonQuery(queryCommandType, query, connection, transact);
+            return ExecuteTransactedNonQuery(queryCommandType, query, connection, transact);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -579,10 +574,10 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
+            using (DbTransaction transact = Factory.GetDbTransaction(connection))
             {
                 //Get recrods affected
-                return this.ExecuteTransactedNonQuery(queryCommandType, connection, transact, query);
+                return ExecuteTransactedNonQuery(queryCommandType, connection, transact, query);
             }
         }
         /// <summary>
@@ -596,7 +591,7 @@ namespace ADONetHelper.Core
         public int ExecuteTransactedNonQuery(CommandType queryCommandType, DbTransaction transact, string query, bool commitTransaction = true)
         {
             //Return this back to the caller
-            return this.ExecuteTransactedNonQuery(queryCommandType, this.Connection, transact, query, commitTransaction);
+            return ExecuteTransactedNonQuery(queryCommandType, Connection, transact, query, commitTransaction);
         }
         /// <summary>
         /// Utility method for executing a query or stored procedure in a SQL transaction
@@ -615,7 +610,7 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbCommand command = this.Factory.GetDbCommand(queryCommandType, query, this.Parameters, connection, this.CommandTimeout, transact))
+            using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout, transact))
             {
                 try
                 {
@@ -643,11 +638,6 @@ namespace ADONetHelper.Core
                         throw;
                     }
                 }
-                finally
-                {
-                    //Set the output parameters
-                    this._parameters = this.GetParameterList(command);
-                }
             }
 
             //Return this back to the caller
@@ -661,7 +651,7 @@ namespace ADONetHelper.Core
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands)
         {
             //Return this back to the caller
-            return this.ExecuteTransactedBatchedNonQuery(commands, this.Connection);
+            return ExecuteTransactedBatchedNonQuery(commands, Connection);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -672,7 +662,7 @@ namespace ADONetHelper.Core
         public List<int> ExecuteTransactedBatchedNonQuery(IEnumerable<SQLQuery> commands, DbTransaction transact)
         {
             //Return this back to the caller
-            return this.ExecuteTransactedBatchedNonQuery(commands, transact);
+            return ExecuteTransactedBatchedNonQuery(commands, transact);
         }
         /// <summary>
         /// Utility method for executing batches of queries or stored procedures in a SQL transaction
@@ -683,14 +673,14 @@ namespace ADONetHelper.Core
         public List<int> ExecuteTransactedBatchedNonQuery(string connectionString, IEnumerable<SQLQuery> commands)
         {
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbConnection connection = this.Factory.GetDbConnection(connectionString))
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
             {
                 connection.Open();
 
                 //Wrap this in a using statement to automatically handle disposing of resources
-                using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
+                using (DbTransaction transact = Factory.GetDbTransaction(connection))
                 {
-                    return this.ExecuteTransactedBatchedNonQuery(commands, connection, transact);
+                    return ExecuteTransactedBatchedNonQuery(commands, connection, transact);
                 }
             }
         }
@@ -706,9 +696,9 @@ namespace ADONetHelper.Core
             Utilities.OpenDbConnection(connection);
 
             //Wrap this in a using statement to automatically handle disposing of resources
-            using (DbTransaction transact = this.Factory.GetDbTransaction(connection))
+            using (DbTransaction transact = Factory.GetDbTransaction(connection))
             {
-                return this.ExecuteTransactedBatchedNonQuery(commands, connection, transact);
+                return ExecuteTransactedBatchedNonQuery(commands, connection, transact);
             }
         }
         /// <summary>
@@ -729,7 +719,7 @@ namespace ADONetHelper.Core
                 Utilities.OpenDbConnection(connection);
 
                 //Wrap this in a using statement to automatically handle disposing of resources
-                using (DbCommand command = this.Factory.GetDbCommand(connection, transact, this.CommandTimeout))
+                using (DbCommand command = Factory.GetDbCommand(connection, transact, CommandTimeout))
                 {
                     //Now loop through all queries
                     foreach (SQLQuery query in commands)
@@ -748,9 +738,6 @@ namespace ADONetHelper.Core
 
                         //Now execute the query
                         returnList.Add(command.ExecuteNonQuery());
-
-                        //Set the output parameters
-                        query.ParameterList = this.GetParameterList(command);
                     }
 
                     //We made it this far, we can commit
@@ -785,94 +772,6 @@ namespace ADONetHelper.Core
         }
         #endregion
         #region Helper Methods
-        /// <summary>
-        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
-        /// </summary>
-        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
-        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
-        private IEnumerable<IDictionary<string, object>> GetDynamicResultsMultiSet(DbDataReader reader)
-        {
-            //Keep moving through th result sets
-            while (reader.NextResult() == true)
-            {
-                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-
-                //Keep reading records while there are records to read
-                while (reader.Read() == true)
-                {
-
-                    //Loop through all fields in this row
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        object value = null;
-
-                        //Need to check for db null to ensure that db null doesn't make it into the dictionary
-                        if (reader.IsDBNull(i) == false)
-                        {
-                            value = reader.GetValue(i);
-                        }
-
-                        //Add this into the dictionary
-                        obj.Add(reader.GetName(i), value);
-                    }
-
-                    //Return this back to the caller
-                    yield return obj;
-                }
-            }
-        }
-        /// <summary>
-        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
-        /// </summary>
-        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
-        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
-        private IEnumerable<IDictionary<string, object>> GetDynamicResults(DbDataReader reader)
-        {
-            //Keep reading records while there are records to read
-            while (reader.Read() == true)
-            {
-                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-
-                //Loop through all fields in this row
-                for (int i = 0; i < reader.FieldCount; i++)
-                {
-                    object value = null;
-
-                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
-                    if (reader.IsDBNull(i) == false)
-                    {
-                        value = reader.GetValue(i);
-                    }
-
-                    //Add this into the dictionary
-                    obj.Add(reader.GetName(i), value);
-                }
-
-                //Add this item to the Array
-                yield return obj;
-            }
-        }
-        /// <summary>
-        /// Gets a <see cref="List{T}"/> from the passed in <see cref="IEnumerable{IDictionary}"/>
-        /// </summary>
-        /// <param name="results">An <see cref="IEnumerable{T}"/>/> with the results from a sql query</param>
-        /// <typeparam name="T">A type that will be generated from the results of a sql query</typeparam>
-        /// <seealso cref="IEnumerable{Dictionary}"/>
-        /// <seealso cref="List{T}"/>
-        private List<T> GetDynamicTypeList<T>(IEnumerable<IDictionary<string, object>> results)
-        {
-            List<T> list = new List<T>();
-
-            //Loop through each result
-            foreach (IDictionary<string, object> dict in results)
-            {
-                //Keep adding this into the list
-                list.Add(Utilities.GetSingleDynamicType<T>(dict));
-            }
-
-            //Return this back to the caller
-            return list;
-        }
         #endregion
     }
 }

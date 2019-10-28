@@ -26,10 +26,9 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
-#if !NET20 && !NET35 && !NET40
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-#endif
 using System.Reflection;
 #endregion
 
@@ -40,6 +39,210 @@ namespace ADONetHelper.Core
     /// </summary>
     public static class Utilities
     {
+        #region Async Methods
+        /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="token">Propagates notification that operations should be canceled</param>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public static async Task<List<IDictionary<string, object>>> GetDynamicResultsListAsync(DbDataReader reader, CancellationToken token)
+        {
+            List<IDictionary<string, object>> results = new List<IDictionary<string, object>>();
+
+            //Keep reading records while there are records to read
+            while (await reader.ReadAsync(token).ConfigureAwait(false) == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Don't try and set a value if we know it's null
+                    if (await reader.IsDBNullAsync(i, token).ConfigureAwait(false) == false)
+                    {
+                        value = await reader.GetFieldValueAsync<object>(i, token).ConfigureAwait(false);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+                }
+
+                //Add this item to the Array
+                results.Add(obj);
+            }
+
+            //Return this back to the caller
+            return results;
+        }
+        /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public async static IAsyncEnumerable<IDictionary<string, object>> GetDynamicResultsAsync(DbDataReader reader, [EnumeratorCancellation] CancellationToken token = default)
+        {
+            //Keep reading records while there are records to read
+            while (await reader.ReadAsync(token) == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
+                    if (await reader.IsDBNullAsync(i, token).ConfigureAwait(false) == false)
+                    { 
+                        value = await reader.GetFieldValueAsync<object>(i, token).ConfigureAwait(false);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+                }
+
+                //Add this item to the Array
+                yield return obj;
+            }
+        }
+        /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public async static Task<IDictionary<string, object>> GetDynamicResultAsync(DbDataReader reader, CancellationToken token = default)
+        {
+            //Keep reading records while there are records to read
+            while (await reader.ReadAsync(token) == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
+                    if (await reader.IsDBNullAsync(i, token).ConfigureAwait(false) == false)
+                    {
+                        value = await reader.GetFieldValueAsync<object>(i, token).ConfigureAwait(false);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+                }
+
+                //Add this item to the Array
+                return obj;
+            }
+
+            return null;
+        }
+        /// <summary>
+        /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="connection">An instance of the <see cref="DbConnection"/> class</param>
+        public async static Task OpenDbConnectionAsync(DbConnection connection, CancellationToken token = default)
+        {
+            //Check if we need to open the passed in connection
+            if (connection.State == ConnectionState.Closed)
+            {
+                //Await the task
+                await connection.OpenAsync(token).ConfigureAwait(false);
+            }
+        }
+        #endregion
+        #region Sync Methods
+        /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="IEnumerable{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public static IEnumerable<IDictionary<string, object>> GetDynamicResultsEnumerable(DbDataReader reader)
+        {
+            //Keep reading records while there are records to read
+            while (reader.Read() == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
+                    if (reader.IsDBNull(i) == false)
+                    {
+                        value = reader.GetValue(i);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+                }
+
+                //Add this item to the Array
+                yield return obj;
+            }
+        }
+        /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public static List<IDictionary<string, object>> GetDynamicResultsList(DbDataReader reader)
+        {
+            List<IDictionary<string, object>> returnList = new List<IDictionary<string, object>>();
+
+            //Keep reading records while there are records to read
+            while (reader.Read() == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
+                    if (reader.IsDBNull(i) == false)
+                    {
+                        value = reader.GetValue(i);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+
+                    returnList.Add(obj);
+                }
+            }
+
+            //Return this back to the caller
+            return returnList;
+        }
+        /// <summary>
+        /// Gets the dyamic type list.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <returns></returns>
+        public static List<T> GetDynamicTypeList<T>(List<IDictionary<string, object>> results)
+        {
+            List<T> returnList = new List<T>();
+
+            //Keep going through the results
+            foreach(IDictionary<string, object> result in results)
+            {
+                returnList.Add(GetSingleDynamicType<T>(result));
+            }
+
+            //Return this back to the caller
+            return returnList;
+        }
         /// <summary>
         /// Gets the type of the single dynamic.
         /// </summary>
@@ -48,6 +251,13 @@ namespace ADONetHelper.Core
         /// <returns></returns>
         public static T GetSingleDynamicType<T>(IDictionary<string, object> results)
         {
+            //Check for null first
+            if(results == null)
+            {
+                //Return the default for the type
+                return default;
+            }
+
             //Get an instance of the object passed in
             object returnType = Activator.CreateInstance(typeof(T));
             Type type = returnType.GetType();
@@ -57,9 +267,10 @@ namespace ADONetHelper.Core
             {
                 DbField field = null;
                 bool ignoredField = false;
+                bool shouldSkip = (p.CanWrite == false) || (p.PropertyType.IsStruct() == true);
 
                 //Check if we can write the property
-                if (p.CanWrite == false)
+                if (shouldSkip == true)
                 {
                     //Don't go any further we cannot write to this property
                     continue;
@@ -123,7 +334,6 @@ namespace ADONetHelper.Core
                         }
                     }
                     //Check if an enum
-#if !NET20 && !NET35 && !NET40
                     else if (p.PropertyType.GetTypeInfo().IsEnum)
                     {
                         if (value != null)
@@ -131,16 +341,6 @@ namespace ADONetHelper.Core
                             p.SetValue(returnType, Enum.Parse(p.PropertyType, value.ToString()), null);
                         }
                     }
-#else
-                    //Check if this is an enum
-                    else if (p.PropertyType.IsEnum)
-                    {
-                        if(value != null)
-                        {
-                            p.SetValue(returnType, Enum.Parse(p.PropertyType, results[p.Name].ToString()), null);
-                        }
-                    }
-#endif
                     else
                     {
                         //This is a normal property
@@ -151,23 +351,6 @@ namespace ADONetHelper.Core
 
             //Return this back to the caller
             return (T)returnType;
-        }
-        /// <summary>
-        /// Checks if the passed in type is a generic type that is nullable
-        /// </summary>
-        /// <param name="type">The .NET type to check for nullable</param>
-        /// <returns>Returns true if the passed in type is nullable, false otherwise</returns>
-        public static bool IsNullableGenericType(Type type)
-        {
-#if NET20 || NET35 || NET40
-            //Return this back to the caller
-            return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
-#else
-            TypeInfo info = type.GetTypeInfo();
-
-            //Return this back to the caller
-            return (info.IsGenericType && info.GetGenericTypeDefinition() == typeof(Nullable<>));
-#endif
         }
         /// <summary>
         /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>
@@ -181,21 +364,29 @@ namespace ADONetHelper.Core
                 connection.Open();
             }
         }
-#if !NET20 && !NET35 && !NET40
+        #endregion
+        #region Helper Methods
         /// <summary>
-        /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>
+        /// Checks if the passed in type is a generic type that is nullable
         /// </summary>
-        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
-        /// <param name="connection">An instance of the <see cref="DbConnection"/> class</param>
-        public async static Task OpenDbConnectionAsync(DbConnection connection, CancellationToken token = default)
+        /// <param name="type">The .NET type to check for nullable</param>
+        /// <returns>Returns true if the passed in type is nullable, false otherwise</returns>
+        public static bool IsNullableGenericType(Type type)
         {
-            //Check if we need to open the passed in connection
-            if (connection.State == ConnectionState.Closed)
-            {
-                //Await the task
-                await connection.OpenAsync(token).ConfigureAwait(false);
-            }
+            TypeInfo info = type.GetTypeInfo();
+
+            //Return this back to the caller
+            return (info.IsGenericType && info.GetGenericTypeDefinition() == typeof(Nullable<>));
         }
-#endif
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static bool IsStruct(this Type source)
+        {
+            return source.IsValueType && !source.IsPrimitive && !source.IsEnum;
+        }
+        #endregion
     }
 }
