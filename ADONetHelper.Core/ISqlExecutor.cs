@@ -33,7 +33,9 @@ namespace ADONetHelper.Core
     /// The contract class for a ISqlExecutor based class
     /// </summary>
     /// <seealso cref="IDisposable"/>
-    public partial interface ISqlExecutor : IDisposable
+    /// <seealso cref="ISqlExecutorAsync"/>
+    /// <seealso cref="ISqlExecutorSync"/>
+    public interface ISqlExecutor : ISqlExecutorSync, ISqlExecutorAsync, IDisposable
     {
         #region Fields/Properties
         /// <summary>
