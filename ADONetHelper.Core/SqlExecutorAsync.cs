@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -95,26 +96,105 @@ namespace ADONetHelper.Core
             //Wrap this to automatically handle disposing of resources
             using (DbDataReader reader = await GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleRow).ConfigureAwait(false))
             {
-                //Get the field name and value pairs out of this query
-                List<IDictionary<string, object>> results = await GetDynamicResultsAsync(reader, token).ConfigureAwait(false);
-
-                //Check if we need to return the default for the type
-                if (results == null || results.Count == 0)
+                //Check if the reader has rows
+                if (reader.HasRows == true)
                 {
-                    //Return the default for the type back to the caller
-                    return default(T);
+                    //Return this back to the caller
+                    return Utilities.GetSingleDynamicType<T>(await Utilities.GetDynamicResultAsync(reader, token).ConfigureAwait(false));
                 }
                 else
                 {
-                    List<T> list = GetDynamicTypeList<T>(results);
-
-                    //Return this back to the caller
-                    return list[0];
+                    return default;
                 }
             }
         }
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets an <see cref="IAsyncEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <returns>Returns a <see cref="IAsyncEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public async IAsyncEnumerable<T> GetDataObjectEnumerableAsync<T>(CommandType queryCommandType, string query, [EnumeratorCancellation] CancellationToken token = default) where T : class
+        {
+            //Keep iterating through the results
+            await foreach (T type in GetDataObjectEnumerableAsync<T>(queryCommandType, query, Connection, token))
+            {
+                yield return type;
+            }
+
+            //Break out of the iterator function
+            yield break;
+        }
+        /// <summary>
+        /// Gets an <see cref="IAsyncEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connectionString">The connection string used to query a data store</param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <returns>Returns a <see cref="IAsyncEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public async IAsyncEnumerable<T> GetDataObjectEnumerableAsync<T>(CommandType queryCommandType, string query, string connectionString, [EnumeratorCancellation] CancellationToken token = default) where T : class
+        {
+            //Wrap this in a using statement to automatically dispose of resources
+            using (DbConnection connection = Factory.GetDbConnection(connectionString))
+            {
+                //Keep iterating through the results
+                await foreach (T type in GetDataObjectEnumerableAsync<T>(queryCommandType, query, connection, token))
+                {
+                    //Keep returning a result
+                    yield return type;
+                }
+
+                //Break out of the iterator function
+                yield break;
+            }
+        }
+        /// <summary>
+        /// Gets an <see cref="IAsyncEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connection">An instance of a DbConnection object to use to query a datastore</param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <returns>Returns a <see cref="IAsyncEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        public async IAsyncEnumerable<T> GetDataObjectEnumerableAsync<T>(CommandType queryCommandType, string query, DbConnection connection, [EnumeratorCancellation] CancellationToken token = default) where T : class
+        {
+            //Check if cancelled
+            if (token.IsCancellationRequested == true)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
+            //Open the connection if necessary
+            await Utilities.OpenDbConnectionAsync(connection, token).ConfigureAwait(false);
+
+            //Wrap this to automatically handle disposing of resources
+            using (DbDataReader reader = await GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleResult).ConfigureAwait(false))
+            {
+                //Check if the reader has rows first
+                if (reader.HasRows == true)
+                {
+                    IAsyncEnumerable<IDictionary<string, object>> results = Utilities.GetDynamicResultsAsync(reader, token);
+                    IAsyncEnumerator<IDictionary<string, object>> enumerator = results.GetAsyncEnumerator(token);
+
+                    //Keep moving through the enumerator
+                    while (await enumerator.MoveNextAsync() == true)
+                    {
+                        //Return this back to the caller
+                        yield return Utilities.GetSingleDynamicType<T>(enumerator.Current);
+                    }
+
+                    //Break out of the iterator function
+                    yield break;
+                }
+            }
+        }
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
@@ -127,7 +207,7 @@ namespace ADONetHelper.Core
             return await GetDataObjectListAsync<T>(queryCommandType, query, Connection, token).ConfigureAwait(false);
         }
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
@@ -145,7 +225,7 @@ namespace ADONetHelper.Core
             }
         }
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
@@ -168,10 +248,10 @@ namespace ADONetHelper.Core
             using (DbDataReader reader = await GetDbDataReaderAsync(queryCommandType, query, connection, token, CommandBehavior.SingleResult).ConfigureAwait(false))
             {
                 //Get the field name and value pairs out of this query
-                List<IDictionary<string, object>> results = await GetDynamicResultsAsync(reader, token).ConfigureAwait(false);
+                List<IDictionary<string, object>> results = await Utilities.GetDynamicResultsListAsync(reader, token).ConfigureAwait(false);
 
                 //Return this back to the caller
-                return GetDynamicTypeList<T>(results);
+                return Utilities.GetDynamicTypeList<T>(results);
             }
         }
         /// <summary>
@@ -270,20 +350,8 @@ namespace ADONetHelper.Core
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout, transact))
             {
-                try
-                {
-                    //Get the data reader
-                    return await command.ExecuteReaderAsync(behavior, token).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    _parameters = GetParameterList(command);
-                }
+                //Get the data reader
+                return await command.ExecuteReaderAsync(behavior, token).ConfigureAwait(false);
             }
         }
         /// <summary>
@@ -337,20 +405,8 @@ namespace ADONetHelper.Core
             //Wrap this in a using statement to handle disposing of resources
             using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout))
             {
-                try
-                {
-                    //Return this back to the caller
-                    return await command.ExecuteScalarAsync(token).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    _parameters = GetParameterList(command);
-                }
+                //Return this back to the caller
+                return await command.ExecuteScalarAsync(token).ConfigureAwait(false);
             }
         }
         #endregion
@@ -406,20 +462,8 @@ namespace ADONetHelper.Core
             //Wrap this in a using statement to automatically handle disposing of resources
             using (DbCommand command = Factory.GetDbCommand(queryCommandType, query, Parameters, connection, CommandTimeout))
             {
-                try
-                {
-                    //Return this back to the caller
-                    return await command.ExecuteNonQueryAsync(token).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    //Set the output parameters
-                    _parameters = GetParameterList(command);
-                }
+                //Return this back to the caller
+                return await command.ExecuteNonQueryAsync(token).ConfigureAwait(false);
             }
         }
 #if NETSTANDARD2_1
@@ -465,7 +509,7 @@ namespace ADONetHelper.Core
         public async Task<int> ExecuteTransactedNonQueryAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token = default)
         {
             //We need a reference to a connection
-            if(connection == null)
+            if (connection == null)
             {
                 throw new ArgumentNullException(nameof(connection));
             }
@@ -538,53 +582,11 @@ namespace ADONetHelper.Core
                         throw;
                     }
                 }
-                finally
-                {
-                    //Set the output parameters
-                    _parameters = GetParameterList(command);
-                }
             }
         }
 #endif
         #endregion
         #region Helper Methods
-        /// <summary>
-        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
-        /// </summary>
-        /// <param name="token">Propagates notification that operations should be canceled</param>
-        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
-        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
-        private async Task<List<IDictionary<string, object>>> GetDynamicResultsAsync(DbDataReader reader, CancellationToken token)
-        {
-            List<IDictionary<string, object>> results = new List<IDictionary<string, object>>();
-
-            //Keep reading records while there are records to read
-            while (await reader.ReadAsync(token).ConfigureAwait(false) == true)
-            {
-                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-
-                //Loop through all fields in this row
-                for (int i = 0; i < reader.FieldCount; i++)
-                {
-                    object value = null;
-
-                    //Don't try and set a value if we know it's null
-                    if (await reader.IsDBNullAsync(i, token).ConfigureAwait(false) == false)
-                    {
-                        value = await reader.GetFieldValueAsync<object>(i, token).ConfigureAwait(false);
-                    }
-
-                    //Add this into the dictionary
-                    obj.Add(reader.GetName(i), value);
-                }
-
-                //Add this item to the Array
-                results.Add(obj);
-            }
-
-            //Return this back to the caller
-            return results;
-        }
         #endregion
     }
 }

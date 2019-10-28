@@ -30,10 +30,12 @@ using System.Data.Common;
 
 namespace ADONetHelper.Core
 {
-    public partial interface ISqlExecutor
+    /// <summary>
+    /// /Contract class that defines syncrhonous operations against a database
+    /// </summary>
+    public interface ISqlExecutorSync
     {
         #region Data Retrieval
-#if !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
         /// </summary>
@@ -64,7 +66,6 @@ namespace ADONetHelper.Core
         /// <param name="query">SQL query to use to build a result set</param>
         /// <returns>Returns an instance of <see cref="DataTable"/></returns>
         DataTable GetDataTable(CommandType queryCommandType, string query, DbConnection connection);
-#endif
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
         /// </summary>
@@ -92,7 +93,33 @@ namespace ADONetHelper.Core
         /// <returns>Returns an instance of the <typeparamref name="T"/> based on the fields in the passed in query.  Returns the default value for the type if a record is not found</returns>
         T GetDataObject<T>(CommandType queryCommandType, string query, DbConnection connection) where T : class;
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        List<T> GetDataObjectList<T>(CommandType queryCommandType, string query);
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connectionString">The connection string used to query a data store</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, string connectionString);
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> of the type parameter object that creates an object based on the query passed into the routine
+        /// </summary>
+        /// <typeparam name="T">An instance of the type caller wants created from the query passed into procedure</typeparam>
+        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
+        /// <returns>Returns a <see cref="List{T}"/> based on the results of the passed in <paramref name="query"/></returns>
+        List<T> GetDataObjectList<T>(CommandType queryCommandType, string query, DbConnection connection);
+        /// <summary>
+        /// Gets a <see cref="IEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
@@ -100,7 +127,7 @@ namespace ADONetHelper.Core
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passedin <paramref name="query"/></returns>
         IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query);
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets a <see cref="IEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
@@ -109,7 +136,7 @@ namespace ADONetHelper.Core
         /// <returns>Returns a <see cref="IEnumerable{T}"/> based on the results of the passed in <paramref name="query"/></returns>
         IEnumerable<T> GetDataObjectEnumerable<T>(CommandType queryCommandType, string query, string connectionString);
         /// <summary>
-        /// Gets a list of the type parameter object that creates an object based on the query passed into the routine
+        /// Gets a <see cref="IEnumerable{T}"/> of the type parameter object that creates an object based on the query passed into the routine
         /// </summary>
         /// <typeparam name="T">An instance of the type caller wants create from the query passed into procedure</typeparam>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>

@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 #endregion
 #region Using Declarations
-using ADONetHelper.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -55,7 +54,7 @@ namespace ADONetHelper.Core
             get
             {
                 //Set this property
-                _factory.VariableBinder = this.VariableBinder;
+                _factory.VariableBinder = VariableBinder;
 
                 //Return this back to the caller
                 return _factory;
@@ -93,7 +92,7 @@ namespace ADONetHelper.Core
                 //Get the connection string builder
                 if (_connectionstringBuilder == null)
                 {
-                    _connectionstringBuilder = this.Factory.GetDbConnectionStringBuilder();
+                    _connectionstringBuilder = Factory.GetDbConnectionStringBuilder();
                 }
 
                 //Return this back to the caller
@@ -108,12 +107,12 @@ namespace ADONetHelper.Core
             get
             {
                 //Get the DbConnection
-                _connection = _connection ?? this.Factory.GetDbConnection();
+                _connection = _connection ?? Factory.GetDbConnection();
 
                 //Check if this was set
-                if (string.IsNullOrEmpty(_connection.ConnectionString) || _connection.ConnectionString.Trim() == string.Empty)
+                if (string.IsNullOrWhiteSpace(_connection.ConnectionString) == true)
                 {
-                    _connection.ConnectionString = this.ConnectionStringBuilder.ConnectionString;
+                    _connection.ConnectionString = ConnectionStringBuilder.ConnectionString;
                 }
 
                 //Return this back to the caller
@@ -137,9 +136,9 @@ namespace ADONetHelper.Core
             _factory = new DbObjectFactory(connection);
 
             //Get the connection string from the connection
-            this.ConnectionStringBuilder.ConnectionString = _connection.ConnectionString;
+            ConnectionStringBuilder.ConnectionString = _connection.ConnectionString;
         }
-#if !NETSTANDARD1_3 && !NETSTANDARD2_0
+#if !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance of <see cref="SqlExecutor"/> with the passed in <paramref name="row"/>
         /// </summary>
@@ -179,26 +178,6 @@ namespace ADONetHelper.Core
         }
         #endregion
         #region Helper Methods
-        /// <summary>
-        /// Gets all of the existing output parameter values from the passed in command object
-        /// </summary>
-        /// <param name="command">An instance of an existing <see cref="DbCommand"/> object to retrieve the output parameter values from</param>
-        private List<DbParameter> GetParameterList(DbCommand command)
-        {
-            List<DbParameter> returnList = new List<DbParameter>();
-
-            //Loop through all parameters
-            foreach (DbParameter param in command.Parameters)
-            {
-                returnList.Add(param);
-            }
-
-            //We need to clear all parameters from the command, so that we can reuse parameters on the same connection
-            command.Parameters.Clear();
-
-            //Return this back to the caller
-            return returnList;
-        }
         #endregion
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -216,7 +195,7 @@ namespace ADONetHelper.Core
                 if (disposing)
                 {
                     //Close the connection
-                    this.Connection.Close();
+                    Connection.Close();
                 }
 
                 //Set that we have disposed of objects
