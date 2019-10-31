@@ -83,39 +83,7 @@ namespace ADONetHelper.Core
         /// <param name="token"></param>
         /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
         /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
-        public async static IAsyncEnumerable<IDictionary<string, object>> GetDynamicResultsAsync(DbDataReader reader, [EnumeratorCancellation] CancellationToken token = default)
-        {
-            //Keep reading records while there are records to read
-            while (await reader.ReadAsync(token) == true)
-            {
-                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-                //Loop through all fields in this row
-                for (int i = 0; i < reader.FieldCount; i++)
-                {
-                    object value = null;
-
-                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
-                    if (await reader.IsDBNullAsync(i, token).ConfigureAwait(false) == false)
-                    { 
-                        value = await reader.GetFieldValueAsync<object>(i, token).ConfigureAwait(false);
-                    }
-
-                    //Add this into the dictionary
-                    obj.Add(reader.GetName(i), value);
-                }
-
-                //Add this item to the Array
-                yield return obj;
-            }
-        }
-        /// <summary>
-        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
-        /// </summary>
-        /// <param name="token"></param>
-        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
-        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
-        public async static Task<IDictionary<string, object>> GetDynamicResultAsync(DbDataReader reader, CancellationToken token = default)
+        public async static IAsyncEnumerable<IDictionary<string, object>> GetDynamicResultsEnumerableAsync(DbDataReader reader, [EnumeratorCancellation] CancellationToken token = default)
         {
             //Keep reading records while there are records to read
             while (await reader.ReadAsync(token) == true)
@@ -138,10 +106,44 @@ namespace ADONetHelper.Core
                 }
 
                 //Add this item to the Array
+                yield return obj;
+            }
+        }
+        /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public static async Task<IDictionary<string, object>> GetDynamicResultAsync(DbDataReader reader, CancellationToken token = default)
+        {
+            //Check if the reader has rows
+            if (await reader.ReadAsync(token) == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
+                    if (await reader.IsDBNullAsync(i, token).ConfigureAwait(false) == false)
+                    {
+                        value = await reader.GetFieldValueAsync<object>(i, token).ConfigureAwait(false);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+                }
+
+                //Add this item to the Array
                 return obj;
             }
-
-            return null;
+            else
+            {
+                return null;
+            }
         }
         /// <summary>
         /// Opens the passed in <see cref="DbConnection"/> if the <see cref="DbConnection.State"/> is <see cref="ConnectionState.Closed"/>
@@ -226,6 +228,39 @@ namespace ADONetHelper.Core
             return returnList;
         }
         /// <summary>
+        /// Gets the query values coming out of the passed in <paramref name="reader"/> for each row retrieved
+        /// </summary>
+        /// <param name="reader">An instance of <see cref="DbDataReader"/> that has the results from a SQL query</param>
+        /// <returns>Returns a <see cref="List{T}"/> of <see cref="Dictionary{TKey, TValue}"/> from the results of a sql query</returns>
+        public static IDictionary<string, object> GetDynamicResult(DbDataReader reader)
+        {
+            //Check if the reader has rows
+            if (reader.Read() == true)
+            {
+                Dictionary<string, object> obj = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                //Loop through all fields in this row
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    object value = null;
+
+                    //Need to check for db null to ensure that db null doesn't make it into the dictionary
+                    if (reader.IsDBNull(i) == false)
+                    {
+                        value = reader.GetFieldValue<object>(i);
+                    }
+
+                    //Add this into the dictionary
+                    obj.Add(reader.GetName(i), value);
+                }
+
+                //Add this item to the Array
+                return obj;
+            }
+
+            return null;
+        }
+        /// <summary>
         /// Gets the dyamic type list.
         /// </summary>
         /// <param name="results">The results.</param>
@@ -235,7 +270,7 @@ namespace ADONetHelper.Core
             List<T> returnList = new List<T>();
 
             //Keep going through the results
-            foreach(IDictionary<string, object> result in results)
+            foreach (IDictionary<string, object> result in results)
             {
                 returnList.Add(GetSingleDynamicType<T>(result));
             }
@@ -252,7 +287,7 @@ namespace ADONetHelper.Core
         public static T GetSingleDynamicType<T>(IDictionary<string, object> results)
         {
             //Check for null first
-            if(results == null)
+            if (results == null)
             {
                 //Return the default for the type
                 return default;
