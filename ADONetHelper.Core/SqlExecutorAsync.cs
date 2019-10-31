@@ -178,11 +178,11 @@ namespace ADONetHelper.Core
                 //Check if the reader has rows first
                 if (reader.HasRows == true)
                 {
-                    IAsyncEnumerable<IDictionary<string, object>> results = Utilities.GetDynamicResultsAsync(reader, token);
+                    IAsyncEnumerable<IDictionary<string, object>> results = Utilities.GetDynamicResultsEnumerableAsync(reader, token);
                     IAsyncEnumerator<IDictionary<string, object>> enumerator = results.GetAsyncEnumerator(token);
 
                     //Keep moving through the enumerator
-                    while (await enumerator.MoveNextAsync() == true)
+                    while (await enumerator.MoveNextAsync().ConfigureAwait(false) == true)
                     {
                         //Return this back to the caller
                         yield return Utilities.GetSingleDynamicType<T>(enumerator.Current);
@@ -324,7 +324,7 @@ namespace ADONetHelper.Core
         public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
         {
             //Return this back to the caller
-            return await GetDbDataReaderAsync(queryCommandType, query, connection, default(CancellationToken), behavior, transact).ConfigureAwait(false);
+            return await GetDbDataReaderAsync(queryCommandType, query, connection, default, behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
