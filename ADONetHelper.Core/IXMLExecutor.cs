@@ -41,13 +41,11 @@ namespace ADONetHelper.Core
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns an instance of <see cref="XmlReader"/> based on the <paramref name="query"/> passed into the routine</returns>
         XmlReader ExecuteXMLReader(string query);
-#if !NET20 && !NET35 && !NET40
         /// <summary>
         /// Returns an instance of <see cref="XmlReader"/> based on the <paramref name="query"/>
         /// </summary>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns an instance of <see cref="XmlReader"/> based on the <paramref name="query"/> passed into the routine</returns>
         Task<XmlReader> ExecuteXMLReaderAsync(string query);
-#endif
     }
 }
