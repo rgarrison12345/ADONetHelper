@@ -33,8 +33,6 @@ namespace ADONetHelper.Polly
     /// Specialized instance of <see cref="DbProvider"/> with a focus on fault tolerance and resilience
     /// </summary>
     /// <seealso cref="DbProvider"/>
-    /// <seealso cref="IAsyncFaultTolerantClient"/>
-    /// <seealso cref="ISyncFaultTolerantClient"/>
     public partial class DbFaultTolerantClient : DbProvider, IDbFaultTolerantClient
     {
         #region Variables
@@ -102,6 +100,13 @@ namespace ADONetHelper.Polly
         public DbFaultTolerantClient(string connectionString, string providerName) : base(connectionString, providerName)
         {
 
+        }        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbFaultTolerantClient"/> class.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        public DbFaultTolerantClient(DbConnection connection) : base(connection)
+        {
         }
         #endregion
         #region Utility Methods
