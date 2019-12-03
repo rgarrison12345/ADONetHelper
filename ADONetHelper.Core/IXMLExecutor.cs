@@ -22,9 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 #endregion
 #region Using Statements
-#if !NET20 && !NET35 && !NET40
+using System.Threading;
 using System.Threading.Tasks;
-#endif
 using System.Xml;
 #endregion
 
@@ -44,8 +43,9 @@ namespace ADONetHelper.Core
         /// <summary>
         /// Returns an instance of <see cref="XmlReader"/> based on the <paramref name="query"/>
         /// </summary>
+        /// <param name="token"></param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns an instance of <see cref="XmlReader"/> based on the <paramref name="query"/> passed into the routine</returns>
-        Task<XmlReader> ExecuteXMLReaderAsync(string query);
+        Task<XmlReader> ExecuteXMLReaderAsync(string query, CancellationToken token = default);
     }
 }
