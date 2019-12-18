@@ -27,25 +27,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-#if !NETSTANDARD1_3
 using System.Transactions;
-#endif
 #endregion
 
 namespace ADONetHelper
 {
-    public partial class DbClient : ISynchronousClient, IDisposable
+    public partial class DbClient : ISynchronousClient
     {
-        #region Destructor
-        /// <summary>
-        /// Finalizer for the class to release unmanaged resources
-        /// </summary>
-        ~DbClient()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(false);
-        }
-        #endregion
         #region Data Retrieval
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
@@ -383,7 +371,6 @@ namespace ADONetHelper
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
         #endregion
     }
 }
