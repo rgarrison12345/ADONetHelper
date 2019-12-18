@@ -34,9 +34,7 @@ namespace ADONetHelper
     /// </summary>
     /// <seealso cref="DbProvider"/>
     /// <seealso cref="ISynchronousClient"/>
-#if !NET20 && !NET35 && !NET40
     /// <seealso cref="IAsynchronousClient"/>
-#endif
     /// <remarks>
     /// DbClient is a utility class that encompasses both a <see cref="DbConnection"/> and a <see cref="DbCommand"/>
     /// to help query a database with minimal coding to focus on the users SQL
@@ -50,7 +48,7 @@ namespace ADONetHelper
         protected bool disposedValue = false;
         #endregion
         #region Constructors
-#if !NETSTANDARD1_3 && !NETSTANDARD2_0
+#if !NETSTANDARD2_0
         /// <summary>
         /// Instantiates a new instance of <see cref="DbClient"/> with the passed in <paramref name="row"/> and <paramref name="connectionString"/>
         /// </summary>
