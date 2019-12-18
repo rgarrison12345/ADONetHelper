@@ -32,13 +32,12 @@ using System.Data.Common;
 namespace ADONetHelper
 {
     /// <summary>
-    /// 
+    /// Contract class that defines synchronous operations to be performed against a data store
     /// </summary>
     /// <seealso cref="IDisposable" />
-    public interface ISynchronousClient
+    public interface ISynchronousClient : IDisposable
     {
         #region Data Retrieval
-#if !NETSTANDARD1_3
         /// <summary>
         /// Gets an instance of <see cref="DataSet"/>
         /// </summary>
@@ -65,7 +64,6 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns a <see cref="DataTable"/> object</returns>
         DataTable GetDataTable(string query, DbConnection connection);
-#endif
         /// <summary>
         /// Gets a single instance of <typeparamref name="T"/> based on the <paramref name="query"/> passed into the routine
         /// </summary>
