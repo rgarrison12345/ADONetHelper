@@ -14,7 +14,7 @@
     <PackageId>ADONetHelper.Core</PackageId>
     <Description>Core functionality API objects for ADONetHelper based libraries</Description>
     <PackageReleaseNotes>
-      Updating to Microsoft.Bcl.AsyncInterfaces 1.1.0, Microsoft.Extensions.DependencyModel 3.1.0.  Adding set connection property method in IConnectionStringUtility
+      Updating to Microsoft.Bcl.AsyncInterfaces 1.1.0, Microsoft.Extensions.DependencyModel 3.1.0
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
