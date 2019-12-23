@@ -167,6 +167,7 @@ namespace ADONetHelper.Polly
         /// <param name="token">The token.</param>
         /// <returns></returns>
         Task<List<T>> ExecuteGetDataObjectEnumerableAsync<T>(string query, string policyName, CancellationToken token = default) where T : class;
+        /// <summary>
         /// Executes the get data object enumerable asynchronous.
         /// </summary>
         /// <typeparam name="T"></typeparam>

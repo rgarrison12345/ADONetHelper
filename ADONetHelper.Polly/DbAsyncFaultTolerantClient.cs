@@ -270,7 +270,7 @@ namespace ADONetHelper.Polly
         /// <param name="policy">The policy.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        /// <exception cref=ArgumentNullException">policy</exception>
+        /// <exception cref="ArgumentNullException">policy</exception>
         public async Task<List<T>> ExecuteGetDataObjectEnumerableAsync<T>(string query, IAsyncPolicy policy, CancellationToken token = default) where T : class
         {
             //Check for null 

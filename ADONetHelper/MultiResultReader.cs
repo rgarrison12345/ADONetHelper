@@ -140,9 +140,8 @@ namespace ADONetHelper
             return Utilities.GetSingleDynamicType<T>(Utilities.GetDynamicResult(_reader));
         }
         /// <summary>
-        /// Reads the object.
+        /// Moves to next result.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public bool MoveToNextResult()
         {
