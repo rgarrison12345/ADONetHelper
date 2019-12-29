@@ -302,7 +302,7 @@ namespace ADONetHelper.Core
             {
                 DbField field = null;
                 bool ignoredField = false;
-                bool shouldSkip = (p.CanWrite == false) || (p.PropertyType.IsStruct() == true);
+                bool shouldSkip = !(p.CanWrite == true);
 
                 //Check if we can write the property
                 if (shouldSkip == true)
