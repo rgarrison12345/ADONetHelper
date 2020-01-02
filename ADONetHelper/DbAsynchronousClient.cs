@@ -131,19 +131,20 @@ namespace ADONetHelper
         public virtual async Task<int> ExecuteTransactedNonQueryAsync(string query, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await ExecuteTransactedNonQueryAsync(query, token).ConfigureAwait(false);
+            return await ExecuteSQL.ExecuteTransactedNonQueryAsync(QueryCommandType, query, token).ConfigureAwait(false);
         }
         /// <summary>
-        /// Utility method for executing a query or stored procedure in a SQL transaction
+        /// Utility method for executing an Ad-Hoc query or stored procedure with a transaction
         /// </summary>
+        /// <param name="commitTransaction">Whether or not to commit this transaction after it was completed successfully</param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="transact">An instance of a <see cref="DbTransaction"/> class</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <returns>Returns the number of rows affected by this query</returns>
-        public virtual async Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact, CancellationToken token = default)
+        /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
+        public virtual async Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact, bool commitTransaction = true, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await ExecuteSQL.ExecuteTransactedNonQueryAsync(QueryCommandType, transact, query).ConfigureAwait(false);
+            return await ExecuteSQL.ExecuteTransactedNonQueryAsync(QueryCommandType, transact, query, commitTransaction, token).ConfigureAwait(false);
         }
 #endif
         /// <summary>
