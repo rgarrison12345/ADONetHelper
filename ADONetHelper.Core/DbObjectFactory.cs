@@ -70,12 +70,12 @@ namespace ADONetHelper.Core
             }
         }
         /// <summary>
-        /// Gets or sets the database parameter mapper.
+        /// Gets or sets the paramter formatter.
         /// </summary>
         /// <value>
-        /// The database parameter mapper.
+        /// The paramter formatter.
         /// </value>
-        public IDbParameterMapper DbParameterMapper { get; set; }
+        public IDbParameterFormatter ParamterFormatter { get; set; }
         #endregion
         #region Constructors
         /// <summary>
@@ -409,7 +409,7 @@ namespace ADONetHelper.Core
             }
 
             //Check for null or empty
-            if (!string.IsNullOrEmpty(VariableBinder) || VariableBinder.Trim() != string.Empty)
+            if (string.IsNullOrWhiteSpace(VariableBinder) == false)
             {
                 parameter.ParameterName = VariableBinder + parameterName.Replace(VariableBinder, "");
             }
@@ -419,10 +419,10 @@ namespace ADONetHelper.Core
             }
 
             //Check db parameter has been set
-            if(DbParameterMapper != null)
+            if(ParamterFormatter != null)
             {
                 //Now get the RDBMS mapped data type to the .net data type
-                parameter.DbType = DbParameterMapper.GetDbType(parameter.Value);
+                parameter.DbType = ParamterFormatter.GetDbType(parameter.Value);
             }
 
             //Check if this is nullable
@@ -463,25 +463,27 @@ namespace ADONetHelper.Core
         }
 #if NETSTANDARD2_1
         /// <summary>
-        /// 
+        /// Asynchronously gets an instace of the <see cref="DbTransaction"/> object based on the <see cref="DbConnection"/> object passed in
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="connection">An instance of <see cref="DbConnection"/></param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <returns>An instance of the <see cref="DbTransaction"/> object</returns>
         public async ValueTask<DbTransaction> GetDbTransactionAsync(DbConnection connection, CancellationToken token = default)
         {
-            return await connection.BeginTransactionAsync(token);
+            //Return this back to the caller
+            return await connection.BeginTransactionAsync(token).ConfigureAwait(false);
         }
         /// <summary>
-        /// 
+        /// Asynchronously gets an instace of the <see cref="DbTransaction"/> object based on the <see cref="DbConnection"/> object passed in
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="level"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="level">The transaction locking level for the passed in <paramref name="connection"/></param>
+        /// <param name="connection">An instance of <see cref="DbConnection"/></param>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <returns>An instance of the <see cref="DbTransaction"/> object</returns>
         public async ValueTask<DbTransaction> GetDbTransactionAsync(DbConnection connection, IsolationLevel level, CancellationToken token = default)
         {
-            return await connection.BeginTransactionAsync(level, token);
+            //Return this back to the caller
+            return await connection.BeginTransactionAsync(level, token).ConfigureAwait(false);
         }
 #endif
         #endregion

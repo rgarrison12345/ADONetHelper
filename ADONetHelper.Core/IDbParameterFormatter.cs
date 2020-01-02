@@ -28,9 +28,9 @@ using System.Data;
 namespace ADONetHelper.Core
 {
     /// <summary>
-    /// Contract class the defines the behavior of a DbParameter mapper class
+    /// Contract class the defines the behavior of a DbFormatter mapper class
     /// </summary>
-    public interface IDbParameterMapper
+    public interface IDbParameterFormatter
     {
         #region Utility Methods
         /// <summary>
