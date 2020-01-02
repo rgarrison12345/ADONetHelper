@@ -69,6 +69,13 @@ namespace ADONetHelper.Core
                 return this._dbProviderFactory.CanCreateDataSourceEnumerator;
             }
         }
+        /// <summary>
+        /// Gets or sets the database parameter mapper.
+        /// </summary>
+        /// <value>
+        /// The database parameter mapper.
+        /// </value>
+        public IDbParameterMapper DbParameterMapper { get; set; }
         #endregion
         #region Constructors
         /// <summary>
@@ -411,14 +418,11 @@ namespace ADONetHelper.Core
                 parameter.ParameterName = parameterName;
             }
 
-            //Check if this binary or xml of some sort
-            if (parameterValue is byte[])
+            //Check db parameter has been set
+            if(DbParameterMapper != null)
             {
-                parameter.DbType = DbType.Binary;
-            }
-            else if (parameterValue is Guid)
-            {
-                parameter.DbType = DbType.Guid;
+                //Now get the RDBMS mapped data type to the .net data type
+                parameter.DbType = DbParameterMapper.GetDbType(parameter.Value);
             }
 
             //Check if this is nullable
