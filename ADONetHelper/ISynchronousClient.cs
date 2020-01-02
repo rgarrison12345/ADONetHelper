@@ -157,7 +157,7 @@ namespace ADONetHelper
         /// </summary>
         /// <param name="level">The <see cref="System.Data.IsolationLevel"/> to describe the locking behavior for the transaction</param>
         /// <returns>Returns an instance of <see cref="DbTransaction"/></returns>
-        DbTransaction GetDbTransaction(System.Data.IsolationLevel level);
+        DbTransaction GetDbTransaction(IsolationLevel level);
         /// <summary>
         /// Closes the connection to a database
         /// </summary>
