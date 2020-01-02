@@ -14,7 +14,7 @@
     <PackageId>ADONetHelper.Core</PackageId>
     <Description>Core functionality API objects for ADONetHelper based libraries</Description>
     <PackageReleaseNotes>
-      Bug fix
+      Copyright updates, new IDbParamterFormatter interface, intellisense updates
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
