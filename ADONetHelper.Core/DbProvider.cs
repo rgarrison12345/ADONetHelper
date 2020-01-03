@@ -311,6 +311,17 @@ namespace ADONetHelper.Core
             _executeSQL = new SqlExecutor(connection);
         }
         /// <summary>
+        /// Instantiates a new instance of <see cref="DbProvider"/> using an existing <see cref="DbConnection"/> to initialize the <paramref name="connection"/>
+        /// </summary>
+        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connection">An instance of <see cref="DbConnection"/> to use to query a database </param>
+        protected DbProvider(DbConnection connection, CommandType queryCommandType)
+        {
+            //Set properties
+            _executeSQL = new SqlExecutor(connection);
+            QueryCommandType = queryCommandType;
+        }
+        /// <summary>
         /// Instantiates a new instance of <see cref="DbProvider"/> using the passed in <paramref name="connectionString"/> and <paramref name="factory"/>
         /// </summary>
         /// <param name="connectionString">The connection string used to query a database</param>
