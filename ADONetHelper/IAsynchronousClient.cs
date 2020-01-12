@@ -95,7 +95,7 @@ namespace ADONetHelper
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         Task<int> ExecuteNonQueryAsync(string query, CancellationToken token = default);
-#if NETSTANDARD2_1
+#if !NET461 && !NETSTANDARD2_0
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure with a transaction
         /// </summary>
@@ -113,6 +113,21 @@ namespace ADONetHelper
         /// <returns>Returns the number of rows affected by this query as a <see cref="Task{Int32}"/></returns>
         Task<int> ExecuteTransactedNonQueryAsync(string query, DbTransaction transact, bool commitTransaction = false, CancellationToken token = default);
 #endif
+        #endregion
+        #region Connection Methods
+#if !NET461 && !NETSTANDARD2_0
+        /// <summary>
+        /// Changes the current <see cref="DbConnection"/> to target a different database
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="databaseName">The name of a database as a <see cref="string"/></param>
+        Task ChangeDatabaseAsync(string databaseName, CancellationToken token = default);
+#endif
+        /// <summary>
+        /// Opens the connection to a database asynchronously
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        Task OpenAsync(CancellationToken token = default);
         #endregion
     }
 }

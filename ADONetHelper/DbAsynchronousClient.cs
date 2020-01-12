@@ -160,6 +160,18 @@ namespace ADONetHelper
         }
         #endregion
         #region Connection Methods
+#if !NET461 && !NETSTANDARD2_0
+        /// <summary>
+        /// Changes the current <see cref="DbConnection"/> to target a different database
+        /// </summary>
+        /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
+        /// <param name="databaseName">The name of a database as a <see cref="string"/></param>
+        public async Task ChangeDatabaseAsync(string databaseName, CancellationToken token = default)
+        {
+            //Now change the database
+            await ExecuteSQL.Connection.ChangeDatabaseAsync(databaseName, token);
+        }
+#endif
         /// <summary>
         /// Opens the connection to a database asynchronously
         /// </summary>

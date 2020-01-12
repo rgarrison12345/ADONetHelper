@@ -7,7 +7,7 @@
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>4.0.5</Version>
+    <Version>4.0.6</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -16,7 +16,7 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET client library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Updating to ADONetHelper.Core 1.2.3
+      Adding ChangeDatabaseAsync (NetStandard2.1 only), OpenAsync into IAscynchronousClient and DbClient
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
