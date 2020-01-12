@@ -30,7 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endregion
 
-namespace ADONetHelper
+ namespace ADONetHelper
 {
     public partial class DbClient : IAsynchronousClient
     {
@@ -169,7 +169,7 @@ namespace ADONetHelper
         public async Task ChangeDatabaseAsync(string databaseName, CancellationToken token = default)
         {
             //Now change the database
-            await ExecuteSQL.Connection.ChangeDatabaseAsync(databaseName, token);
+            await ExecuteSQL.Connection.ChangeDatabaseAsync(databaseName, token).ConfigureAwait(false);
         }
 #endif
         /// <summary>
