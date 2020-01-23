@@ -121,7 +121,7 @@ using System.Threading.Tasks;
         }
         #endregion
         #region Data Modifications
-#if NETSTANDARD2_1
+#if !NET461 && !NETSTANDARD2_0
         /// <summary>
         /// Utility method for executing an Ad-Hoc query or stored procedure with a transaction
         /// </summary>
