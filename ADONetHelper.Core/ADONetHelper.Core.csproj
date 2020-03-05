@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/rgarrison12345/ADONetHelper/tree/master/ADONetHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.2.5</Version>
+    <Version>1.2.6</Version>
     <PackageTags>ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Authors>Robert Garrison</Authors>
     <Company>Robert Garrison</Company>
@@ -17,7 +17,7 @@
     <PackageId>ADONetHelper.Core</PackageId>
     <Description>Core functionality API objects for ADONetHelper based libraries</Description>
     <PackageReleaseNotes>
-      Updating Microsoft.Extensions.DependencyModel to 3.1.2
+      Bug fix in GetDataObjectEnumerableAsync
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>

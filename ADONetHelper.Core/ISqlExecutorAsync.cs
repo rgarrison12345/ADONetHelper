@@ -167,22 +167,12 @@ namespace ADONetHelper.Core
         /// </summary>
         /// <param name="transact">An instance of <see cref="DbTransaction"/></param>
         /// <param name="behavior">Provides a description of the results of the query and its effect on the database.  Defaults to <see cref="CommandBehavior.Default"/></param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="connection">An instance of the DbConnection class</param>
-        /// <returns>A DbDataReader object, the caller is responsible for handling closing the DataReader.  Once the data reader is closed, the Database Connection will be closed as well</returns>
-        Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null);
-        /// <summary>
-        /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
-        /// </summary>
-        /// <param name="transact">An instance of <see cref="DbTransaction"/></param>
-        /// <param name="behavior">Provides a description of the results of the query and its effect on the database.  Defaults to <see cref="CommandBehavior.Default"/></param>
         /// <param name="token">Structure that propogates a notification that an operation should be cancelled</param>
         /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
         /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
         /// <param name="connection">An instance of the DbConnection class</param>
         /// <returns>A DbDataReader object, the caller is responsible for handling closing the DataReader.  Once the data reader is closed, the Database Connection will be closed as well</returns>
-        Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null);
+        Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CancellationToken token = default, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null);
         /// <summary>
         /// Utility method for returning a <see cref="Task{Object}"/> from the database
         /// </summary>

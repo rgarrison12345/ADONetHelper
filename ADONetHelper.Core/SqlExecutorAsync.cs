@@ -178,19 +178,25 @@ namespace ADONetHelper.Core
                 //Check if the reader has rows first
                 if (reader.HasRows == true)
                 {
-                    IAsyncEnumerable<IDictionary<string, object>> results = Utilities.GetDynamicResultsEnumerableAsync(reader, token);
-                    IAsyncEnumerator<IDictionary<string, object>> enumerator = results.GetAsyncEnumerator(token);
-
-                    //Keep moving through the enumerator
-                    while (await enumerator.MoveNextAsync().ConfigureAwait(false) == true)
+                    //Keep going through the results
+                    while (await reader.ReadAsync(token).ConfigureAwait(false) == true)
                     {
-                        //Return this back to the caller
-                        yield return Utilities.GetSingleDynamicType<T>(enumerator.Current);
-                    }
+                        Dictionary<string, object> results = new Dictionary<string, object>();
 
-                    //Break out of the iterator function
-                    yield break;
+                        //Keep going through the result set
+                        for(int i=0; i < reader.FieldCount; i++)
+                        {
+                            //Keep adding field name and value
+                            results.Add(reader.GetName(i), reader[i]);
+                        }
+
+                        //Return this back to the caller
+                        yield return Utilities.GetSingleDynamicType<T>(results);
+                    }
                 }
+
+                //Nothing to do here
+                yield break;
             }
         }
         /// <summary>
@@ -311,20 +317,6 @@ namespace ADONetHelper.Core
         {
             //Return this back to the caller
             return await GetDbDataReaderAsync(queryCommandType, query, Connection, token, behavior, transact).ConfigureAwait(false);
-        }
-        /// <summary>
-        /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
-        /// </summary>
-        /// <param name="transact">An instance of <see cref="DbTransaction"/></param>
-        /// <param name="behavior">Provides a description of the results of the query and its effect on the database.  Defaults to <see cref="CommandBehavior.Default"/></param>
-        /// <param name="connection">An instance of a <see cref="DbConnection"/> object to use to query a datastore</param>
-        /// <param name="query">The query command text or name of stored procedure to execute against the data store</param>
-        /// <param name="queryCommandType">Represents how a command should be interpreted by the data provider</param>
-        /// <returns>Returns an instance of <see cref="DbDataReader"/>, the caller is responsible for handling closing the DataReader</returns>
-        public async Task<DbDataReader> GetDbDataReaderAsync(CommandType queryCommandType, string query, DbConnection connection, CommandBehavior behavior = CommandBehavior.Default, DbTransaction transact = null)
-        {
-            //Return this back to the caller
-            return await GetDbDataReaderAsync(queryCommandType, query, connection, default, behavior, transact).ConfigureAwait(false);
         }
         /// <summary>
         /// Utility method for returning a <see cref="Task{DbDataReader}"/> object
