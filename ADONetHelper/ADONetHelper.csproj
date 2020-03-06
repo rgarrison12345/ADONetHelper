@@ -16,7 +16,7 @@
     <PackageId>ADONetHelper</PackageId>
     <Description>Generic ADO.NET client library to connect to a relational database system using a given providers ADO.NET driver.  Driver can be in Global Assembly Cache or referenced as a nuget package.</Description>
     <PackageReleaseNotes>
-      Updating to ADONetHelper.Core 1.2.5
+      Updating to ADONetHelper.Core 1.2.6
     </PackageReleaseNotes>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
