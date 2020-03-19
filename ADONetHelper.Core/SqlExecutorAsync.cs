@@ -179,19 +179,10 @@ namespace ADONetHelper.Core
                 if (reader.HasRows == true)
                 {
                     //Keep going through the results
-                    while (await reader.ReadAsync(token).ConfigureAwait(false) == true)
-                    {
-                        Dictionary<string, object> results = new Dictionary<string, object>();
-
-                        //Keep going through the result set
-                        for(int i=0; i < reader.FieldCount; i++)
-                        {
-                            //Keep adding field name and value
-                            results.Add(reader.GetName(i), reader[i]);
-                        }
-
+                    await foreach(IDictionary<string,object> kvp in Utilities.GetDynamicResultsEnumerableAsync(reader, token))
+                    { 
                         //Return this back to the caller
-                        yield return Utilities.GetSingleDynamicType<T>(results);
+                        yield return Utilities.GetSingleDynamicType<T>(kvp);
                     }
                 }
 
